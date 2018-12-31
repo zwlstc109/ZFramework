@@ -1,0 +1,47 @@
+ManifestFileVersion: 0
+CRC: 3607860499
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: shader
+      Dependencies: {}
+    Info_1:
+      Name: sound
+      Dependencies: {}
+    Info_2:
+      Name: sprites
+      Dependencies: {}
+    Info_3:
+      Name: attack
+      Dependencies:
+        Dependency_0: shader
+    Info_4:
+      Name: ptctest1
+      Dependencies: {}
+    Info_5:
+      Name: itmtest1
+      Dependencies: {}
+    Info_6:
+      Name: itmtest2
+      Dependencies: {}
+    Info_7:
+      Name: pnlloading
+      Dependencies: {}
+    Info_8:
+      Name: pnlmainmenu
+      Dependencies: {}
+    Info_9:
+      Name: pnlstartmenu
+      Dependencies: {}
+    Info_10:
+      Name: pnltest1
+      Dependencies: {}
+    Info_11:
+      Name: pnltest2
+      Dependencies: {}
+    Info_12:
+      Name: pnltest3
+      Dependencies: {}
+    Info_13:
+      Name: assetmanifest
+      Dependencies: {}

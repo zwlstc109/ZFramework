@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AssetManifest xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <AssetLst Path="Assets/GameData/Prefabs/Attack.prefab" ABName="attack" AssetName="Attack.prefab">
+    <DependAB>shader</DependAB>
+  </AssetLst>
+  <AssetLst Path="Assets/GameData/Prefabs/UGUI/Item/itmTest1.prefab" ABName="itmtest1" AssetName="itmTest1.prefab" />
+  <AssetLst Path="Assets/GameData/Prefabs/UGUI/Item/itmTest2.prefab" ABName="itmtest2" AssetName="itmTest2.prefab" />
+  <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/PnlLoading.prefab" ABName="pnlloading" AssetName="PnlLoading.prefab" />
+  <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/PnlMainMenu.prefab" ABName="pnlmainmenu" AssetName="PnlMainMenu.prefab" />
+  <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/pnlStartMenu.prefab" ABName="pnlstartmenu" AssetName="pnlStartMenu.prefab" />
+  <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/PnlTest1.prefab" ABName="pnltest1" AssetName="PnlTest1.prefab" />
+  <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/PnlTest2.prefab" ABName="pnltest2" AssetName="PnlTest2.prefab" />
+  <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/PnlTest3.prefab" ABName="pnltest3" AssetName="PnlTest3.prefab" />
+  <AssetLst Path="Assets/GameData/Prefabs/Effect/ptcTest1.prefab" ABName="ptctest1" AssetName="ptcTest1.prefab" />
+  <AssetLst Path="Assets/GameData/Shaders/benghuai.shader" ABName="shader" AssetName="benghuai.shader" />
+  <AssetLst Path="Assets/GameData/Shaders/Skybox.shader" ABName="shader" AssetName="Skybox.shader" />
+  <AssetLst Path="Assets/GameData/Shaders/Water.shader" ABName="shader" AssetName="Water.shader" />
+  <AssetLst Path="Assets/GameData/Shaders/Xray.shader" ABName="shader" AssetName="Xray.shader" />
+  <AssetLst Path="Assets/GameData/Sounds/menusound.mp3" ABName="sound" AssetName="menusound.mp3" />
+  <AssetLst Path="Assets/GameData/Sounds/senlin.mp3" ABName="sound" AssetName="senlin.mp3" />
+  <AssetLst Path="Assets/GameData/Sprites/Test1.png" ABName="sprites" AssetName="Test1.png" />
+  <AssetLst Path="Assets/GameData/Sprites/test2.png" ABName="sprites" AssetName="test2.png" />
+  <AssetLst Path="Assets/GameData/Sprites/test3.png" ABName="sprites" AssetName="test3.png" />
+</AssetManifest>
