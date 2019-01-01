@@ -20,7 +20,7 @@ namespace Zframework
         
         internal override void Init()
         {
-            Z.Log.Log("ResourceManager init");
+            Z.Debug.Log("ResourceManager init");
             Z.Resource = this;
             Z.Pool.RegisterClassCustomPool(() => new ResourceItem(), ResourceItem.Clean, 500);
             ResourceGroupManager.Init();
@@ -49,7 +49,7 @@ namespace Zframework
         {
             if (string.IsNullOrEmpty(path))
             {
-                Z.Log.Error("请求的资源地址为空");
+                Z.Debug.Error("请求的资源地址为空");
                 return null;
             }
             //获得内含资源的资源壳
@@ -71,7 +71,7 @@ namespace Zframework
                 resItem = ResourceItemDic.GetValue(path);//只要加载过清单 肯定会得到对应的壳
                 if (resItem == null)
                 {
-                    Z.Log.Error("请求加载的资源不在清单内 "+path);
+                    Z.Debug.Error("请求加载的资源不在清单内 "+path);
                     return null;
                 }
                 if (AssetBundleManager.LoadResourceAB(resItem))
@@ -89,7 +89,7 @@ namespace Zframework
                 return resItem;
             }
             Z.Pool.Return(ref resItem);
-            Z.Log.Error("加载资源失败");
+            Z.Debug.Error("加载资源失败");
             return null;
         }
         /// <summary>

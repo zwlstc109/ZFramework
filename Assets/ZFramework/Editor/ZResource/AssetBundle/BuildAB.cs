@@ -7,7 +7,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Xml.Serialization;
 
-namespace Zframework
+namespace Zframework.Editor
 {   
     public static class BuildAB
     {
@@ -163,6 +163,10 @@ namespace Zframework
             WriteData(assetPathDic);
 
             AssetBundleManifest manifest = BuildPipeline.BuildAssetBundles(mABBuildTargetPath, BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
+            //mAssetLst.Clear();
+            //mABPathFilter.Clear();
+            //mAllFolderABDic.Clear();
+            //mAllPrefabABDic.Clear();
             if (manifest == null)
             {
                 Debug.LogError("AssetBundle 打包失败！");

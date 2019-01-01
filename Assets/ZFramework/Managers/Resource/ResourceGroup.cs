@@ -42,14 +42,14 @@ namespace Zframework
         {
             if (resItem.Asset==null)
             {
-                Z.Log.Warning("空壳无法加入资源组 "+resItem.AssetName+" "+resItem.Path);
+                Z.Debug.Warning("空壳无法加入资源组 "+resItem.AssetName+" "+resItem.Path);
                 return;
             }
 
             if (groupIndex>mGroupLst.Count-1)
             {
                 groupIndex = 0;
-                Z.Log.Warning("申请加入的资源组不存在");
+                Z.Debug.Warning("申请加入的资源组不存在");
             }
             mGroupLst[groupIndex].Add(resItem);
         }
@@ -59,7 +59,7 @@ namespace Zframework
             if (groupIndex > mGroupLst.Count - 1)
             {
                 groupIndex = 0;
-                Z.Log.Warning("申请释放的资源组不存在");
+                Z.Debug.Warning("申请释放的资源组不存在");
             }
             mGroupLst[groupIndex].Release(destroyCache);
         }

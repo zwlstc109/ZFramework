@@ -6,7 +6,7 @@ using System;
 namespace Zframework
 {
     
-    public class ProcedureBase:FsmState
+    public abstract class ProcedureBase:FsmState
     {
        
     }

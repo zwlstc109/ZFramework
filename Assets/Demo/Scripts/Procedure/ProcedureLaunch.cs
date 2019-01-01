@@ -10,7 +10,7 @@ namespace Zframework
     {
         public override void OnEnter(object userData = null)
         {
-            Z.Log.Log("ProcedureLaunch enter");
+            Z.Debug.Log("ProcedureLaunch enter");
             //...加载一些东西可能
             //...
             //...

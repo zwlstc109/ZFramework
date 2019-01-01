@@ -24,7 +24,7 @@ namespace Zframework
             TextAsset manifestBytes = manifestAB.LoadAsset<TextAsset>(mManifestName);
             if (manifestBytes == null)
             {
-                Z.Log.Error("资源清单读取失败");
+                Z.Debug.Error("资源清单读取失败");
                 return ;
             }
             MemoryStream stream = new MemoryStream(manifestBytes.bytes);
@@ -119,7 +119,7 @@ namespace Zframework
         {
             if (item == null)
             {
-                Z.Log.Warning("要卸载的资源为空");
+                Z.Debug.Warning("要卸载的资源为空");
                 return;
             }
             if (item.DependAB != null && item.DependAB.Count > 0)
@@ -146,7 +146,7 @@ namespace Zframework
                 {
                     if (abItem.AssetBundle == null)//不太可能发生...
                     {
-                        Z.Log.Warning("准备卸载AB包时，发现壳内的包引用为空");
+                        Z.Debug.Warning("准备卸载AB包时，发现壳内的包引用为空");
                     }
                     abItem.AssetBundle.Unload(true);
                     Z.Pool.Return(ref abItem);

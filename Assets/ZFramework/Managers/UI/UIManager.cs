@@ -14,7 +14,7 @@ namespace Zframework
     {
         protected override int MgrIndex { get { return (int)ManagerIndex.UI; } }
         private List<UIGroup> mGroupLst = new List<UIGroup>();
-        [SerializeField] internal Transform CanvasRoot;
+        [SerializeField] internal Transform CanvasRoot=null;
         public string SceneLoadingPath=null;
         //private Dictionary<string, List<PanelBase>> mPanelDic = new Dictionary<string, List<PanelBase>>();
         internal override void Init()

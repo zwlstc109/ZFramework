@@ -45,7 +45,7 @@ namespace Zframework
             {
                 if (mMgrLst[index] != null)
                 {
-                    Debug.LogError("重复的ManagerIndex");
+                    UnityEngine.Debug.LogError("重复的ManagerIndex");
                     mErrorFlag = true;
                     //return;
                 }
@@ -92,7 +92,7 @@ namespace Zframework
         /// <summary>ProcedureManager</summary>
         public static ProcedureManager Procedure { get; internal set; }
         /// <summary>LogManager</summary>
-        public static LogManager Log { get; internal set; }
+        public static LogManager Debug { get; internal set; }
         /// <summary>PoolManager</summary>
         public static PoolManager Pool { get; internal set; }
         /// <summary>UnitManager</summary>

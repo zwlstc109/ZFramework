@@ -29,7 +29,7 @@ namespace Zframework
             var pool = mObjectPoolDic.GetValue(poolName);
             if (pool!=null)
             {
-                Z.Log.Warning("重复注册Pool:" + typeof(T));
+                Z.Debug.Warning("重复注册Pool:" + typeof(T));
                 return;
             }
             mObjectPoolDic.Add(poolName, new ClassPool<T>(initialAmount,holdAmount));
@@ -48,7 +48,7 @@ namespace Zframework
             var pool = mObjectPoolDic.GetValue(poolName);
             if (pool != null)
             {
-                Z.Log.Warning("重复初始化Pool:" + typeof(T));
+                Z.Debug.Warning("重复初始化Pool:" + typeof(T));
                 return;
             }
             mObjectPoolDic.Add(poolName, new CustomClassPool<T>(factoryMethod,cleanMethod,initialAmount, holdAmount));
@@ -64,7 +64,7 @@ namespace Zframework
             var pool = mObjectPoolDic.GetValue(poolName);
             if (pool == null)//必须先在主线程中注册过，才能使用池
             {
-                Z.Log.Warning("未初始化Pool:" + typeof(T));
+                Z.Debug.Warning("未初始化Pool:" + typeof(T));
                 return null;
             }
             return pool.Spawn() as T;
@@ -78,14 +78,14 @@ namespace Zframework
         {
             if (t == null)
             {
-                Z.Log.Warning("试图往池中归还一个空引用");
+                Z.Debug.Warning("试图往池中归还一个空引用");
                 return;
             }
             string poolName = typeof(T).FullName;
             var pool = mObjectPoolDic.GetValue(poolName);
             if (pool == null)
             {
-                Z.Log.Warning("未初始化Pool:" + typeof(T));
+                Z.Debug.Warning("未初始化Pool:" + typeof(T));
                 return;
             }            
             pool.Despawn(t);

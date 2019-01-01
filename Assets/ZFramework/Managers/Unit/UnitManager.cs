@@ -11,7 +11,7 @@ namespace Zframework
         protected override int MgrIndex { get { return (int)ManagerIndex.Unit; } }
         //为了快速获取池中的unit,必须要一个字典
         internal Dictionary<string, Stack<Unit>> mUnitPool = new Dictionary<string, Stack<Unit>>();
-        [SerializeField]internal Transform poolRoot;
+        [SerializeField]internal Transform poolRoot=null;
         
 
         private List<UnitGroup> mUnitGroupLst = new List<UnitGroup>();
@@ -32,7 +32,7 @@ namespace Zframework
         {
             if (unitGroupIndex>=mUnitGroupLst.Count)
             {
-                Z.Log.Error("Unit显示失败:没有注册过的Unit组");
+                Z.Debug.Error("Unit显示失败:没有注册过的Unit组");
                 return null;
             }
             var unitGroup = mUnitGroupLst[unitGroupIndex];
@@ -53,7 +53,7 @@ namespace Zframework
         {
             if (unitGroupIndex >= mUnitGroupLst.Count)
             {
-                Z.Log.Error("释放Unit池失败:没有注册过的Unit组");
+                Z.Debug.Error("释放Unit池失败:没有注册过的Unit组");
                 return;
             }
             mUnitGroupLst[unitGroupIndex].ReleaseGroup(intoPool);

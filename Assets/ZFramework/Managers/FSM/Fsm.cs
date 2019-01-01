@@ -27,12 +27,12 @@ namespace Zframework
         /// <param name="states"></param>
         /// <param name="fsmId"></param>
         /// <param name="owner"></param>
-        internal Fsm(IEnumerable<FsmState> states,int fsmId,object owner):this(fsmId,owner)
+        internal Fsm(IEnumerable<FsmState> states,int fsmId,object owner,bool autoStart):this(fsmId,owner)
         {
             foreach (var state in states)
             {
                 string stateName = state.GetType().FullName/* + FsmId.ToString()*/;
-                AddState(stateName, state);
+                AddState(stateName, state,autoStart);
             }
         }
         /// <summary>
@@ -41,24 +41,24 @@ namespace Zframework
         /// <param name="states">带名字的状态列表,名字要固定地址!!!</param>
         /// <param name="fsmId"></param>
         /// <param name="owner"></param>
-        internal Fsm(IEnumerable<Tuple<string, FsmState>> states, int fsmId,object owner):this(fsmId,owner)
+        internal Fsm(IEnumerable<Tuple<string, FsmState>> states, int fsmId,object owner,bool autoStart):this(fsmId,owner)
         {
             //mStateDic = new Dictionary<string, FsmState>();
             foreach (var stateTuple in states)
             {
                 string stateName = stateTuple.Item1/*+FsmId.ToString()*/;
-                AddState(stateName, stateTuple.Item2);
+                AddState(stateName, stateTuple.Item2,autoStart);
             }
         }
         private Fsm(int fsmId,object owner) { FsmId = fsmId;Owner = owner; }
 
-        private void AddState(string stateName,FsmState state)
+        private void AddState(string stateName,FsmState state,bool autoStart)
         {
             if (mFsmStateLst.Find(s =>ReferenceEquals(s.StateName, stateName)) == null)//地址比较的基础是名字字符串是固定地址!!
             {
                 state.StateName = stateName;
                 mFsmStateLst.Add(state);
-                if (CurState == null)//tuples的第一个会被当作初始状态
+                if (autoStart&&CurState == null)//tuples的第一个会被当作初始状态
                 {
                     CurState = state;
                     state.OnEnter();
@@ -68,8 +68,26 @@ namespace Zframework
             }
             else
             {
-                Z.Log.Error("状态机状态名字重复");
+                Z.Debug.Error("状态机状态名字重复");
             }           
+        }
+        internal void StartFsm(FsmState entrance)
+        {
+            if (CurState!=null)
+            {
+                Z.Debug.Error("无法重复开始状态机");
+                return;
+            }
+            var state = mFsmStateLst.Find(s => s == entrance);
+            if (state!=null)
+            {
+                CurState = state;
+                state.OnEnter();
+            }
+            else
+            {
+                Z.Debug.Error("状态机开启失败：未找到指定的状态机");
+            }
         }
         internal void ChangeState<T>()where T:FsmState//提供一种随手根据类型切换状态的方式
         {
@@ -87,7 +105,7 @@ namespace Zframework
             }
             else
             {
-                Z.Log.Error("切换状态机状态失败：未找到对应状态 "+stateName);
+                Z.Debug.Error("切换状态机状态失败：未找到对应状态 "+stateName);
             }
         }
 

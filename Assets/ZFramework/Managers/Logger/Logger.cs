@@ -17,7 +17,7 @@ namespace Zframework
         public Logger(string loggerName)
         {
             Name = loggerName;
-            mLogPublisher = Z.Log.RegisterLogger(this);
+            mLogPublisher = Z.Debug.RegisterLogger(this);
         }
 
         /// <summary>Output LogType.Log but only enables isDebugBuild</summary>

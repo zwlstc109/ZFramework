@@ -18,7 +18,7 @@ namespace Zframework
         private Action<object> mDoneCallback = null;
         internal override void Init()
         {
-            Z.Log.Log("SceneManager init");
+            Z.Debug.Log("SceneManager init");
             Z.Scene = this;
         }
         public void LoadScene(string sceneName)

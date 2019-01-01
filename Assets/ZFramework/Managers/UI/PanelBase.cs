@@ -8,7 +8,7 @@ namespace Zframework
     public class PanelBase:MonoBehaviour
     {
         
-        internal int mId;
+        internal int mId=-1;
         public int Id { get { return mId; } }
         //每个Panel都有各自的资源组和unit组 使得加载的资源可以Panel为单位进行卸载
         [HideInInspector]public int mUnitGroupIndex;//TODO 由于申请unit组时会连带申请一个res组 和下面有点重复 待优化

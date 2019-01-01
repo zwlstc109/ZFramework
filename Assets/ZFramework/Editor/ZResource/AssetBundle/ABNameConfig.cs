@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-namespace Zframework
+namespace Zframework.Editor
 {
     //[CreateAssetMenu(fileName = "ABNameConfig", menuName = "CreatABNameConfig", order = 0)]
     public class ABNameConfig : ScriptableObject

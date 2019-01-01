@@ -1,7 +1,8 @@
 {
     "name": "ZFramework.Editor",
     "references": [
-        "ZFramework"
+        "ZFramework",
+        "UniRx"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [

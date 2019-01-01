@@ -26,8 +26,8 @@ public class ZFrameworkTest : MonoBehaviour
     //readonly int num = 2;
     public Text mText;
     public AudioSource source;
-    private AudioClip clip;
-    private GameObject prefab;
+    private AudioClip clip = null;
+    private GameObject prefab=null;
     private void Awake()
     {
         //Zframework.Timer.IntializeDriver();

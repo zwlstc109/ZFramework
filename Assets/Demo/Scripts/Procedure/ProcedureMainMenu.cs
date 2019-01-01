@@ -10,7 +10,7 @@ namespace Zframework
     {
         public override void OnEnter(object userData = null)
         {
-            Z.Log.Log("ProcedureMainMenu enter");
+            Z.Debug.Log("ProcedureMainMenu enter");
         }
         public override void OnUpdate()
         {
