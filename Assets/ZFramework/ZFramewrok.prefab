@@ -3177,7 +3177,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4068653195550887608}
-  - component: {fileID: 4068653195550887609}
+  - component: {fileID: 1485907745}
   m_Layer: 0
   m_Name: Fsm
   m_TagString: Untagged
@@ -3199,7 +3199,7 @@ Transform:
   m_Father: {fileID: 4068653195127935811}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4068653195550887609
+--- !u!114 &1485907745
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3254,7 +3254,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c642bbd1a7b84b94289bc9ce4067ed2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LoadingUIPath: ' Assets/GameData/Prefabs/UGUI/Panel/PnlLoading.prefab'
+  LoadingUIPath: Assets/GameData/Prefabs/UGUI/Panel/PnlLoading.prefab
 --- !u!1 &4068653196130685804
 GameObject:
   m_ObjectHideFlags: 0
@@ -3443,7 +3443,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 279
 --- !u!1 &6585393643456357982
 GameObject:
   m_ObjectHideFlags: 0
