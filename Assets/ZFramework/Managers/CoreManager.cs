@@ -15,14 +15,14 @@ namespace Zframework
         bool mInitial = false;
         internal override void Init()
         {
-            //ObservableLogger.Listener.LogToUnityDebug();
-            Z.Log.Log("CoreManager init" + Time.frameCount.ToString());
+           
+            Z.Debug.Log("CoreManager init"/* + Time.frameCount.ToString()*/);
             if (!mInitial)
             {
                 DontDestroyOnLoad(gameObject);
             }
             mInitial = true;
-            //Debug.Log();     
+         
         }
         /// <summary>
         /// ZFrameworkCore 启动！
@@ -43,8 +43,7 @@ namespace Zframework
         private void OnApplicationQuit()
         {
 #if UNITY_EDITOR          
-            //Resources.UnloadUnusedAssets();
-            //Debug.Log("清空编辑器缓存");
+            Resources.UnloadUnusedAssets();
 #endif
         }
         internal override void MgrUpdate()

@@ -17,7 +17,7 @@ namespace Zframework
 
         internal override void Init()
         {
-            Z.Log.Log("SubjectManager init");
+            Z.Debug.Log("SubjectManager init");
             Z.Subject = this;
         }
         //用于轻量级无装箱版的字典的字典， 通过类型 找到对应的字典
@@ -72,7 +72,7 @@ namespace Zframework
         #endregion
         #region 轻量级
 
-        //轻量级管理，string作为key ,object为事件参数,但存在装拆箱的问题
+        //轻量级管理，string作为key ,object为事件参数,但存在装拆箱的问题 非常适合用来广播无参事件
         private Dictionary<string, Subject<object>> mObjSubjectDic = new Dictionary<string, Subject<object>>();
         public IObservable<object> GetSubject(string name)
         {

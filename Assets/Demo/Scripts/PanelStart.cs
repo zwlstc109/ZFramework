@@ -15,12 +15,18 @@ public class PanelStart : PanelBase
         base.OnLoad(userData);
         mbtnStart.onClick.AddListener(() =>
         {
-            CloseUI();
+            CloseSelf();
             Z.Scene.LoadSceneAsync("TestScene1", _ => Z.Procedure.ChangeProcedure<ProcedurePlay>());
         });
 
 
-        mbtnQuit.onClick.AddListener(() => Application.Quit());
+        mbtnQuit.onClick.AddListener(() => 
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#endif
+            Application.Quit();
+        });
     }
 
     public override void OnOpen(object userData = null)

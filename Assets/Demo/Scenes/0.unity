@@ -179,5 +179,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4068653195640712511, guid: 2e6319257a7f91e40b503ce2870ab193,
+        type: 3}
+      propertyPath: LoadingUIPath
+      value: Assets/GameData/Prefabs/UGUI/Panel/PnlLoading.prefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 4769064031333245337, guid: 2e6319257a7f91e40b503ce2870ab193,
+        type: 3}
+      propertyPath: m_BlockingMask.m_Bits
+      value: 279
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2e6319257a7f91e40b503ce2870ab193, type: 3}

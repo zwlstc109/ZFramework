@@ -3108,6 +3108,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4daa6b27ab1933842b19149718ef4acb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_AvailableProcedureTypeNames:
+  - Zframework.ProcedureChangeScene
+  - Zframework.ProcedureLaunch
+  - Zframework.ProcedureMainMenu
+  - Zframework.ProcedurePlay
+  m_EntranceProcedureTypeName: Zframework.ProcedureLaunch
 --- !u!1 &4068653195127935821
 GameObject:
   m_ObjectHideFlags: 0
@@ -3248,6 +3254,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c642bbd1a7b84b94289bc9ce4067ed2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LoadingUIPath: ' Assets/GameData/Prefabs/UGUI/Panel/PnlLoading.prefab'
 --- !u!1 &4068653196130685804
 GameObject:
   m_ObjectHideFlags: 0
@@ -3338,7 +3345,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CanvasRoot: {fileID: 5401700949222582320}
-  SceneLoadingPath: Assets/GameData/Prefabs/UGUI/Panel/PnlLoading.prefab
 --- !u!1 &5092181723139812806
 GameObject:
   m_ObjectHideFlags: 0

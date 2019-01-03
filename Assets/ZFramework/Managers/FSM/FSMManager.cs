@@ -11,7 +11,7 @@ namespace Zframework
         private Stack<int> mIdleFsmLst = new Stack<int>();//存放闲置的fsm 考虑fsm回收再利用
         internal override void Init()
         {
-            Z.Log.Log("FSMManager init");
+            Z.Debug.Log("FSMManager init");
             Z.Fsm = this;
         }
         /// <summary>
@@ -20,9 +20,9 @@ namespace Zframework
         /// <param name="states">状态们</param>
         /// <param name="owner">状态机持有者</param>
         /// <returns>状态机Id 可根据Id拿到此状态机</returns>
-        public int CreateFsm(IEnumerable<FsmState> states, object owner)
+        public int RegistFsm(IEnumerable<FsmState> states, object owner,bool autoStart=true)
         {
-            var fsm = new Fsm(states, mFsmLst.Count, owner);//考虑FSM加个回收状态，Manager加个Id的容器，如果有闲置的Id就先用这个FSm 不new
+            var fsm = new Fsm(states, mFsmLst.Count, owner,autoStart);//考虑FSM加个回收状态，Manager加个Id的容器，如果有闲置的Id就先用这个FSm 不new
             mFsmLst.Add(fsm);
             return mFsmLst.Count - 1;
         }
@@ -32,9 +32,9 @@ namespace Zframework
         /// <param name="states">状态们</param>
         /// <param name="owner">状态机持有者</param>
         /// <returns>状态机Id 可根据Id拿到此状态机</returns>
-        public int CreateFsm(IEnumerable<Tuple<string,FsmState>> states,object owner)
+        public int RegistFsm(IEnumerable<Tuple<string,FsmState>> states,object owner, bool autoStart = true)
         {
-            var fsm = new Fsm(states,mFsmLst.Count,owner);
+            var fsm = new Fsm(states,mFsmLst.Count,owner,autoStart);
             mFsmLst.Add(fsm);
             return mFsmLst.Count-1;
         }
@@ -46,6 +46,10 @@ namespace Zframework
                 return null;
             }
             return mFsmLst[fsmId];
+        }
+        public FsmState GetFsmCurrentState(int fsmId)
+        {
+            return GetFsm(fsmId).CurState;
         }
         public void ChangeFsmState<T>(int fsmId)where T : FsmState
         {

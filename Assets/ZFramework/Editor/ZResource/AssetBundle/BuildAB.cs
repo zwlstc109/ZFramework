@@ -7,7 +7,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Xml.Serialization;
 
-namespace Zframework
+namespace Zframework.Editor
 {   
     public static class BuildAB
     {
@@ -29,7 +29,7 @@ namespace Zframework
         //储存所有有效资源路径 （储存的是那些会在运行时主动加载的资源 声音图片预制体之类，即二进制配置表中需要记录的信息）
         private static List<string> mAssetLst = new List<string>();
 
-        [MenuItem("ZFramework/AssetBundle/打包")]
+        [MenuItem("ZFramework/AssetBundle/打包 (需配置)")]
         public static void Build()
         {
           
@@ -163,6 +163,10 @@ namespace Zframework
             WriteData(assetPathDic);
 
             AssetBundleManifest manifest = BuildPipeline.BuildAssetBundles(mABBuildTargetPath, BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
+            //mAssetLst.Clear();
+            //mABPathFilter.Clear();
+            //mAllFolderABDic.Clear();
+            //mAllPrefabABDic.Clear();
             if (manifest == null)
             {
                 Debug.LogError("AssetBundle 打包失败！");

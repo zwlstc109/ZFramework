@@ -1,1 +1,1 @@
-本该放在这里的流程类 现在在框架的Procedure文件夹里
+游戏的大流程 由ProcedureManager管理流程的状态机

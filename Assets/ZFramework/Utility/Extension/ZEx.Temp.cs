@@ -13,11 +13,13 @@ namespace Zframework
         {
             unitGroup.Add(unit);
         }
-        internal static void AddTo(this PanelBase panel,UIGroup group)
-        {
-            group.Add(panel);
-            panel.UIGroup = group;
-        }
+        //internal static void AddTo(this PanelBase panel,UIGroup group)
+        //{
+        //    group.Add(panel);
+        //    panel.UIGroup = group;
+        //}
+
+        
         #endregion
     }
 }

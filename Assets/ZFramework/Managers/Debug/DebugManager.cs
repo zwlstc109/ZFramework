@@ -5,9 +5,9 @@ using UniRx;
 using System;
 namespace Zframework
 {/// <summary>
-/// 日志管理
+/// Debug管理
 /// </summary>  
-    public class LogManager : BaseManager
+    public class DebugManager : BaseManager
     {   
         protected override int MgrIndex { get { return (int)ManagerIndex.Log; } }
         //日志subject
@@ -15,13 +15,13 @@ namespace Zframework
         private Logger mDefaultLogger;
         internal override void Init()
         {
-            Z.Log = this;
+            Z.Debug = this;
             //默认关联UnityDebug
            logSubject.Where(e => ReferenceEquals(e.LoggerName, "DefaultLogger")).Subscribe(new UnityDebugSink());//有个不好的地方 用默认日志输出器就不能双击console来到debug.log的地方了
             //默认日志输出器                                                     //但可以使用Debug.log 不强制使用Z.log   Z.log用来以后可以把输出整理到一个UI上 持久化到文件上 甚至上传到服务器之类的需求
             mDefaultLogger = new Logger("DefaultLogger");
          
-            Z.Log.Log("LogManager init");
+            Z.Debug.Log("LogManager init");
         }
 
         public Action<LogEntry> RegisterLogger(Logger logger)
@@ -47,7 +47,7 @@ namespace Zframework
 
         public virtual void LogFormat(string format, params object[] args)
         {
-            mDefaultLogger.LogFormat(format);
+            mDefaultLogger.LogFormat(format,args);
         }
 
         public virtual void Warning(object message, UnityEngine.Object context = null)
@@ -57,7 +57,7 @@ namespace Zframework
 
         public virtual void WarningFormat(string format, params object[] args)
         {
-            mDefaultLogger.WarningFormat(format);
+            mDefaultLogger.WarningFormat(format,args);
         }
 
         public virtual void Error(object message, UnityEngine.Object context = null)
@@ -67,7 +67,7 @@ namespace Zframework
 
         public virtual void ErrorFormat(string format, params object[] args)
         {
-            mDefaultLogger.ErrorFormat(format);
+            mDefaultLogger.ErrorFormat(format, args);
         }
 
         public virtual void Exception(Exception exception, UnityEngine.Object context = null)
