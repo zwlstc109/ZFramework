@@ -13,7 +13,7 @@ namespace Zframework
         protected override int MgrIndex { get { return (int)ManagerIndex.Resource; } }
         //是否从AB加载
         public bool LoadFromAssetBundle = false;
-        //所有资源的壳  壳里可能没资源(刚从清单读出引用，还未加载) 也可能有资源 可能引用计数大于0(缓存着) 也可能等于0(保留着)  正式卸载资源时 只置空壳里的asset 不移除pair
+        //所有资源的壳  壳里可能没资源(也许刚从清单读出引用，还未加载) 也可能有资源 可能引用计数大于0(缓存着) 也可能等于0(保留着)  正式卸载资源时 只置空壳里的asset 不移除pair
         //为加载资源服务
         internal Dictionary<string, ResourceItem> ResourceItemDic = new Dictionary<string, ResourceItem>();
         
@@ -29,6 +29,17 @@ namespace Zframework
                 AssetBundleManager.LoadABManifest();//AB清单解析 先放这里 正式应该在流程启动后在流程里解析
             }          
         }
+        /// <summary>
+        /// 解析处理AB包清单信息
+        /// </summary>
+        public void AnalyzeAssetBundleData() { AssetBundleManager.LoadABManifest(); }
+        /// <summary>
+        /// 同步加载资源
+        /// </summary>
+        /// <typeparam name="T">资源类型</typeparam>
+        /// <param name="path">资源文件路径</param>
+        /// <param name="groupIndex">想要处于哪个资源组 0:默认组 过场自动清理</param>
+        /// <returns></returns>
         public T LoadResource<T>(string path,int groupIndex = 0) where T : UnityEngine.Object
         {
             var resItem = LoadResourceItem<T>(path,groupIndex);
@@ -38,13 +49,7 @@ namespace Zframework
             }
             return null;
         }
-        /// <summary>
-        /// 同步加载资源
-        /// </summary>
-        /// <typeparam name="T">资源类型</typeparam>
-        /// <param name="path">资源crc</param>
-        /// <param name="groupIndex">请求的资源组别 默认0（过场自动清理）</param>
-        /// <returns></returns>
+        
         internal ResourceItem LoadResourceItem<T>(string path,int groupIndex=0)where T : UnityEngine.Object
         {
             if (string.IsNullOrEmpty(path))
@@ -81,7 +86,7 @@ namespace Zframework
             }
             if (resItem.Asset != null)
             {             
-                if (!LoadFromAssetBundle)//只有编辑器下加载资源需要添加这个pair
+                if (!LoadFromAssetBundle&&!ResourceItemDic.ContainsKey(path))//只有编辑器下加载资源需要添加这个pair
                 {
                     ResourceItemDic.Add(path, resItem);
                 }
@@ -109,7 +114,7 @@ namespace Zframework
             return RegistGroup<ResourceGroup>();
         }
         /// <summary>
-        /// 清理资源组
+        /// 清理资源组中资源
         /// </summary>
         /// <param name="groupIndex"></param>
         /// <param name="destroyCache">是否真的卸载资源</param>
@@ -163,7 +168,7 @@ namespace Zframework
     /// </summary>
     public class ResourceItem
     {
-        ////资源路径的CRC  感觉不用存这个值 因为在字典中已经关联了 先放着
+        ////资源路径的CRC  本来想用crc做key 
         //public uint Crc = 0;
         public string Path = string.Empty;
         //资源名字
@@ -183,8 +188,7 @@ namespace Zframework
         public float LastUseTime = 0.0f;
         //引用计数
         protected int mRefCount = 0;
-        //是否跳场景清掉
-        public bool Clear = true;
+        
         public int RefCount
         {
             get { return mRefCount; }

@@ -28,7 +28,7 @@ namespace Zframework.Editor
 
             if (string.IsNullOrEmpty(m_EntranceProcedureTypeName.stringValue))
             {
-                EditorGUILayout.HelpBox("Entrance procedure is invalid.", MessageType.Error);
+                EditorGUILayout.HelpBox("请在框架预制体的Procedure节点下设置启动流程.", MessageType.Error);
             }
             else if (EditorApplication.isPlaying)
             {

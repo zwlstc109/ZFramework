@@ -59,9 +59,9 @@ namespace Zframework
         internal static void Release(int groupIndex,bool destroyCache=true)
         {
             if (groupIndex > mGroupLst.Count - 1)
-            {
-                groupIndex = 0;
+            {             
                 Z.Debug.Warning("申请释放的资源组不存在");
+                return;
             }
             mGroupLst[groupIndex].Release(destroyCache);
         }
@@ -93,7 +93,7 @@ namespace Zframework
             {
                 var resItem = mResItemLst[i];
                 resItem.RefCount--;
-                if (resItem.RefCount>0)//同一种资源的壳只会留下一个供正式卸载
+                if (resItem.RefCount>0)//同一种资源的壳只会留下一个供正式卸载 也有可能一个不留 因为留下的那个在其他组
                 {
                     mResItemLst.RemoveAt(i);                   
                 }
@@ -101,21 +101,20 @@ namespace Zframework
                 {
                     if (destroyCache)
                     {
-                        AssetBundleManager.ReleaseResource(resItem);//而AB包卸载的时候 相关的预制体和实体化的物体会被删除...
+                        AssetBundleManager.ReleaseResource(resItem);//
 #if UNITY_EDITOR
                         if (resItem.Asset is GameObject)
                         {
-                            //UnityEngine.Object.DestroyImmediate(resItem.Asset,true);//删掉预制体 并不会把实例化的实体删除... 
+                            //UnityEngine.Object.DestroyImmediate(resItem.Asset,true);
                         }
                         else
                         {
                             Resources.UnloadAsset(resItem.Asset);                         
                         }
-                        if (!Z.Resource.LoadFromAssetBundle/*&&Z.Resource.ResourceItemDic.ContainsKey(resItem.Path)*/)
-                        {
-                            Z.Resource.ResourceItemDic.Remove(resItem.Path);
-                            
-                        }
+                        //if (!Z.Resource.LoadFromAssetBundle/*&&Z.Resource.ResourceItemDic.ContainsKey(resItem.Path)*/)
+                        //{
+                        //    Z.Resource.ResourceItemDic.Remove(resItem.Path);                            
+                        //}
                       
 #endif
                         mResItemLst.RemoveAt(i);

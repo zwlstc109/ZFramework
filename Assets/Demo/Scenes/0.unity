@@ -179,33 +179,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4068653195640712511, guid: 2e6319257a7f91e40b503ce2870ab193,
+    - target: {fileID: 4068653196130685794, guid: 2e6319257a7f91e40b503ce2870ab193,
         type: 3}
-      propertyPath: LoadingUIPath
-      value: Assets/GameData/Prefabs/UGUI/Panel/PnlLoading.prefab
-      objectReference: {fileID: 0}
-    - target: {fileID: 4769064031333245337, guid: 2e6319257a7f91e40b503ce2870ab193,
-        type: 3}
-      propertyPath: m_BlockingMask.m_Bits
-      value: 279
+      propertyPath: LoadFromAssetBundle
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2e6319257a7f91e40b503ce2870ab193, type: 3}
---- !u!1 &1485907744 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4068653195550887611, guid: 2e6319257a7f91e40b503ce2870ab193,
-    type: 3}
-  m_PrefabInstance: {fileID: 1485907743}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1485907745
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1485907744}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74b8962a3f8c11c4fa7d7caf5b984bb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

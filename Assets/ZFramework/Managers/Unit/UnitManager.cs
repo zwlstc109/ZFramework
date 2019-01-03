@@ -18,7 +18,7 @@ namespace Zframework
         internal override void Init()
         {
             Z.Unit = this;
-            Z.Pool.RegisterClassPool<Unit>(500);
+            Z.Pool.RegisterClassPool<Unit>(1000);
             Z.Obs.ForLoop((int)BuiltinGroup.Count, _=>RegistUnitGroup());//TODO 资源组优化
            
         }
@@ -44,7 +44,7 @@ namespace Zframework
             var unit = _GetUnitFromPool(path);           
             if (unit == null)
             {                
-                var resItem = Z.Resource.LoadResourceItem<GameObject>(path, unitGroup.prefabGroupIndex);               
+                var resItem = Z.Resource.LoadResourceItem<GameObject>(path, unitGroup.prefabGroupIndex);//每一个resItem都会被加入到资源组中（不管他所在的unit发生什么变故，他总会在组释放的时候正确的扣掉引用计数）               
                 unit = Z.Pool.Take<Unit>();
                 unit.Group = unitGroup;
                 unit.ResItem = resItem;
@@ -71,9 +71,11 @@ namespace Zframework
             if (lst!=null&&lst.Count>0)
             {
                 var unit = lst.Pop();
-                unit.LeaveFromPoolNotify();
-                unit.GO.transform.SetParent(transform);
-                return unit;
+               
+                var another = Z.Pool.Take<Unit>();
+                unit.Move(another);//把空的unit留在组中lst的原地 统一遍历时会处理
+                another.GO.transform.SetParent(transform);
+                return another;
             }
             return null;
         }
@@ -96,17 +98,26 @@ namespace Zframework
         internal ResourceItem ResItem;
         public GameObject GO;
         internal UnitGroup Group;
-        //通知自己的组，自己被从池(Dic)中取走
-        internal void LeaveFromPoolNotify()
-        {
-            Group.PoolListener(this);
-        }
+        
         /// <summary>
         /// 释放自己直接入池  
         /// </summary>
         public void ReleaseSelf()//入池和setActiveFalse的区别 前者可以在load请求时被拿走
         {
             Group.ReleaseOne(this);
+        }
+        /// <summary>
+        /// 转移自己的数据到另一个Unit 并置空自己
+        /// </summary>
+        /// <param name="another"></param>
+        internal void Move(Unit another)
+        {
+            another.ResItem = ResItem;//这个赋值似乎没有必要，不管unit有什么变故，resItem已经在GO加载时就被添加进资源组了
+            another.GO = GO;
+            another.Group = Group;
+
+            ResItem = null;
+            GO = null;
         }
     }
 
@@ -123,23 +134,25 @@ namespace Zframework
         {
             mUnitLst.Add(unit);
         }
-        //监听是否有unit从池(那个Dic)中取走 
-        internal void PoolListener(Unit unit)
-        {
-            mUnitsInPool.Remove(unit);//TODO 遍历不是一种很好的味道
-        }
+        
+       
+        //算是一种提前释放 
         internal void ReleaseOne(Unit unit,bool destroy=true)
         {
-            mUnitLst.Remove(unit);//TODO 现在两边都要遍历了... 在观察实际性能表现后 可以考虑增加dic 
+            //mUnitLst.Remove(unit);//不删（不是链表，中间删除，消耗巨大） 留着空壳 等统一释放时再处理
             if (unit.GO==null)
             {
                 Z.Debug.Warning("要释放的GO为空，是否手动释放过？");
                 return;
             }
             if (destroy)
-                UnityEngine.Object.Destroy(unit.GO);                        
-            else if(unit.GO!=null)
-                _ReleaseOne(unit);
+                UnityEngine.Object.Destroy(unit.GO);
+            else if (unit.GO != null)
+            {
+                var another = Z.Pool.Take<Unit>();
+                unit.Move(another);                    
+                _PutIntoPool(another);
+            }
            
         }
         internal void ReleaseGroup(bool destroy=true)
@@ -149,7 +162,7 @@ namespace Zframework
                 for (int i = mUnitLst.Count-1; i >=0 ; i--)
                 {
                     var unit = mUnitLst[i];
-                    _ReleaseOne(unit);
+                    _PutIntoPool(unit);
                     mUnitLst.RemoveAt(i);
                 }
             }
@@ -158,18 +171,23 @@ namespace Zframework
                 for (int i = mUnitLst.Count - 1; i >= 0; i--)
                 {
                     var unit = mUnitLst[i];
-                    UnityEngine.Object.Destroy(unit.GO);
+                    if (unit.GO!=null)//判空是需要的 因为有的unit会提前调用releaseSelf
+                        UnityEngine.Object.Destroy(unit.GO);
                     mUnitLst.RemoveAt(i);
                     Z.Pool.Return(ref unit);//类池归还
                 }
+                //在池中的Unit也要销毁 不用完全对应 只要直接拿走对应数量即可??
                 for (int i = mUnitsInPool.Count - 1; i >= 0; i--)
                 {
                     var unit = mUnitsInPool[i];
-                    if (Z.Unit.mUnitPool.ContainsKey(unit.ResItem.Path))
+                    if (unit.GO!=null)
                     {
-                        Z.Unit.mUnitPool.Remove(unit.ResItem.Path);
-                    }
-                    UnityEngine.Object.Destroy(unit.GO);
+                        if (Z.Unit.mUnitPool.ContainsKey(unit.ResItem.Path))
+                        {
+                            Z.Unit.mUnitPool.Remove(unit.ResItem.Path);
+                        }
+                        UnityEngine.Object.Destroy(unit.GO);
+                    }                  
                     mUnitsInPool.RemoveAt(i);
                     Z.Pool.Return(ref unit);
                 }
@@ -178,19 +196,21 @@ namespace Zframework
 
         }
 
-        private void _ReleaseOne(Unit unit)
+        private void _PutIntoPool(Unit unit)
         {
             if (unit.GO==null)
             {
-                Z.Debug.Warning("是否手动调用过Destory?");
+                Z.Debug.Warning("提前调用过Destory?");//可能提前调用过releaseSelf
+                Z.Pool.Return(ref unit);
                 return;
             }
             var stack = Z.Unit.mUnitPool.GetValue(unit.ResItem.Path);
             if (stack == null)
             {
-                stack = new Stack<Unit>();
+                stack = new Stack<Unit>();//TODO 类池 避免GC 好像也不用 因为不会去移除字典的pair
                 Z.Unit.mUnitPool[unit.ResItem.Path] = stack;
             }
+            //实际储存Unit
             stack.Push(unit);
             mUnitsInPool.Add(unit);
             unit.GO.transform.SetParent(Z.Unit.poolRoot);           
