@@ -6,7 +6,7 @@ namespace Zframework
 {
 
     /// <summary>
-    /// 资源管理
+    /// 资源管理 提供编辑模式读包模式无差别加载 (加载代码和资源文件存放均无差别 AB包打包需要先配置包名)
     /// </summary>
     public class ResourceManager : BaseManager
     {
@@ -88,7 +88,9 @@ namespace Zframework
                 IncreaseRefCount(resItem,groupIndex);
                 return resItem;
             }
+#if UNITY_EDITOR
             Z.Pool.Return(ref resItem);
+#endif
             Z.Debug.Error("加载资源失败");
             return null;
         }

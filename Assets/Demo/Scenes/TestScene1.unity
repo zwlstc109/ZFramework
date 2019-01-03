@@ -1150,7 +1150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1169,8 +1169,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "A\uFF1A\u9500\u6BC15\u4E2AGameObject\nS:  \u7F13\u5B58\u6240\u6709GameObject\uFF08\u5728Unit\u7ED3\u70B9\u4E0B\uFF09\nD:
-    \ \u751F\u62105\u4E2AGameObject"
+  m_Text: "A\uFF1A\u9500\u6BC11000\u4E2AGameObject\nS:  \u7F13\u5B58\u6240\u6709GameObject\uFF08\u5728Unit\u7ED3\u70B9\u4E0B\uFF09\nD:
+    \ \u751F\u62101000\u4E2AGameObject"
 --- !u!222 &1580601868
 CanvasRenderer:
   m_ObjectHideFlags: 0

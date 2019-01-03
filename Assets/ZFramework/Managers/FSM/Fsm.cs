@@ -58,7 +58,7 @@ namespace Zframework
             {
                 state.StateName = stateName;
                 mFsmStateLst.Add(state);
-                if (autoStart&&CurState == null)//tuples的第一个会被当作初始状态
+                if (autoStart&&CurState == null)//第一个会被当作初始状态
                 {
                     CurState = state;
                     state.OnEnter();

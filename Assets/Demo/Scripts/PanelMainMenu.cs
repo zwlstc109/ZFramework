@@ -7,24 +7,63 @@ using Zframework;
 using System;
 public class PanelMainMenu : PanelBase
 {
-    [SerializeField] private Button mBtnTest1;
-    [SerializeField] private Button mBtnTest2;
-    [SerializeField] private Button mBtnTest3;
+    [SerializeField] private Button mBtnTest1 = null;
+    [SerializeField] private Button mBtnTest2 = null;
+    [SerializeField] private Button mBtnTest3 = null;
+    PanelBase pnlTest1 = null;
+    PanelBase pnlTest2 = null;
+    PanelBase pnlTest3 = null;
 
-    public override void OnPause(object userData = null)
+    public override void OnLoad(object userData = null)
     {
-        base.OnPause(userData);
-        CanvasGroup.blocksRaycasts = false;
+        base.OnLoad(userData);
+        mBtnTest1.onClick.AddListener(() =>
+        {
+            if (pnlTest1 == null)
+                pnlTest1 = Open("Assets/GameData/Prefabs/UGUI/Panel/PnlTest1.prefab");
+            else
+                Open(pnlTest1);
+        });
+        mBtnTest2.onClick.AddListener(() =>
+        {
+            if (pnlTest2 == null)
+                pnlTest2 = Open("Assets/GameData/Prefabs/UGUI/Panel/PnlTest2.prefab");
+            else
+                Open(pnlTest2);
+        });
+        mBtnTest3.onClick.AddListener(() =>
+        {
+            if (pnlTest3 == null)
+                pnlTest3 = Open("Assets/GameData/Prefabs/UGUI/Panel/PnlTest3.prefab");
+            else
+                Open(pnlTest3);
+        });
     }
 
-    public override void OnResume(object userData = null)
+    public override void OnCover(object userData = null)
     {
-        base.OnResume(userData);
-        CanvasGroup.blocksRaycasts = true;
+        //base.OnCover(userData);
+        //CanvasGroup.blocksRaycasts = false;
+        Z.Debug.Log("MainMenu OnCover");
     }
 
-   public void OnBtnClick(string path)
+    public override void OnReveal(object userData = null)
     {
-        Z.UI.OpenUI(path);
+        //base.OnReveal(userData);
+        //CanvasGroup.blocksRaycasts = true;
+        Z.Debug.Log("MainMenu OnReveal");
     }
+
+   //public void OnBtnClick(string path)
+   // {
+
+
+   //    var pnl=  Open(path);
+   //     if (ReferenceEquals(path, "Assets/GameData/Prefabs/UGUI/Panel/PnlTest1.prefab")) 
+   //     pnlTest1 = pnl;
+   //     else if(ReferenceEquals(path, "Assets/GameData/Prefabs/UGUI/Panel/PnlTest2.prefab"))
+   //         pnlTest2 = pnl;
+   //     else if (ReferenceEquals(path, "Assets/GameData/Prefabs/UGUI/Panel/PnlTest3.prefab"))
+   //         pnlTest3 = pnl;
+   // }
 }

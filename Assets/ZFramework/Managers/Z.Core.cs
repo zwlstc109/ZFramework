@@ -92,7 +92,7 @@ namespace Zframework
         /// <summary>ProcedureManager</summary>
         public static ProcedureManager Procedure { get; internal set; }
         /// <summary>LogManager</summary>
-        public static LogManager Debug { get; internal set; }
+        public static DebugManager Debug { get; internal set; }
         /// <summary>PoolManager</summary>
         public static PoolManager Pool { get; internal set; }
         /// <summary>UnitManager</summary>

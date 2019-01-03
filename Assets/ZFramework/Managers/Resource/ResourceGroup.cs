@@ -4,8 +4,10 @@ using UnityEngine;
 using UniRx;
 using System;
 namespace Zframework
-{
-    public enum BuiltinGroup
+{/// <summary>
+/// 内置资源组 包括资源和Unit都内置这些索引   TODO　Unit组其实不用持有Audio
+/// </summary>
+    public enum BuiltinGroup 
     {
         Default,//默认组 过场清理
         Preload,//预加载组 手动清理
@@ -93,9 +95,9 @@ namespace Zframework
                 resItem.RefCount--;
                 if (resItem.RefCount>0)//同一种资源的壳只会留下一个供正式卸载
                 {
-                    mResItemLst.RemoveAt(i);
+                    mResItemLst.RemoveAt(i);                   
                 }
-                else
+                else// refcount==0
                 {
                     if (destroyCache)
                     {
@@ -112,14 +114,24 @@ namespace Zframework
                         if (!Z.Resource.LoadFromAssetBundle/*&&Z.Resource.ResourceItemDic.ContainsKey(resItem.Path)*/)
                         {
                             Z.Resource.ResourceItemDic.Remove(resItem.Path);
+                            
                         }
                       
 #endif
                         mResItemLst.RemoveAt(i);
+
                         resItem.Asset = null;
                         Resources.UnloadUnusedAssets();
+#if UNITY_EDITOR  //TODO 两个一样的宏 很尴尬 
+                        if (!Z.Resource.LoadFromAssetBundle/*&&Z.Resource.ResourceItemDic.ContainsKey(resItem.Path)*/)
+                        {
+                            Z.Pool.Return(ref resItem);
+
+                        }                      
+#endif
                     }
                 }
+              
             }
             
         }

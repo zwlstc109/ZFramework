@@ -29,7 +29,7 @@ namespace Zframework.Editor
         //储存所有有效资源路径 （储存的是那些会在运行时主动加载的资源 声音图片预制体之类，即二进制配置表中需要记录的信息）
         private static List<string> mAssetLst = new List<string>();
 
-        [MenuItem("ZFramework/AssetBundle/打包")]
+        [MenuItem("ZFramework/AssetBundle/打包 (需配置)")]
         public static void Build()
         {
           

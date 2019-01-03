@@ -5,13 +5,19 @@ using UniRx;
 using System.Threading.Tasks;
 namespace Zframework
 {
+    public class Test
+    {
 
+    }
     public class ProcedurePlay : ProcedureBase
     {
         
         public override void OnEnter(object userData = null)
         {
             Z.Audio.PlayBackGroundMusic("Assets/GameData/Sounds/menusound.mp3");
+
+            Z.UI.Open("Assets/GameData/Prefabs/UGUI/Panel/PnlMainMenu.prefab");
+
         }
         public override void OnUpdate()
         {
@@ -25,7 +31,7 @@ namespace Zframework
             }
             if (Input.GetKeyDown(KeyCode.D))
             {
-                Z.Obs.ForLoop(5, _ => Z.Unit.LoadUnit("Assets/GameData/Prefabs/Attack.prefab"));
+                Z.Obs.ForLoop(1000, _ => Z.Unit.LoadUnit("Assets/GameData/Prefabs/Attack.prefab"));
             }
         }
     }

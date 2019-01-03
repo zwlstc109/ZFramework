@@ -5,9 +5,9 @@ using UniRx;
 using System;
 namespace Zframework
 {/// <summary>
-/// 日志管理
+/// Debug管理
 /// </summary>  
-    public class LogManager : BaseManager
+    public class DebugManager : BaseManager
     {   
         protected override int MgrIndex { get { return (int)ManagerIndex.Log; } }
         //日志subject
@@ -47,7 +47,7 @@ namespace Zframework
 
         public virtual void LogFormat(string format, params object[] args)
         {
-            mDefaultLogger.LogFormat(format);
+            mDefaultLogger.LogFormat(format,args);
         }
 
         public virtual void Warning(object message, UnityEngine.Object context = null)
@@ -57,7 +57,7 @@ namespace Zframework
 
         public virtual void WarningFormat(string format, params object[] args)
         {
-            mDefaultLogger.WarningFormat(format);
+            mDefaultLogger.WarningFormat(format,args);
         }
 
         public virtual void Error(object message, UnityEngine.Object context = null)
@@ -67,7 +67,7 @@ namespace Zframework
 
         public virtual void ErrorFormat(string format, params object[] args)
         {
-            mDefaultLogger.ErrorFormat(format);
+            mDefaultLogger.ErrorFormat(format, args);
         }
 
         public virtual void Exception(Exception exception, UnityEngine.Object context = null)

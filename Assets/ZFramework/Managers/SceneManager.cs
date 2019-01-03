@@ -16,11 +16,13 @@ namespace Zframework
         public string SceneName { get; private set; }
         public bool Already { get; private set; }
         private Action<object> mDoneCallback = null;
+        public string LoadingUIPath = null;
         internal override void Init()
         {
             Z.Debug.Log("SceneManager init");
             Z.Scene = this;
         }
+       
         public void LoadScene(string sceneName)
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
@@ -29,7 +31,11 @@ namespace Zframework
         {
             mDoneCallback = doneCallback;
             StartCoroutine(LoadAsync(sceneName, userData));
-            Z.Subject.Fire("StartLoadScene", null);
+            Z.UI.Open(LoadingUIPath);
+        }
+        public void SetLoadScenePath(string path)
+        {
+            
         }
         IEnumerator LoadAsync(string name,object userData)
         {
@@ -76,7 +82,7 @@ namespace Zframework
                 mDoneCallback = null;
             }
         }
-
+        //转场清理默认资源组
         private void ClearCache()
         {
             Z.Resource.Release(0);

@@ -12,18 +12,23 @@ public class PanelTest3 : PanelBase
     {
         base.OnLoad(userData);
 
-        mBtnClose.onClick.AddListener(() => CloseUI());
+        mBtnClose.onClick.AddListener(() => CloseSelf());
     }
 
     public override void OnOpen(object userData = null)
     {
         base.OnOpen(userData);
-        gameObject.Show();
+        Z.Debug.Log("Test3 OnOpen");
     }
 
     public override void OnClose(object userData = null)
     {
         base.OnClose(userData);
-        gameObject.Hide();
+        Z.Debug.Log("Test3 OnClose");
+    }
+    public override void OnSwitch(object userData = null)
+    {
+        base.OnSwitch(userData);
+        Z.Debug.Log("Test3 OnSwicth");
     }
 }

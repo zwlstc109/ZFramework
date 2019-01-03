@@ -85,7 +85,7 @@ namespace Zframework
         {
             c.gameObject.SetActive(false);
         }
-        public static void LoadUnit(this Component c)
+        public static void Show(this Component c)
         {
             c.gameObject.SetActive(true);
         }

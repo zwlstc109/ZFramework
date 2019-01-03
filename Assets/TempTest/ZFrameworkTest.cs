@@ -48,7 +48,7 @@ public class ZFrameworkTest : MonoBehaviour
         source.Play();
 
         //Z.Obs.ForLoop(5,_ =>prefab=Z.Unit.LoadUnit("Assets/GameData/Prefabs/Attack.prefab"));
-        Z.UI.OpenUI("Assets/GameData/Prefabs/UGUI/Panel/PnlMainMenu.prefab");
+        Z.UI.Open("Assets/GameData/Prefabs/UGUI/Panel/PnlMainMenu.prefab");
 #if UNITY_EDITOR
         //string[] allDependences = AssetDatabase.GetDependencies("Assets/GameData/Prefabs/Attack.prefab");
         //Z.Obs.ForLoop(allDependences.Length, i => Z.Log.Log(allDependences[i]));
