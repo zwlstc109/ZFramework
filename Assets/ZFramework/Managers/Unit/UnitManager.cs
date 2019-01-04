@@ -6,7 +6,7 @@ using System;
 namespace Zframework
 {
 
-    public class UnitManager : BaseManager
+    public class UnitManager : BaseManager //TODO 异步加载
     {
         protected override int MgrIndex { get { return (int)ManagerIndex.Unit; } }
         //为了快速获取池中的unit,必须要一个字典
@@ -70,14 +70,14 @@ namespace Zframework
             var lst = mUnitPool.GetValue(path);        
             if (lst!=null)
             {           
-                while (lst.Count > 0)//在池中的unit只是unit组中的'残影' 可能在入池后被整组释放（而入池前空GO的unit会被排除） 所以用一个while循环 直到找到有GO的unit为止
+                while (lst.Count > 0)//在池中的unit只是unit组中的'残影' 可能在入池后被整组释放（释放后归入类池，内存被clean）（而入池前空GO的unit会被排除） 所以用一个while循环 直到找到有GO的unit为止
                 {
                     var unit = lst.Pop();//此unit只是残影 出栈后不需要归还到类池
                     if (unit.GO != null)
                     {
                         var another = Z.Pool.Take<Unit>();
                         unit.Move(another);//把空的unit留在组中lst的原地 统一遍历时会处理  --到处充满留空操作 是为了消除在容器中删除的开销
-                        another.GO.transform.SetParent(transform);
+                        another.GO.transform.SetParent(transform,false);
                         return another;
                     }
                 }
@@ -97,19 +97,22 @@ namespace Zframework
 
 
     }
-
+    /// <summary>
+    /// GameObject包装类 存有实例化过的GO
+    /// </summary>
     public class Unit
     {
         internal ResourceItem ResItem;
         public GameObject GO;
+        //所在的unit组
         internal UnitGroup Group;
         
         /// <summary>
         /// 释放自己直接入池  
         /// </summary>
-        public void ReleaseSelf()//入池和setActiveFalse的区别 前者可以在load请求时被拿走
+        public void ReleaseSelf(bool destroy)//入池和setActiveFalse的区别 前者可以在load请求时被拿走
         {
-            Group.ReleaseOne(this);
+            Group.ReleaseOne(this,destroy);
         }
         /// <summary>
         /// 转移自己的数据到另一个Unit 并置空自己
@@ -129,7 +132,7 @@ namespace Zframework
     public class UnitGroup
     {
         public int prefabGroupIndex;
-        private List<Unit> mUnitLst = new List<Unit>();
+        private List<Unit> mUnitsOutPool = new List<Unit>();
         private List<Unit> mUnitsInPool = new List<Unit>();
         internal UnitGroup()
         {
@@ -137,12 +140,16 @@ namespace Zframework
         }
         internal void Add(Unit unit)
         {
-            mUnitLst.Add(unit);
+            mUnitsOutPool.Add(unit);
         }
         
        
-        //算是一种提前释放 
-        internal void ReleaseOne(Unit unit,bool destroy=true)
+       /// <summary>
+       /// 很舒服的释放接口
+       /// </summary>
+       /// <param name="unit"></param>
+       /// <param name="destroy"></param>
+        internal void ReleaseOne(Unit unit,bool destroy=true) //提前释放 
         {
             //mUnitLst.Remove(unit);//不删（不是链表，中间删除，消耗巨大） 留着空壳 等统一释放时再处理
             if (unit.GO==null)
@@ -164,21 +171,21 @@ namespace Zframework
         {
             if (!destroy)
             {
-                for (int i = mUnitLst.Count-1; i >=0 ; i--)
+                for (int i = mUnitsOutPool.Count-1; i >=0 ; i--)
                 {
-                    var unit = mUnitLst[i];
+                    var unit = mUnitsOutPool[i];
                     _PutIntoPool(unit);
-                    mUnitLst.RemoveAt(i);
+                    mUnitsOutPool.RemoveAt(i);
                 }
             }
             else
             {
-                for (int i = mUnitLst.Count - 1; i >= 0; i--)
+                for (int i = mUnitsOutPool.Count - 1; i >= 0; i--)
                 {
-                    var unit = mUnitLst[i];
+                    var unit = mUnitsOutPool[i];
                     if (unit.GO!=null)//判空是需要的 因为有的unit会提前调用releaseSelf
                         UnityEngine.Object.Destroy(unit.GO);
-                    mUnitLst.RemoveAt(i);
+                    mUnitsOutPool.RemoveAt(i);
                     Z.Pool.Return(ref unit);//类池归还
                 }
                 //
@@ -205,7 +212,7 @@ namespace Zframework
         {
             if (unit.GO==null)
             {
-                Z.Debug.Warning("提前调用过Destory?");//可能提前调用过releaseSelf
+                Z.Debug.Warning("提前调用过Destory?");//也可能提前调用过releaseSelf
                 Z.Pool.Return(ref unit);
                 return;
             }
@@ -218,7 +225,7 @@ namespace Zframework
             //实际储存Unit
             stack.Push(unit);
             mUnitsInPool.Add(unit);
-            unit.GO.transform.SetParent(Z.Unit.poolRoot);           
+            unit.GO.transform.SetParent(Z.Unit.poolRoot,false);           
         }
     }
 }

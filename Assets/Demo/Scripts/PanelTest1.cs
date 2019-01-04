@@ -13,7 +13,7 @@ public class PanelTest1 : PanelBase
     {
         base.OnLoad(userData);
 
-        mBtnClose.onClick.AddListener(()=>CloseSelf());
+        mBtnClose.onClick.AddListener(()=>ReleaseSelf());
     }
 
     public override void OnOpen(object userData = null)

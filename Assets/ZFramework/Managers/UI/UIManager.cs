@@ -15,35 +15,44 @@ namespace Zframework
     {
         protected override int MgrIndex { get { return (int)ManagerIndex.UI; } }
         //用来迅速判断面板是否加载过 的字典
-        private Dictionary<string, PanelBase> mPathPnlDic = new Dictionary<string, PanelBase>();
+        internal Dictionary<string, PanelBase> PathPnlDic = new Dictionary<string, PanelBase>();
         //所有的UI组
         private List<UIGroup> mGroupLst = new List<UIGroup>();
         [SerializeField] internal Transform CanvasRoot=null;
       
+        IReadOnlyReactiveProperty<int> mTreeNodePoolCount;//TEST
         //private Dictionary<string, List<PanelBase>> mPanelDic = new Dictionary<string, List<PanelBase>>();
         internal override void Init()
         {
             Z.UI = this;
             Z.Pool.RegisterClassCustomPool(() => new TreeNode<PanelBase>(), UIGroup.Clean, 150);
+
+            mTreeNodePoolCount =Z.Pool.mObjectPoolDic[typeof(TreeNode<PanelBase>).FullName].ObserveEveryValueChanged(p=>p.Count).ToReactiveProperty<int>();
+            DebugHub.Instance.RegistText(mTreeNodePoolCount);
+
             Z.Obs.ForLoop((int)BuiltinUIGroup.Count, i=> mGroupLst.Add(new UIGroup(i)));
         }
-  
+
 
         /// <summary>
-        /// 在UIGroup的root下打开一个面板
+        /// 在root下打开一个新的面板
         /// </summary>
         /// <param name="path"></param>
         /// <param name="userData"></param>
-        /// <param name="uiGroupIndex"></param>
+        /// <param name="uiGroupIndex">指定在哪个uiGroup</param>
         /// <param name="unitGroupIndex"></param>
-        public void Open(string path, object userData = null, int uiGroupIndex = 0, int unitGroupIndex = (int)BuiltinGroup.UI,bool open=true)
-        {          
-            mGroupLst[uiGroupIndex].Open(path, userData,unitGroupIndex,true);
+        public PanelBase Open(string path, object userData = null, int uiGroupIndex = 0, int unitGroupIndex = (int)BuiltinGroup.UI, bool open = true)
+        {
+            return mGroupLst[uiGroupIndex].Open(path, userData, unitGroupIndex, true);
+        }
+        public void Open(PanelBase panel,object userData = null,int uiGroupIndex=0)
+        {
+            mGroupLst[uiGroupIndex].Open(panel, userData);
         }
 
         internal PanelBase Load(string path,object userData,UIGroup uiGroup, int unitGroupIndex)
         {
-            var pnl = mPathPnlDic.GetValue(path);
+            var pnl = PathPnlDic.GetValue(path);
             if (pnl != null && !pnl.AllowMultInstance)
             {
                 Z.Debug.Warning("此面板不允许多个实例:" + pnl.Unit.ResItem.Path);
@@ -61,7 +70,7 @@ namespace Zframework
 
             if (pnl == null)
             {
-                mPathPnlDic.Add(path, panel);
+                PathPnlDic.Add(path, panel);
             }
             return panel;
         }
@@ -92,6 +101,7 @@ namespace Zframework
         internal PanelBase FocusPanel = null;
         internal bool Lock = false;
         internal int Id = -1;
+
         /// <summary>
         /// 
         /// </summary>
@@ -108,36 +118,41 @@ namespace Zframework
         /// <param name="path"></param>
         /// <param name="userData"></param>
         /// <param name="open">是否自动打开</param>
-        internal PanelBase Open(string path,object userData,int unitGroupIndex=-1,bool open=true)
+        internal PanelBase Open(string path, object userData,int unitGroupIndex=-1,bool open=true)
         {
-            return Open(mPanelTree.Root,path,userData, (int)BuiltinGroup.UI, open);
-        }     
-               /// 在某节点上打开新的
-               /// </summary>
-               /// <param name="parentNode">某节点</param>
-               /// <param name="path"></param>
-               /// <param name="userData"></param>
-               /// <param name="unitGroupIndex"></param>
-               /// <param name="open">是否自动打开</param>
-               /// <returns></returns>
-        internal PanelBase Open(TreeNode<PanelBase> parentNode,string path,object userData,int unitGroupIndex=-1,bool open=true)
-        {                                                        //-1则用父节点的Unit组Id 否则用参数指定的Id
-            PanelBase newChild = Z.UI.Load(path, userData, this, unitGroupIndex==-1?parentNode.Value._UnitGroupIndex: unitGroupIndex);
-           
-            if (newChild == null)
+            return Open(mPanelTree.Root,path, userData,(int)BuiltinGroup.UI, open);
+        }
+        /// 在某节点上打开新的
+        /// </summary>
+        /// <param name="parentNode">某节点</param>
+        /// <param name="path"></param>
+        /// <param name="userData"></param>
+        /// <param name="unitGroupIndex"></param>
+        /// <param name="open">是否自动打开</param>
+        /// <returns></returns>
+        internal PanelBase Open(TreeNode<PanelBase> parentNode, string path, object userData,  int unitGroupIndex = -1, bool open = true)
+        {
+            if (Lock )
+            {
+                return null;
+            }                                                 //-1则用父节点的Unit组Id 否则用参数指定的Id
+            PanelBase newPanel = Z.UI.Load(path, userData, this, unitGroupIndex == -1 ? parentNode.Value._UnitGroupIndex : unitGroupIndex);
+
+            if (newPanel == null)
             {
                 return null;
             }
-            var node = Z.Pool.Take<TreeNode<PanelBase>>();
-            node.Fill(newChild);
-            newChild.NodeInGroup = node;
-            parentNode.AddChild(node);
+            var node = parentNode.AddChild(newPanel);
+            newPanel.NodeInGroup = node;
+         
             if (open)
-            {                
+            {
                 _Open(parentNode, node, userData);
             }
-            return newChild;
-        }/// <summary>
+         
+            return newPanel;
+        }
+        /// <summary>
         /// 在根节点上打开旧的
         /// </summary>
         /// <param name="panel"></param>
@@ -157,6 +172,15 @@ namespace Zframework
         /// <returns></returns>
         internal void Open(TreeNode<PanelBase> parentNode, PanelBase child, object userData)
         {
+            if (child.Unit.GO == null)
+            {
+                Z.Debug.Warning("要打开的面板的unit里的GO为空");
+                return;
+            }
+            if (Lock)
+            {
+                return;
+            }
             var childNode = parentNode.Children.Find(n => n.Value == child);
             _Open(parentNode,childNode,userData);
         }
@@ -167,13 +191,13 @@ namespace Zframework
                 childNode.Value.OnOpen(userData);
                 bool coverFlag = true;
                 for (int i = 0; i < parentNode.Children.Count; i++)
-                {
+                {                   
                     var curPanel = parentNode.Children[i].Value;
-                    if (curPanel == childNode.Value)//自排除
+                    if (curPanel==null||curPanel == childNode.Value)//自排除
                     {
                         continue;
                     }
-                    if (curPanel.Available || curPanel.Visible)
+                    if (curPanel.Available || curPanel.Visible)//有一个可用的兄弟就不用调onCover
                     {
                         coverFlag = false;
                         break;
@@ -182,8 +206,13 @@ namespace Zframework
                 if (coverFlag)
                     parentNode.Value?.OnCover(userData);
 
-                for (int i = 0; i < parentNode.Children.Count; i++)
+           
+                for (int i = 0; i < parentNode.Children.Count; i++)//为什么不用ActionOnBrothers 因为要传userData 闭包捕获可能会有Gc
                 {
+                    if (parentNode.Children[i].Value==null)
+                    {
+                        continue;
+                    }
                     if (parentNode.Children[i].Value != childNode.Value)//自排除
                     {
                         parentNode.Children[i].Value.OnSwitch(userData);
@@ -203,33 +232,66 @@ namespace Zframework
             Open(parentNode, child, userData);
         }
         /// <summary>
-        /// 关闭自己
+        /// 关闭某个面板自己
         /// </summary>
-        /// <param name="self"></param>
+        /// <param name="node"></param>
         /// <param name="userData"></param>
-        internal void Close(PanelBase self)//应该只有关闭自己的接口 不用留关掉其他子的接口
-        {
-            var selfNode = self.NodeInGroup;
-            var parentNode = selfNode.Parent;
-            selfNode.ActionRecursive(n =>
+        internal void Close(TreeNode<PanelBase> node)
+        {                   
+            node.ActionRecursive(n =>
             {
                 n.Value.OnClose();
             });
+            _RevealParent(node.Parent, node);
+        }
+        /// <summary>
+        /// 关闭所有子节点
+        /// </summary>
+        /// <param name="parent"></param>
+        internal void CloseChildren(TreeNode<PanelBase> parent)
+        {
+            for (int i = 0; i < parent.Children.Count; i++)
+            {
+                parent.Children[i].ActionRecursive(n =>
+                {
+                    n.Value.OnClose();
+                });
+            }
+            parent.Value?.OnReveal();
+        }
+        internal void Release(TreeNode<PanelBase> node,bool destroy)
+        {
+            if (!node.Value.AllowMultInstance)
+            {
+                Z.UI.PathPnlDic.Remove(node.Value.Unit.ResItem.Path);
+            }
+            _RevealParent(node.Parent, node);
+            node.ActionRecursive(n =>
+            {
+                n.Value.OnUnLoad();
+                n.Value.Unit.ReleaseSelf(destroy);
+                Clean(n);
+            });
+           
+        }
+
+        private void _RevealParent(TreeNode<PanelBase> parentNode,TreeNode<PanelBase> closeNode)
+        {
             for (int i = 0; i < parentNode.Children.Count; i++)
             {
                 var curPanel = parentNode.Children[i].Value;
-                if (curPanel == self)
+                if (curPanel==null|| curPanel == closeNode.Value)
                 {
                     continue;
                 }
-                if (curPanel.Available|| curPanel.Visible)
+                if (curPanel.Available || curPanel.Visible)
                 {
                     return;
                 }
             }
             parentNode.Value?.OnReveal();
         }
-        
+
         internal void Update()
         {
             mPanelTree.Root.ActionRecursive(n => //TODO 递归改循环
@@ -241,10 +303,12 @@ namespace Zframework
             });
         }
    
-
-        internal static void Clean(TreeNode<PanelBase> node)//TODO
+        //清理节点
+        internal static void Clean(TreeNode<PanelBase> node)
         {
-
+            node.Value = null;
+            node.Children.Clear();
+           
         }
     }
 }

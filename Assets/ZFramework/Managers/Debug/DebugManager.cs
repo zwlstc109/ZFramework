@@ -13,6 +13,7 @@ namespace Zframework
         //日志subject
         private readonly Subject<LogEntry> logSubject = new Subject<LogEntry>();
         private Logger mDefaultLogger;
+        [HideInInspector] public DebugHub Hub; 
         internal override void Init()
         {
             Z.Debug = this;
@@ -76,7 +77,14 @@ namespace Zframework
         }
         internal override void MgrUpdate()
         {
-           
+            if (Input.GetKeyDown(KeyCode.K))
+            {
+                Hub.Show();
+            }
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                Hub.Hide();
+            }
         }
 
         internal override void ShutDown()

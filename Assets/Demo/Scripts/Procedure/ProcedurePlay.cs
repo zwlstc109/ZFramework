@@ -7,7 +7,7 @@ namespace Zframework
 {
     public class Test
     {
-
+    public  int value ;
     }
     public class ProcedurePlay : ProcedureBase
     {
@@ -18,6 +18,22 @@ namespace Zframework
 
             Z.UI.Open("Assets/GameData/Prefabs/UGUI/Panel/PnlMainMenu.prefab");
 
+            Z.Pool.RegisterClassPool<Test>();
+            Z.Pool.Take<Test>();
+            
+            Test t1 = Z.Pool.Take<Test>();
+            t1.value = 1;
+
+            Test tt1 = t1;
+
+            Z.Pool.Return(ref t1);
+
+            Z.Pool.Return(ref tt1);
+
+            Test s1 = Z.Pool.Take<Test>();
+            Test s2 = Z.Pool.Take<Test>();
+
+            Debug.Log(s1.value + " " + s2.value);
         }
         public override void OnUpdate()
         {

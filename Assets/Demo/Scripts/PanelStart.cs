@@ -32,12 +32,12 @@ public class PanelStart : PanelBase
     public override void OnOpen(object userData = null)
     {
         base.OnOpen(userData);
-        gameObject.Show(); 
+        //gameObject.Show(); 
     }
     public override void OnClose(object userData = null)
     {
         base.OnClose(userData);
-        gameObject.Hide();
+        //gameObject.Hide();
     }
 
 }

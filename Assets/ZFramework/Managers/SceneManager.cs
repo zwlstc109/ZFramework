@@ -77,7 +77,7 @@ namespace Zframework
                 LoadingProgress = 100;
               
                 Already = true;
-                asyncScene.allowSceneActivation = true;
+                //asyncScene.allowSceneActivation = true;
                 mDoneCallback?.Invoke(userData);
                 mDoneCallback = null;
             }

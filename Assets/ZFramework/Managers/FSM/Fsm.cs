@@ -57,14 +57,14 @@ namespace Zframework
             if (mFsmStateLst.Find(s =>ReferenceEquals(s.StateName, stateName)) == null)//地址比较的基础是名字字符串是固定地址!!
             {
                 state.StateName = stateName;
-                mFsmStateLst.Add(state);
-                if (autoStart&&CurState == null)//第一个会被当作初始状态
+                mFsmStateLst.Add(state);             
+                state.Owner = this;
+                state.OnInit();
+                if (autoStart && CurState == null)//第一个会被当作初始状态
                 {
                     CurState = state;
                     state.OnEnter();
                 }
-                state.Owner = this;
-                state.OnInit();
             }
             else
             {
@@ -86,7 +86,7 @@ namespace Zframework
             }
             else
             {
-                Z.Debug.Error("状态机开启失败：未找到指定的状态机");
+                Z.Debug.Error("状态机开启失败：未找到指定的状态");
             }
         }
         internal void ChangeState<T>()where T:FsmState//提供一种随手根据类型切换状态的方式

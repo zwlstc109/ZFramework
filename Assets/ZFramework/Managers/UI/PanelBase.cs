@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,11 +29,13 @@ namespace Zframework
         internal int _UnitGroupIndex = -1;
         //所在的Unit组Index
         protected int UnitGroupIndex { get { return _UnitGroupIndex; } }
-        //一个通知所在UIGroup自己是否响应交互和update的标志... 其实update自己也能控制 ...
+
+        
+        //是否响应交互和update
         protected bool mAvailable = true;
-        public bool Available {
+        public virtual bool Available {
             get { return mAvailable; }
-            protected set
+            protected  set
             {
                 mAvailable = value;
                 CanvasGroup.interactable = value;
@@ -98,7 +101,9 @@ namespace Zframework
         }
         public virtual void OnUnLoad(object userData = null)
         {
-            
+            Available = false;
+            Visible = false;
+          
         }
         /// <summary>
         /// 在本面板下打开新面板
@@ -138,7 +143,7 @@ namespace Zframework
                 return;
             }
             
-            UIGroup.Close(this);
+            UIGroup.Close(NodeInGroup);
         }
         /// <summary>
         /// 在UIGroup中 向同一层级的panel发出切换请求
@@ -159,15 +164,16 @@ namespace Zframework
         /// <summary>
         /// 释放面板控制权 TODO
         /// </summary>
-        protected void ReleaseSelf()
+        protected void ReleaseSelf(bool destroy=false)
         {
             if (!Available)
             {
                 return;
             }
+            UIGroup.Release(NodeInGroup,destroy);
         }
         /// <summary>
-        /// 在UIGroup中锁定自己 使得UIGroup不接受任何请求
+        /// 在UIGroup中锁定自己 使得UIGroup不接受任何打开请求
         /// </summary>
         protected void LockSelf(bool value)
         {
