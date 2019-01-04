@@ -67,15 +67,20 @@ namespace Zframework
 
         private Unit _GetUnitFromPool(string path)
         {
-            var lst = mUnitPool.GetValue(path);
-            if (lst!=null&&lst.Count>0)
-            {
-                var unit = lst.Pop();
-               
-                var another = Z.Pool.Take<Unit>();
-                unit.Move(another);//把空的unit留在组中lst的原地 统一遍历时会处理
-                another.GO.transform.SetParent(transform);
-                return another;
+            var lst = mUnitPool.GetValue(path);        
+            if (lst!=null)
+            {           
+                while (lst.Count > 0)//在池中的unit只是unit组中的'残影' 可能在入池后被整组释放（而入池前空GO的unit会被排除） 所以用一个while循环 直到找到有GO的unit为止
+                {
+                    var unit = lst.Pop();//此unit只是残影 出栈后不需要归还到类池
+                    if (unit.GO != null)
+                    {
+                        var another = Z.Pool.Take<Unit>();
+                        unit.Move(another);//把空的unit留在组中lst的原地 统一遍历时会处理  --到处充满留空操作 是为了消除在容器中删除的开销
+                        another.GO.transform.SetParent(transform);
+                        return another;
+                    }
+                }
             }
             return null;
         }
@@ -176,16 +181,16 @@ namespace Zframework
                     mUnitLst.RemoveAt(i);
                     Z.Pool.Return(ref unit);//类池归还
                 }
-                //在池中的Unit也要销毁 不用完全对应 只要直接拿走对应数量即可??
+                //
                 for (int i = mUnitsInPool.Count - 1; i >= 0; i--)
                 {
                     var unit = mUnitsInPool[i];
-                    if (unit.GO!=null)
+                    if (unit.GO!=null)//判空是需要的 因为有的unit会提前调用releaseSelf
                     {
-                        if (Z.Unit.mUnitPool.ContainsKey(unit.ResItem.Path))
-                        {
-                            Z.Unit.mUnitPool.Remove(unit.ResItem.Path);
-                        }
+                        //if (Z.Unit.mUnitPool.ContainsKey(unit.ResItem.Path))
+                        //{
+                        //    Z.Unit.mUnitPool.Remove(unit.ResItem.Path);
+                        //}
                         UnityEngine.Object.Destroy(unit.GO);
                     }                  
                     mUnitsInPool.RemoveAt(i);
