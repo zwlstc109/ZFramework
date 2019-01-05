@@ -39,4 +39,9 @@ public class PanelTest2 : PanelBase
         Z.Debug.Log("Test2 OnSwicth");
       
     }
+    public override void OnUnLoad(object userData = null)
+    {
+        base.OnUnLoad(userData);
+        mBtnClose.onClick.RemoveAllListeners();
+    }
 }

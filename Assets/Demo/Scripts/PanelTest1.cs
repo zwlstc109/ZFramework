@@ -42,4 +42,10 @@ public class PanelTest1 : PanelBase
         base.OnSwitch(userData);
         Z.Debug.Log("Test1 OnSwicth");
     }
+
+    public override void OnUnLoad(object userData = null)
+    {
+        base.OnUnLoad(userData);
+        mBtnClose.onClick.RemoveAllListeners();
+    }
 }

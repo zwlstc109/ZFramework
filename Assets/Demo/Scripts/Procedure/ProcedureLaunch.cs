@@ -16,8 +16,8 @@ namespace Zframework
             //...
             //...
             //...
-            var startPnl = Z.UI.Open("Assets/GameData/Prefabs/UGUI/Panel/pnlStartMenu.prefab");//TODO 每个打开的面板都需要接管返回值 用这个返回值再次打开它 如何管理是个问题
-            Z.Scene.LoadScene("Start");
+            var startPnl = Z.UI.Open("Assets/GameData/Prefabs/UGUI/Panel/pnlStartMenu.prefab");
+            Z.Scene.LoadScene("Start",false);
            
             //Z.Pool.RegisterClassPool<TreeNode<Test>>(100);
 
@@ -31,9 +31,6 @@ namespace Zframework
             tree.Root.ActionRecursive(n => Debug.Log(n.Name)/*{ }*/);
 
         }
-        public override void OnUpdate()
-        {
-           
-        }
+       
     }
 }

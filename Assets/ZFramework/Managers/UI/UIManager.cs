@@ -118,7 +118,7 @@ namespace Zframework
 
         
         /// <summary>
-        /// 在根节点上打开新的
+        /// 在根节点上打开 (单实例的ui传path可以重复打开 多实例的不行)
         /// </summary>
         /// <param name="path"></param>
         /// <param name="userData"></param>
@@ -127,7 +127,8 @@ namespace Zframework
         {
             return Open(mPanelTree.Root,path,parent,await, userData,(int)BuiltinGroup.UI, open);
         }
-        /// 在某节点上打开新的
+        /// <summary>
+        /// 在某节点上打开 (单实例的ui传path可以重复打开 多实例的不行)
         /// </summary>
         /// <param name="parentNode">某节点</param>
         /// <param name="path"></param>
@@ -139,8 +140,16 @@ namespace Zframework
         {
             if (Lock )
             {
+                Z.Debug.Log("UI锁定中");
                 return null;
-            }                                                 //-1则用父节点的Unit组Id 否则用参数指定的Id
+            }
+            var panel = Z.UI.PathPnlDic.GetValue(path);
+            if (panel!=null&&!panel.AllowMultInstance)
+            {
+                Open(parentNode, panel, await, userData);
+                return panel;
+            }
+                                                  //-1则用父节点的Unit组Id 否则用参数指定的Id
             PanelBase newPanel = Z.UI.Load(path,parent, userData, this, unitGroupIndex == -1 ? parentNode.Value._UnitGroupIndex : unitGroupIndex);
 
             if (newPanel == null)
@@ -207,9 +216,9 @@ namespace Zframework
                     mUiComplete =Z.Subject.GetSubject("Z_UIComplete").Subscribe(_ =>
                     {
                         _CoverParent(parentNode, childNode, userData);
-                        childNode.Value.SetAvailable(true);
-                        Lock = false;
+                        childNode.Value.SetAvailable(true);                       
                         mUiComplete.Dispose();
+                        Lock = false;
                     });
                 }
                 else

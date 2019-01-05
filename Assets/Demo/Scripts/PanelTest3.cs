@@ -14,17 +14,18 @@ public class PanelTest3 : PanelBase
         base.OnLoad(userData);
 
         mBtnClose.onClick.AddListener(() => CloseSelf());
-        CanvasGroup.alpha = 0;
-        CanvasGroup.DOFade(1, 2).onComplete += () =>
-        {
-            Z.Subject.Fire("Z_UIComplete", null);
-        };
+       
     }
 
     public override void OnOpen(object userData = null)
     {
         base.OnOpen(userData);
         Z.Debug.Log("Test3 OnOpen");
+        CanvasGroup.alpha = 0;
+        CanvasGroup.DOFade(1, 2).onComplete += () =>
+        {
+            Z.Subject.Fire("Z_UIComplete", null);
+        };
     }
 
     public override void OnClose(object userData = null)
@@ -36,5 +37,10 @@ public class PanelTest3 : PanelBase
     {
         base.OnSwitch(userData);
         Z.Debug.Log("Test3 OnSwicth");
+    }
+    public override void OnUnLoad(object userData = null)
+    {
+        base.OnUnLoad(userData);
+        mBtnClose.onClick.RemoveAllListeners();
     }
 }

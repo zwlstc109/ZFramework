@@ -53,10 +53,12 @@ namespace Zframework
                     break;
             }
         }
-        public void LoadScene(string sceneName)
+        public void LoadScene(string sceneName,bool fade=true)
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
-            Fade(SceneFadeMode.FadeOut);
+            if (fade)
+                Fade(SceneFadeMode.FadeOut);
+
         }
 
         public void LoadSceneAsync(string sceneName,Action<object> doneCallback=null,bool fade=true,object userData=null)
