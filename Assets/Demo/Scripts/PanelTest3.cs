@@ -13,7 +13,7 @@ public class PanelTest3 : PanelBase
     {
         base.OnLoad(userData);
 
-        mBtnClose.onClick.AddListener(() => ReleaseSelf());
+        mBtnClose.onClick.AddListener(() => CloseSelf());
         CanvasGroup.alpha = 0;
         CanvasGroup.DOFade(1, 2).onComplete += () =>
         {

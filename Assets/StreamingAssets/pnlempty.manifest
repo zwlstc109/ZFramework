@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 3090205108
+CRC: 99883488
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 1524e503eb56ec937c5a81ae1c6bb061
+    Hash: 2fa0d0975fc56cbc2c8bf41da9620aea
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 97efc28defd7deb4f313a7dd038cb5af
+    Hash: 81ba2707cd02b50a50a3de55f0adb9fe
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -16,9 +16,7 @@ ClassTypes:
 - Class: 114
   Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
 - Class: 114
-  Script: {fileID: -113659843, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: 60e28b49297bd1f4c85920e661ec6290, type: 3}
+  Script: {fileID: 11500000, guid: f34d3753a9f2c0a4483dbd0896cf257c, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 213
@@ -28,5 +26,5 @@ ClassTypes:
 - Class: 224
   Script: {instanceID: 0}
 Assets:
-- Assets/GameData/Prefabs/UGUI/Panel/PnlLoading.prefab
+- Assets/GameData/Prefabs/UGUI/Panel/PnlEmpty.prefab
 Dependencies: []

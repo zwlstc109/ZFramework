@@ -16,8 +16,9 @@ namespace Zframework
             //...
             //...
             //...
-            Z.Scene.LoadScene("Start");//TODO 如何让场景加载和UI开启配合起来 还有串联Procedure切换
-            Z.UI.Open("Assets/GameData/Prefabs/UGUI/Panel/pnlStartMenu.prefab");
+            var startPnl = Z.UI.Open("Assets/GameData/Prefabs/UGUI/Panel/pnlStartMenu.prefab");//TODO 每个打开的面板都需要接管返回值 用这个返回值再次打开它 如何管理是个问题
+            Z.Scene.LoadScene("Start");
+           
             //Z.Pool.RegisterClassPool<TreeNode<Test>>(100);
 
             Tree<Test> tree = new Tree<Test>();

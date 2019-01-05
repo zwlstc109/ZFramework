@@ -19,21 +19,21 @@ public class PanelMainMenu : PanelBase
         base.OnLoad(userData);
         mBtnTest1.onClick.AddListener(() =>
         {
-            if (/*pnlTest1 == null*/true)
+            if (pnlTest1 == null)
                 pnlTest1 = Open("Assets/GameData/Prefabs/UGUI/Panel/PnlTest1.prefab", await: true);
             else
                 Open(pnlTest1);
         });
         mBtnTest2.onClick.AddListener(() =>
         {
-            if (/*pnlTest2 == null*/true)
+            if (pnlTest2 == null)
                 pnlTest2 = Open("Assets/GameData/Prefabs/UGUI/Panel/PnlTest2.prefab", await: true);
             else
                 Open(pnlTest2);
         });
         mBtnTest3.onClick.AddListener(() =>
         {
-            if (/*pnlTest3 == null*/true)
+            if (pnlTest3 == null)
                 pnlTest3 = Open("Assets/GameData/Prefabs/UGUI/Panel/PnlTest3.prefab", await: true);
             else
                 Open(pnlTest3);
@@ -42,28 +42,20 @@ public class PanelMainMenu : PanelBase
 
     public override void OnCover(object userData = null)
     {
-        //base.OnCover(userData);
-        //CanvasGroup.blocksRaycasts = false;
+       
         Z.Debug.Log("MainMenu OnCover");
     }
 
     public override void OnReveal(object userData = null)
     {
-        //base.OnReveal(userData);
-        //CanvasGroup.blocksRaycasts = true;
+        
         Z.Debug.Log("MainMenu OnReveal");
     }
 
-   //public void OnBtnClick(string path)
-   // {
-
-
-   //    var pnl=  Open(path);
-   //     if (ReferenceEquals(path, "Assets/GameData/Prefabs/UGUI/Panel/PnlTest1.prefab")) 
-   //     pnlTest1 = pnl;
-   //     else if(ReferenceEquals(path, "Assets/GameData/Prefabs/UGUI/Panel/PnlTest2.prefab"))
-   //         pnlTest2 = pnl;
-   //     else if (ReferenceEquals(path, "Assets/GameData/Prefabs/UGUI/Panel/PnlTest3.prefab"))
-   //         pnlTest3 = pnl;
-   // }
+    public override void OnSwitch(object userData = null)
+    {
+        //禁用默认的切换行为
+        //base.OnSwitch(userData);
+    }
+   
 }

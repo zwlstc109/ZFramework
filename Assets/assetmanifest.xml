@@ -3,8 +3,14 @@
   <AssetLst Path="Assets/GameData/Prefabs/Attack.prefab" ABName="attack" AssetName="Attack.prefab">
     <DependAB>shader</DependAB>
   </AssetLst>
+  <AssetLst Path="Assets/GameData/Prefabs/Temp/Cube.prefab" ABName="cube" AssetName="Cube.prefab" />
+  <AssetLst Path="Assets/GameData/Prefabs/Temp/Sphere.prefab" ABName="cube" AssetName="Sphere.prefab" />
+  <AssetLst Path="Assets/GameData/Prefabs/Temp/Cube Variant.prefab" ABName="cube variant" AssetName="Cube Variant.prefab">
+    <DependAB>cube</DependAB>
+  </AssetLst>
   <AssetLst Path="Assets/GameData/Prefabs/UGUI/Item/itmTest1.prefab" ABName="itmtest1" AssetName="itmTest1.prefab" />
   <AssetLst Path="Assets/GameData/Prefabs/UGUI/Item/itmTest2.prefab" ABName="itmtest2" AssetName="itmTest2.prefab" />
+  <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/PnlEmpty.prefab" ABName="pnlempty" AssetName="PnlEmpty.prefab" />
   <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/PnlLoading.prefab" ABName="pnlloading" AssetName="PnlLoading.prefab" />
   <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/PnlMainMenu.prefab" ABName="pnlmainmenu" AssetName="PnlMainMenu.prefab" />
   <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/pnlStartMenu.prefab" ABName="pnlstartmenu" AssetName="pnlStartMenu.prefab" />

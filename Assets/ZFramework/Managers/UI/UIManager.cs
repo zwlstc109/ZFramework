@@ -28,7 +28,7 @@ namespace Zframework
             Z.Pool.RegisterClassCustomPool(() => new TreeNode<PanelBase>(), UIGroup.Clean, 150);
 
             mTreeNodePoolCount =Z.Pool.mObjectPoolDic[typeof(TreeNode<PanelBase>).FullName].ObserveEveryValueChanged(p=>p.Count).ToReactiveProperty<int>();
-            DebugHub.Instance.RegistText(mTreeNodePoolCount);
+            //DebugHub.Instance.RegistText(mTreeNodePoolCount);
 
             Z.Obs.ForLoop((int)BuiltinUIGroup.Count, i=> mGroupLst.Add(new UIGroup(i)));
         }
@@ -184,6 +184,12 @@ namespace Zframework
             }
             if (Lock)
             {
+                Z.Debug.Log("UI锁定中");
+                return;
+            }
+            if (child.Available&&child.Visible)
+            {
+                Z.Debug.Log("拒绝重复打开");
                 return;
             }
             var childNode = parentNode.Children.Find(n => n.Value == child);
@@ -198,7 +204,7 @@ namespace Zframework
                 {
                     Lock= true;
                     childNode.Value.SetAvailable(false);
-                    mUiComplete=Z.Subject.GetSubject("Z_UIComplete").Subscribe(_ =>
+                    mUiComplete =Z.Subject.GetSubject("Z_UIComplete").Subscribe(_ =>
                     {
                         _CoverParent(parentNode, childNode, userData);
                         childNode.Value.SetAvailable(true);
