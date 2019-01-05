@@ -124,8 +124,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60e28b49297bd1f4c85920e661ec6290, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mUnitGroupIndex: 0
-  mResGroupIndex: 0
   CanvasGroup: {fileID: 0}
   AllowMultInstance: 0
   mSlider: {fileID: 3599456798047382792}

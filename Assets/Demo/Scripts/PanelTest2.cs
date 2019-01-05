@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
 using Zframework;
+using DG.Tweening;
 using System;
 public class PanelTest2 : PanelBase
 {
@@ -20,6 +21,11 @@ public class PanelTest2 : PanelBase
         base.OnOpen(userData);
        
         Z.Debug.Log("Test2 OnOpen");
+        CanvasGroup.alpha = 0;
+        CanvasGroup.DOFade(1, 2).onComplete += () =>
+        {
+            Z.Subject.Fire("Z_UIComplete", null);
+        };
     }
 
     public override void OnClose(object userData = null)
@@ -32,5 +38,10 @@ public class PanelTest2 : PanelBase
         base.OnSwitch(userData);
         Z.Debug.Log("Test2 OnSwicth");
       
+    }
+    public override void OnUnLoad(object userData = null)
+    {
+        base.OnUnLoad(userData);
+        mBtnClose.onClick.RemoveAllListeners();
     }
 }

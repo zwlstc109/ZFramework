@@ -10,6 +10,7 @@ namespace Zframework
         object Spawn();
         void Despawn(object t);
         void ClearAll();
+        int Count { get; }//测试使用
     }
     public interface IFactory<T>
     {
@@ -32,7 +33,7 @@ namespace Zframework
     {
         protected Stack<T> mStack = new Stack<T>();
         protected IFactory<T> mFactory;
-        public int CurCount { get { return mStack.Count; }}
+        public int Count { get { return mStack.Count; }}
         protected int mHoldAmount;//保有数量
         protected SimpleSpinLock mSpinLock = new SimpleSpinLock();
         /// <summary>
@@ -58,7 +59,7 @@ namespace Zframework
         {
             T t;
             mSpinLock.Enter();
-            t = CurCount > 0 ? mStack.Pop() : mFactory.Create();
+            t = Count > 0 ? mStack.Pop() : mFactory.Create();
             mSpinLock.Leave();
             //Z.Log.Log(CurCount);
             return t;
@@ -68,7 +69,7 @@ namespace Zframework
         {
            
             mSpinLock.Enter();
-            if (CurCount < mHoldAmount)
+            if (Count < mHoldAmount)
             {
                 mStack.Push(t as T);
             }
@@ -81,7 +82,7 @@ namespace Zframework
     public class CustomClassPool<T> : ClassPool<T> where T:class,new()
     {
         protected Action<T> mCleanMethod;
-        public CustomClassPool(Func<T> factoryMethod,Action<T> cleanMethod=null, int initialAmount = 0, int holdAmount = -1)
+        public CustomClassPool(Func<T> factoryMethod,Action<T> cleanMethod=null, int initialAmount = 0, int holdAmount = -1):base(initialAmount,holdAmount)
         {
             mFactory = new CustomFactory<T>(factoryMethod);
             mCleanMethod = cleanMethod;
@@ -89,7 +90,7 @@ namespace Zframework
         public override void Despawn(object t)
         {
             mSpinLock.Enter();
-            if (CurCount < mHoldAmount)
+            if (Count < mHoldAmount)
             {
                 mCleanMethod?.Invoke(t as T);
                 mStack.Push(t as T);

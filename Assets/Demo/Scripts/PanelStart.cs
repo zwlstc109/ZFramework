@@ -15,8 +15,11 @@ public class PanelStart : PanelBase
         base.OnLoad(userData);
         mbtnStart.onClick.AddListener(() =>
         {
-            CloseSelf();
-            Z.Scene.LoadSceneAsync("TestScene1", _ => Z.Procedure.ChangeProcedure<ProcedurePlay>());
+            Z.Scene.LoadSceneAsync("TestScene1", _ =>
+            {
+                CloseSelf();
+                Z.Procedure.ChangeProcedure<ProcedurePlay>();              
+            });
         });
 
 
@@ -32,12 +35,16 @@ public class PanelStart : PanelBase
     public override void OnOpen(object userData = null)
     {
         base.OnOpen(userData);
-        gameObject.Show(); 
+      
     }
     public override void OnClose(object userData = null)
     {
         base.OnClose(userData);
-        gameObject.Hide();
+        
     }
-
+    public override void OnSwitch(object userData = null)
+    {
+        //禁用默认的切换行为
+        //base.OnSwitch(userData);
+    }
 }
