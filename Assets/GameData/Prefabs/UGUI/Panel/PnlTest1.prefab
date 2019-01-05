@@ -566,3 +566,4 @@ MonoBehaviour:
   CanvasGroup: {fileID: 0}
   AllowMultInstance: 0
   mBtnClose: {fileID: 4154181000544656988}
+  mBtnSub: {fileID: 1339226768488141404}

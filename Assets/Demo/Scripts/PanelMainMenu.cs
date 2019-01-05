@@ -10,9 +10,9 @@ public class PanelMainMenu : PanelBase
     [SerializeField] private Button mBtnTest1 = null;
     [SerializeField] private Button mBtnTest2 = null;
     [SerializeField] private Button mBtnTest3 = null;
-    PanelBase pnlTest1 = null;
-    PanelBase pnlTest2 = null;
-    PanelBase pnlTest3 = null;
+    //PanelBase pnlTest1 = null;
+    //PanelBase pnlTest2 = null;
+    //PanelBase pnlTest3 = null;
 
     public override void OnLoad(object userData = null)
     {

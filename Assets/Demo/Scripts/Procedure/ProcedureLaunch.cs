@@ -17,20 +17,39 @@ namespace Zframework
             //...
             //...
             var startPnl = Z.UI.Open("Assets/GameData/Prefabs/UGUI/Panel/pnlStartMenu.prefab");
-            Z.Scene.LoadScene("Start",false);
-           
+            Z.Scene.LoadScene("Start", false);
+
             //Z.Pool.RegisterClassPool<TreeNode<Test>>(100);
 
-            Tree<Test> tree = new Tree<Test>();
-            TreeNode<Test> A = new TreeNode<Test>("A"); TreeNode<Test> B = new TreeNode<Test>("B");
-            tree.Root.AddChild(A); tree.Root.AddChild(B);
-            TreeNode<Test> AA1 = new TreeNode<Test>("AA1"); TreeNode<Test> AA2 = new TreeNode<Test>("AA2"); TreeNode<Test> AA3 = new TreeNode<Test>("AA3");
-            A.AddChild(AA1); A.AddChild(AA2); A.AddChild(AA3);
-            A.RemoveChild(B);
-            Debug.Log(".........................................");
-            tree.Root.ActionRecursive(n => Debug.Log(n.Name)/*{ }*/);
+            //Tree<Test> tree = new Tree<Test>();
+            //TreeNode<Test> A = new TreeNode<Test>("A"); TreeNode<Test> B = new TreeNode<Test>("B");
+            //tree.Root.AddChild(A); tree.Root.AddChild(B);
+            //TreeNode<Test> AA1 = new TreeNode<Test>("AA1"); TreeNode<Test> AA2 = new TreeNode<Test>("AA2"); TreeNode<Test> AA3 = new TreeNode<Test>("AA3");
+            //A.AddChild(AA1); A.AddChild(AA2); A.AddChild(AA3);
+            //A.RemoveChild(B);
+            //Debug.Log(".........................................");
+            //tree.Root.ActionRecursive(n => Debug.Log(n.Name)/*{ }*/);
+            //var assetBundle = AssetBundle.LoadFromFile(Application.streamingAssetsPath + "/" + "attack");
+            //var temp = assetBundle;
+            //assetBundle.Unload(false);
+            //Z.Debug.Log(temp);
 
+            //GameObject go1 = new GameObject();
+            //GameObject go2 = go1;
+            //UnityEngine.Object.DestroyImmediate(go1);
+            //Debug.Log(go2);
+
+            TestClass c = null;
+            var temp = c;
+            //c.Destroy();
+            Debug.Log(c!=temp);
         }
-       
+
+    }
+
+    class TestClass:ZObject
+    {
+        
+
     }
 }

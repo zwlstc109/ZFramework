@@ -148,7 +148,7 @@ namespace Zframework
                     {
                         Z.Debug.Warning("准备卸载AB包时，发现壳内的包引用为空");
                     }
-                    abItem.AssetBundle.Unload(true);
+                    abItem.AssetBundle.Unload(true);//这个卸载Unity做的很智能 会把所有引用这个assetBundle的变量都置空，不知道怎么做的... 
                     Z.Pool.Return(ref abItem);
                     mAssetBundleItemDic.Remove(name);
                 }
@@ -158,7 +158,7 @@ namespace Zframework
     /// <summary>
     /// AB包壳
     /// </summary>
-    internal class AssetBundleItem
+    internal class AssetBundleItem:ZObject
     {
         internal AssetBundle AssetBundle = null;
         internal int RefCount;

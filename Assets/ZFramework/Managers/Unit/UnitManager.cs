@@ -100,7 +100,7 @@ namespace Zframework
     /// <summary>
     /// GameObject包装类 存有实例化过的GO
     /// </summary>
-    public class Unit
+    public class Unit:ZObject
     {
         internal ResourceItem ResItem;
         public GameObject GO;

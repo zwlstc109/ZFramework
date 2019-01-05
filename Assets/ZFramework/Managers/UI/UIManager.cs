@@ -54,7 +54,14 @@ namespace Zframework
         {
             mGroupLst[uiGroupIndex].Open(panel,await, userData);
         }
-
+        public void Lock()
+        {
+            Z.Obs.ForLoop(mGroupLst.Count, i => mGroupLst[i].Lock = true);         
+        }
+        public void UnLock()
+        {
+            Z.Obs.ForLoop(mGroupLst.Count, i => mGroupLst[i].Lock = false);
+        }
         internal PanelBase Load(string path,Transform parent,object userData,UIGroup uiGroup, int unitGroupIndex)
         {
             var pnl = PathPnlDic.GetValue(path);
@@ -69,6 +76,7 @@ namespace Zframework
             panel.Unit = unit;
             panel._UnitGroupIndex = unitGroupIndex;
             panel.CanvasGroup = panel.GetOrAddComponent<CanvasGroup>();
+            panel.CanvasGroup.ignoreParentGroups = true;
             panel.UIGroup=uiGroup;
             panel.transform.SetParent(parent==null?CanvasRoot:parent,false);
             panel.OnLoad(userData);

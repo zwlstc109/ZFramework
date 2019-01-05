@@ -63,7 +63,6 @@ namespace Zframework
 
         public void LoadSceneAsync(string sceneName,Action<object> doneCallback=null,bool fade=true,object userData=null)
         {
-            
 
             AsyncOperation asyncScene = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
             asyncScene.allowSceneActivation = false;

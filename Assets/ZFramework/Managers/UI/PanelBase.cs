@@ -14,6 +14,7 @@ namespace Zframework
         internal int mId = -1;
         public int Id { get { return mId; } }
 
+        private bool InPool = false;
 
         [HideInInspector] public CanvasGroup CanvasGroup;
         //internal string Path;
@@ -183,6 +184,39 @@ namespace Zframework
                 return;
             }
             UIGroup.Lock = value;
+        }
+
+
+        public static bool operator !=(PanelBase lhs, PanelBase rhs)
+        {
+            if (System.Object.Equals(rhs, null))
+            {
+                if (System.Object.Equals(lhs, null))
+                {
+                    return false;
+                }
+
+                if (lhs.InPool ||!lhs.gameObject)
+                {
+                    return false;
+                }
+            }
+            return !ReferenceEquals(lhs, rhs);
+        }
+        public static bool operator ==(PanelBase lhs, PanelBase rhs)
+        {
+            if (System.Object.Equals(rhs, null))
+            {
+                if (System.Object.Equals(lhs, null))
+                {
+                    return true;
+                }
+                if (lhs.InPool || !lhs.gameObject)
+                {
+                    return true;
+                }
+            }
+            return ReferenceEquals(lhs, rhs);
         }
     }
 }

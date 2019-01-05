@@ -166,7 +166,7 @@ namespace Zframework
     /// <summary>
     /// 资源壳 记录了资源所在AB包、包依赖、引用计数等信息
     /// </summary>
-    public class ResourceItem
+    public class ResourceItem:ZObject
     {
         ////资源路径的CRC  本来想用crc做key 
         //public uint Crc = 0;

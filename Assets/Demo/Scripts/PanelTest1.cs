@@ -9,12 +9,14 @@ using System;
 public class PanelTest1 : PanelBase
 {
     [SerializeField]private Button mBtnClose = null;
+    [SerializeField] private Button mBtnSub = null;
 
     public override void OnLoad(object userData = null)
     {
         base.OnLoad(userData);
 
         mBtnClose.onClick.AddListener(()=>CloseSelf());
+        mBtnSub.onClick.AddListener(()=>Open("Assets/GameData/Prefabs/UGUI/Panel/PnlTest1Sub.prefab"));
     }
 
     public override void OnOpen(object userData = null)
@@ -47,5 +49,6 @@ public class PanelTest1 : PanelBase
     {
         base.OnUnLoad(userData);
         mBtnClose.onClick.RemoveAllListeners();
+        mBtnSub.onClick.RemoveAllListeners();
     }
 }
