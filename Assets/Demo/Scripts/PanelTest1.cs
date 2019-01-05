@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
 using Zframework;
+using DG.Tweening;
 using System;
 public class PanelTest1 : PanelBase
 {
@@ -21,6 +22,13 @@ public class PanelTest1 : PanelBase
         base.OnOpen(userData);
      
         Z.Debug.Log("Test1 OnOpen");
+
+        RectTransform rect = transform as RectTransform;
+        CanvasGroup.alpha = 0;
+        CanvasGroup.DOFade(1, 2).onComplete += () =>
+        {
+            Z.Subject.Fire("Z_UIComplete",null);
+        };
     }
 
     public override void OnClose(object userData = null)

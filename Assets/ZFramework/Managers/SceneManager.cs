@@ -31,7 +31,7 @@ namespace Zframework
         {
             mDoneCallback = doneCallback;
             StartCoroutine(LoadAsync(sceneName, userData));
-            Z.UI.Open(LoadingUIPath);
+            Z.UI.Open(LoadingUIPath,Z.UI.Top);
         }
         public void SetLoadScenePath(string path)
         {
@@ -42,14 +42,15 @@ namespace Zframework
      
             Already = false;
 
-            UnityEngine.SceneManagement.SceneManager.LoadScene("Empty", LoadSceneMode.Single);
+            //UnityEngine.SceneManagement.SceneManager.LoadScene("Empty", LoadSceneMode.Single);
            
             LoadingProgress = 0;
             int targetProgress = 0;
-            AsyncOperation asyncScene = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(name);
+            AsyncOperation asyncScene = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(name,LoadSceneMode.Single);
+            asyncScene.allowSceneActivation = false;
             if (asyncScene != null && !asyncScene.isDone)
             {
-                asyncScene.allowSceneActivation = false;
+
                 while (asyncScene.progress < 0.9f)
                 {
                     targetProgress = (int)asyncScene.progress * 100;//TODO 
@@ -60,12 +61,13 @@ namespace Zframework
                         ++LoadingProgress;
                         yield return null;
                     }
-                   
+
                 }
 
                 SceneName = name;
 
                 ClearCache();
+                asyncScene.allowSceneActivation = true;
 
                 //自行加载剩余的10%
                 targetProgress = 100;
@@ -75,12 +77,11 @@ namespace Zframework
                     yield return null;
                 }
                 LoadingProgress = 100;
-              
                 Already = true;
-                //asyncScene.allowSceneActivation = true;
                 mDoneCallback?.Invoke(userData);
                 mDoneCallback = null;
             }
+            yield return null;
         }
         //转场清理默认资源组
         private void ClearCache()

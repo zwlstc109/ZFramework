@@ -20,21 +20,21 @@ public class PanelMainMenu : PanelBase
         mBtnTest1.onClick.AddListener(() =>
         {
             if (/*pnlTest1 == null*/true)
-                pnlTest1 = Open("Assets/GameData/Prefabs/UGUI/Panel/PnlTest1.prefab");
+                pnlTest1 = Open("Assets/GameData/Prefabs/UGUI/Panel/PnlTest1.prefab", await: true);
             else
                 Open(pnlTest1);
         });
         mBtnTest2.onClick.AddListener(() =>
         {
             if (/*pnlTest2 == null*/true)
-                pnlTest2 = Open("Assets/GameData/Prefabs/UGUI/Panel/PnlTest2.prefab");
+                pnlTest2 = Open("Assets/GameData/Prefabs/UGUI/Panel/PnlTest2.prefab", await: true);
             else
                 Open(pnlTest2);
         });
         mBtnTest3.onClick.AddListener(() =>
         {
             if (/*pnlTest3 == null*/true)
-                pnlTest3 = Open("Assets/GameData/Prefabs/UGUI/Panel/PnlTest3.prefab");
+                pnlTest3 = Open("Assets/GameData/Prefabs/UGUI/Panel/PnlTest3.prefab", await: true);
             else
                 Open(pnlTest3);
         });

@@ -35,12 +35,13 @@ namespace Zframework
         protected bool mAvailable = true;
         public virtual bool Available {
             get { return mAvailable; }
-            protected  set
+            protected set  //很尴尬的访问修饰符 protected是为了让程序集外的子类访问 但是我需要在程序集里也能访问 只能再加一个internal方法
             {
                 mAvailable = value;
                 CanvasGroup.interactable = value;
             }
-        }
+        }    
+        internal void SetAvailable(bool value) { Available = value; }
         protected bool mVisible = true;
         public bool Visible {
             get { return mVisible; }
@@ -111,13 +112,13 @@ namespace Zframework
         /// <param name="path"></param>
         /// <param name="userData"></param>
         /// <param name="open">是否直接打开</param>
-        protected PanelBase Open(string path, object userData=null,int unitGroupIndex=-1, bool open = true)
+        protected PanelBase Open(string path,Transform parent=null,bool await=false, object userData=null,int unitGroupIndex=-1, bool open = true)
         {
             if (!Available)
             {
                 return null;
             }
-           return UIGroup.Open(NodeInGroup, path, userData,unitGroupIndex, open);
+           return UIGroup.Open(NodeInGroup, path, parent==null?transform:parent,await, userData,unitGroupIndex, open);
         }
         /// <summary>
         /// 在本面板下打开旧有面板
@@ -125,13 +126,13 @@ namespace Zframework
         /// <param name="path"></param>
         /// <param name="userData"></param>
         /// <param name="open">是否直接打开</param>
-        protected void Open(PanelBase child, object userData=null)
+        protected void Open(PanelBase child,bool await=false, object userData=null)
         {
             if (!Available)
             {
                 return ;
             }
-            UIGroup.Open(NodeInGroup, child, userData);
+            UIGroup.Open(NodeInGroup, child,await, userData);
         }
         /// <summary>
         /// 在UIGroup中关闭自己
@@ -148,19 +149,19 @@ namespace Zframework
         /// <summary>
         /// 在UIGroup中 向同一层级的panel发出切换请求
         /// </summary>
-        protected void SwitchTo(PanelBase panel,object userData=null)
-        {
-            if (!Available)
-            {
-                return;
-            }
-            if (panel==this)
-            {
-                Z.Debug.Warning("Panel试图切换到自己？");
-                return;
-            }
-            UIGroup.Switch(NodeInGroup.Parent, panel, userData);
-        }
+        //protected void SwitchTo(PanelBase panel,object userData=null)
+        //{
+        //    if (!Available)
+        //    {
+        //        return;
+        //    }
+        //    if (panel==this)
+        //    {
+        //        Z.Debug.Warning("Panel试图切换到自己？");
+        //        return;
+        //    }
+        //    UIGroup.Switch(NodeInGroup.Parent, panel, userData);
+        //}
         /// <summary>
         /// 释放面板控制权 TODO
         /// </summary>
