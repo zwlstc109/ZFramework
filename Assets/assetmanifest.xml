@@ -4,6 +4,8 @@
   <AssetLst Path="Assets/GameData/Prefabs/Attack.prefab" ABName="attack_prefab" AssetName="Attack.prefab">
     <DependAB>shader</DependAB>
   </AssetLst>
+  <AssetLst Path="Assets/GameData/Prefabs/Temp/Cube (1).prefab" ABName="cube (1)_prefab" AssetName="Cube (1).prefab" />
+  <AssetLst Path="Assets/GameData/Prefabs/Temp/Cube (2).prefab" ABName="cube (2)_prefab" AssetName="Cube (2).prefab" />
   <AssetLst Path="Assets/GameData/Prefabs/Temp/Cube Variant.prefab" ABName="cube variant_prefab" AssetName="Cube Variant.prefab">
     <DependAB>cube_prefab</DependAB>
   </AssetLst>
@@ -32,5 +34,8 @@
     <DependAB>cube_prefab</DependAB>
     <DependAB>cube variant_prefab</DependAB>
   </AssetLst>
-  <AssetLst Path="Assets/Demo/Scenes/TestScene1.unity" ABName="testscene1_unity" AssetName="TestScene1.unity" />
+  <AssetLst Path="Assets/Demo/Scenes/TestScene1.unity" ABName="testscene1_unity" AssetName="TestScene1.unity">
+    <DependAB>cube (1)_prefab</DependAB>
+    <DependAB>cube (2)_prefab</DependAB>
+  </AssetLst>
 </AssetManifest>

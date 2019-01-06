@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 4217737655
+CRC: 1018225153
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: a77a9e84d22d16e6ba7532267220344e
+    Hash: a37e5335f821a7013888764d0dfe0143
   TypeTreeHash:
     serializedVersion: 2
     Hash: 8cb64a53b61593d1c5b3c86e1e6cadda
@@ -45,4 +45,6 @@ ClassTypes:
   Script: {instanceID: 0}
 Assets:
 - Assets/Demo/Scenes/TestScene1.unity
-Dependencies: []
+Dependencies:
+- D:/study/MyFramework/Assets/StreamingAssets/cube (1)_prefab
+- D:/study/MyFramework/Assets/StreamingAssets/cube (2)_prefab

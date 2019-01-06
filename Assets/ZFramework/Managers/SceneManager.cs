@@ -88,54 +88,54 @@ namespace Zframework
         /// <param name="scenePath"></param>
         public void LoadScene(string scenePath,FadeMode mode,Action loadedCallBack=null)
         {
-            //先加载场景AB包
-            _LoadSceneAB(scenePath);
             string sceneName = Z.Str.GetAssetNoExtensionName(scenePath);
-
             Fade(mode, () =>
             {
+                //先加载场景AB包
+                ClearCache();
+                _LoadSceneAB(scenePath);
                 UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
                 loadedCallBack?.Invoke();
-                if (mode==FadeMode.FadeInOut)
+                if (mode == FadeMode.FadeInOut)
                     Z.Subject.Fire("Z_FadeOutAction", null);
-            });          
+            });
+                  
         }
        
 
         public void LoadSceneAsync(string scenePath,Action<object> doneCallback=null,bool fadeIn=true,bool fadeOut=true, object userData=null)
         {
             //先加载场景AB包
-            _LoadSceneAB(scenePath);
-            string sceneName = Z.Str.GetAssetNoExtensionName(scenePath);
-            AsyncOperation asyncScene = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
-            asyncScene.allowSceneActivation = false;
+          
             if (fadeIn)
             {
-                Fade(FadeMode.FadeIn,() => _LoadSceneAsync(asyncScene, doneCallback, fadeOut, userData));   
+                Fade(FadeMode.FadeIn,() => _LoadSceneAsync(scenePath, doneCallback, fadeOut, userData));   
             }
             else
-                _LoadSceneAsync(asyncScene, doneCallback,fadeIn, userData);
+                _LoadSceneAsync(scenePath, doneCallback,fadeIn, userData);
         }
-        private void _LoadSceneAsync(AsyncOperation asyncScene, Action<object> doneCallback ,bool fade ,object userData = null)
+        private void _LoadSceneAsync(string scenePath, Action<object> doneCallback ,bool fade ,object userData = null)
         {
             mDoneCallback = doneCallback;
-            StartCoroutine(LoadAsync(asyncScene, userData,fade));
+            StartCoroutine(LoadAsync(scenePath, userData,fade));
             Z.UI.Open(LoadingUIPath, Z.UI.Top);
         }
         public void SetLoadScenePath(string path)
         {
             
         }
-        IEnumerator LoadAsync(AsyncOperation asyncScene, object userData,bool fade)
+        IEnumerator LoadAsync(string scenePath, object userData,bool fade)
         {
-     
-            Already = false;
-
-            //UnityEngine.SceneManagement.SceneManager.LoadScene("Empty", LoadSceneMode.Single);
-           
             LoadingProgress = 0;
             int targetProgress = 0;
-           
+            Already = false;
+            //加载场景包前先清0组缓存
+            ClearCache();//TODO 可能这前面还要加上加载其他资源的代码 先加再减避免重复加载 等于是要再前面封装一个 一股脑加载资源的进度输出
+            _LoadSceneAB(scenePath);
+            string sceneName = Z.Str.GetAssetNoExtensionName(scenePath);
+            AsyncOperation asyncScene = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
+            asyncScene.allowSceneActivation = false;
+                
             if (asyncScene != null && !asyncScene.isDone)
             {
 
@@ -151,8 +151,6 @@ namespace Zframework
                     }
 
                 }
-                //TODO将来如果在读条中加载资源 要在这个清理缓存前处理 这样可保证引用计数先加再减  (场景的ResItem直接添加进0组 会在下一句话时清理)
-                ClearCache();//TODO 暂时将场景ResItem放到预加载组
                 asyncScene.allowSceneActivation = true;
 
                 //自行加载剩余的10%

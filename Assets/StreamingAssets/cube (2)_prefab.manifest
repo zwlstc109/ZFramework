@@ -1,0 +1,31 @@
+ManifestFileVersion: 0
+CRC: 3795871756
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 0fd41b5990b647f5966a612263f3e839
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: ea3f786f3814b1ad9ef2ef747825eec5
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 65
+  Script: {instanceID: 0}
+Assets:
+- Assets/GameData/Prefabs/Material/New Material 2.mat
+- Assets/GameData/Prefabs/Temp/Cube (2).prefab
+Dependencies: []
