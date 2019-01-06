@@ -292,7 +292,7 @@ namespace Zframework
             }
             parent.Value?.OnReveal();
         }
-        internal void Release(TreeNode<PanelBase> node,bool destroy)
+        internal void Release(TreeNode<PanelBase> node,bool destroy,object userData)
         {
             if (!node.Value.AllowMultInstance)
             {
@@ -301,7 +301,7 @@ namespace Zframework
             _RevealParent(node.Parent, node);
             node.ActionRecursive(n =>
             {
-                n.Value.OnUnLoad();
+                n.Value.OnUnLoad(userData);
                 n.Value.Unit.ReleaseSelf(destroy);
                 Clean(n);
             });

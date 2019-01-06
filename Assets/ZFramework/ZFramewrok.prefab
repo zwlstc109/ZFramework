@@ -897,7 +897,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LoadingUIPath: Assets/GameData/Prefabs/UGUI/Panel/PnlLoading.prefab
-  EmptyUIPath: Assets/GameData/Prefabs/UGUI/Panel/PnlEmpty.prefab
+  FadeUIPath: Assets/GameData/Prefabs/UGUI/Panel/PnlEmpty.prefab
 --- !u!1 &3145433009360821804
 GameObject:
   m_ObjectHideFlags: 0
@@ -1219,9 +1219,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AvailableProcedureTypeNames:
-  - Zframework.ProcedureChangeScene
   - Zframework.ProcedureLaunch
-  - Zframework.ProcedureMainMenu
   - Zframework.ProcedurePlay
   m_EntranceProcedureTypeName: Zframework.ProcedureLaunch
 --- !u!1 &4560428708797837433
@@ -2553,7 +2551,7 @@ GameObject:
   - component: {fileID: 7427620665639120956}
   - component: {fileID: 7062032237901081497}
   m_Layer: 0
-  m_Name: ZFramewrok (1)
+  m_Name: ZFramewrok
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

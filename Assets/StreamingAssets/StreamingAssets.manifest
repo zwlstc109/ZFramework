@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 3904912289
+CRC: 1150776948
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -26,32 +26,29 @@ AssetBundleManifest:
       Dependencies:
         Dependency_0: cube
     Info_7:
-      Name: itmtest1
-      Dependencies: {}
-    Info_8:
-      Name: itmtest2
-      Dependencies: {}
-    Info_9:
       Name: pnlempty
       Dependencies: {}
-    Info_10:
+    Info_8:
       Name: pnlloading
       Dependencies: {}
-    Info_11:
+    Info_9:
       Name: pnlmainmenu
       Dependencies: {}
-    Info_12:
+    Info_10:
       Name: pnlstartmenu
       Dependencies: {}
-    Info_13:
+    Info_11:
       Name: pnltest1
       Dependencies: {}
-    Info_14:
+    Info_12:
+      Name: pnltest1sub
+      Dependencies: {}
+    Info_13:
       Name: pnltest2
       Dependencies: {}
-    Info_15:
+    Info_14:
       Name: pnltest3
       Dependencies: {}
-    Info_16:
+    Info_15:
       Name: assetmanifest
       Dependencies: {}

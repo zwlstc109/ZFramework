@@ -16,9 +16,12 @@ namespace Zframework
             //...
             //...
             //...
-            var startPnl = Z.UI.Open("Assets/GameData/Prefabs/UGUI/Panel/pnlStartMenu.prefab");
-            Z.Scene.LoadScene("Start", false);
+            
+            Z.Scene.LoadScene("Start", FadeMode.None,()=> Z.UI.Open("Assets/GameData/Prefabs/UGUI/Panel/pnlStartMenu.prefab"));
 
+           
+
+            //Action<int> a = _ => { _++; };
             //Z.Pool.RegisterClassPool<TreeNode<Test>>(100);
 
             //Tree<Test> tree = new Tree<Test>();
@@ -29,20 +32,12 @@ namespace Zframework
             //A.RemoveChild(B);
             //Debug.Log(".........................................");
             //tree.Root.ActionRecursive(n => Debug.Log(n.Name)/*{ }*/);
-            //var assetBundle = AssetBundle.LoadFromFile(Application.streamingAssetsPath + "/" + "attack");
-            //var temp = assetBundle;
-            //assetBundle.Unload(false);
-            //Z.Debug.Log(temp);
+            
 
-            //GameObject go1 = new GameObject();
-            //GameObject go2 = go1;
-            //UnityEngine.Object.DestroyImmediate(go1);
-            //Debug.Log(go2);
-
-            TestClass c = null;
+            TestClass c = new TestClass();
             var temp = c;
-            //c.Destroy();
-            Debug.Log(c!=temp);
+            c.Destroy();
+            Debug.Log(temp == null);
         }
 
     }

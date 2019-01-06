@@ -18,22 +18,27 @@ namespace Zframework
 
             Z.UI.Open("Assets/GameData/Prefabs/UGUI/Panel/PnlMainMenu.prefab");
 
-            Z.Pool.RegisterClassPool<Test>();
-            Z.Pool.Take<Test>();
-            
-            Test t1 = Z.Pool.Take<Test>();
-            t1.value = 1;
 
-            Test tt1 = t1;
 
-            Z.Pool.Return(ref t1);
+              
+            Z.Obs.KeyDown(KeyCode.Z).Subscribe(_=> Z.Scene.Fade(FadeMode.FadeInOut));
+            Z.Obs.KeyDown(KeyCode.X).Subscribe(_ => Z.Subject.Fire("Z_FadeOutAction", null));
+            //Z.Pool.RegisterClassPool<Test>();
+            //Z.Pool.Take<Test>();
 
-            Z.Pool.Return(ref tt1);
+            //Test t1 = Z.Pool.Take<Test>();
+            //t1.value = 1;
 
-            Test s1 = Z.Pool.Take<Test>();
-            Test s2 = Z.Pool.Take<Test>();
+            //Test tt1 = t1;
 
-            Debug.Log(s1.value + " " + s2.value);
+            //Z.Pool.Return(ref t1);
+
+            //Z.Pool.Return(ref tt1);
+
+            //Test s1 = Z.Pool.Take<Test>();
+            //Test s2 = Z.Pool.Take<Test>();
+
+            //Debug.Log(s1.value + " " + s2.value);
         }
         public override void OnUpdate()
         {

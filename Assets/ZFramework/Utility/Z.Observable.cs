@@ -29,6 +29,10 @@ namespace Zframework
             {
                 return mEveryUpdate.Where(_ => Input.GetMouseButtonDown(1));
             }
+            public static IObservable<long> KeyDown(KeyCode key)
+            {
+                return mEveryUpdate.Where(_ => Input.GetKeyDown(key));
+            }
             /// <summary>Update的observable</summary>
             public static IObservable<long> Update()
             {

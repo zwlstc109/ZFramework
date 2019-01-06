@@ -49,7 +49,7 @@ namespace Zframework
                 unit.Group = unitGroup;
                 unit.ResItem = resItem;
                 unit.GO = Instantiate(resItem.Asset as GameObject);
-                unit.GO.transform.Reset();//测试
+                //unit.GO.transform.Reset();//测试
             }
             unit.AddTo(unitGroup);//不管是不是从池中获取都要重新加入到unit组中
             return unit;

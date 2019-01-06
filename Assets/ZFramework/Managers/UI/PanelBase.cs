@@ -166,13 +166,13 @@ namespace Zframework
         /// <summary>
         /// 释放面板控制权 TODO
         /// </summary>
-        protected void ReleaseSelf(bool destroy=false)
+        protected void ReleaseSelf(bool destroy=false,object userData=null)
         {
             if (!Available)
             {
                 return;
             }
-            UIGroup.Release(NodeInGroup,destroy);
+            UIGroup.Release(NodeInGroup,destroy,userData);
         }
         /// <summary>
         /// 在UIGroup中锁定自己 使得UIGroup不接受任何打开请求
@@ -203,6 +203,7 @@ namespace Zframework
             }
             return !ReferenceEquals(lhs, rhs);
         }
+        
         public static bool operator ==(PanelBase lhs, PanelBase rhs)
         {
             if (System.Object.Equals(rhs, null))
