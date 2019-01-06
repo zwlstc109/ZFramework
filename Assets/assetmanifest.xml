@@ -1,22 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <AssetManifest xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <AssetLst Path="Assets/GameData/Prefabs/Attack.prefab" ABName="attack" AssetName="Attack.prefab">
+  <AssetLst Path="Assets/Demo/Scenes/0.unity" ABName="0_unity" AssetName="0.unity" />
+  <AssetLst Path="Assets/GameData/Prefabs/Attack.prefab" ABName="attack_prefab" AssetName="Attack.prefab">
     <DependAB>shader</DependAB>
   </AssetLst>
-  <AssetLst Path="Assets/GameData/Prefabs/Temp/Cube.prefab" ABName="cube" AssetName="Cube.prefab" />
-  <AssetLst Path="Assets/GameData/Prefabs/Temp/Sphere.prefab" ABName="cube" AssetName="Sphere.prefab" />
-  <AssetLst Path="Assets/GameData/Prefabs/Temp/Cube Variant.prefab" ABName="cube variant" AssetName="Cube Variant.prefab">
-    <DependAB>cube</DependAB>
+  <AssetLst Path="Assets/GameData/Prefabs/Temp/Cube Variant.prefab" ABName="cube variant_prefab" AssetName="Cube Variant.prefab">
+    <DependAB>cube_prefab</DependAB>
   </AssetLst>
-  <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/PnlEmpty.prefab" ABName="pnlempty" AssetName="PnlEmpty.prefab" />
-  <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/PnlLoading.prefab" ABName="pnlloading" AssetName="PnlLoading.prefab" />
-  <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/PnlMainMenu.prefab" ABName="pnlmainmenu" AssetName="PnlMainMenu.prefab" />
-  <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/pnlStartMenu.prefab" ABName="pnlstartmenu" AssetName="pnlStartMenu.prefab" />
-  <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/PnlTest1.prefab" ABName="pnltest1" AssetName="PnlTest1.prefab" />
-  <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/PnlTest1Sub.prefab" ABName="pnltest1sub" AssetName="PnlTest1Sub.prefab" />
-  <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/PnlTest2.prefab" ABName="pnltest2" AssetName="PnlTest2.prefab" />
-  <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/PnlTest3.prefab" ABName="pnltest3" AssetName="PnlTest3.prefab" />
-  <AssetLst Path="Assets/GameData/Prefabs/Effect/ptcTest1.prefab" ABName="ptctest1" AssetName="ptcTest1.prefab" />
+  <AssetLst Path="Assets/GameData/Prefabs/Temp/Cube.prefab" ABName="cube_prefab" AssetName="Cube.prefab" />
+  <AssetLst Path="Assets/GameData/Prefabs/Temp/Sphere.prefab" ABName="cube_prefab" AssetName="Sphere.prefab" />
+  <AssetLst Path="Assets/Demo/Scenes/Empty.unity" ABName="empty_unity" AssetName="Empty.unity" />
+  <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/PnlEmpty.prefab" ABName="pnlempty_prefab" AssetName="PnlEmpty.prefab" />
+  <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/PnlLoading.prefab" ABName="pnlloading_prefab" AssetName="PnlLoading.prefab" />
+  <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/PnlMainMenu.prefab" ABName="pnlmainmenu_prefab" AssetName="PnlMainMenu.prefab" />
+  <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/pnlStartMenu.prefab" ABName="pnlstartmenu_prefab" AssetName="pnlStartMenu.prefab" />
+  <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/PnlTest1.prefab" ABName="pnltest1_prefab" AssetName="PnlTest1.prefab" />
+  <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/PnlTest1Sub.prefab" ABName="pnltest1sub_prefab" AssetName="PnlTest1Sub.prefab" />
+  <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/PnlTest2.prefab" ABName="pnltest2_prefab" AssetName="PnlTest2.prefab" />
+  <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/PnlTest3.prefab" ABName="pnltest3_prefab" AssetName="PnlTest3.prefab" />
+  <AssetLst Path="Assets/GameData/Prefabs/Effect/ptcTest1.prefab" ABName="ptctest1_prefab" AssetName="ptcTest1.prefab" />
   <AssetLst Path="Assets/GameData/Shaders/benghuai.shader" ABName="shader" AssetName="benghuai.shader" />
   <AssetLst Path="Assets/GameData/Shaders/Skybox.shader" ABName="shader" AssetName="Skybox.shader" />
   <AssetLst Path="Assets/GameData/Shaders/Water.shader" ABName="shader" AssetName="Water.shader" />
@@ -26,4 +28,9 @@
   <AssetLst Path="Assets/GameData/Sprites/Test1.png" ABName="sprites" AssetName="Test1.png" />
   <AssetLst Path="Assets/GameData/Sprites/test2.png" ABName="sprites" AssetName="test2.png" />
   <AssetLst Path="Assets/GameData/Sprites/test3.png" ABName="sprites" AssetName="test3.png" />
+  <AssetLst Path="Assets/Demo/Scenes/Start.unity" ABName="start_unity" AssetName="Start.unity">
+    <DependAB>cube_prefab</DependAB>
+    <DependAB>cube variant_prefab</DependAB>
+  </AssetLst>
+  <AssetLst Path="Assets/Demo/Scenes/TestScene1.unity" ABName="testscene1_unity" AssetName="TestScene1.unity" />
 </AssetManifest>

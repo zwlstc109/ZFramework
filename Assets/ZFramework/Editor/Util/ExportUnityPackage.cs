@@ -16,7 +16,7 @@ namespace Zframework.Editor
             var assetPathName = "Assets/ZFramework";//要打包的文件夹
             var fileName = "ZFramework_"/* + DateTime.Now.ToString("yyyyMMdd_hh") */+ ".unitypackage";//包名  ps:大写的M是月份
             AssetDatabase.ExportPackage(assetPathName, fileName, ExportPackageOptions.Recurse);
-            Application.OpenURL("file:///" + Path.Combine(Application.dataPath, "../"));//打开一下Assets文件夹(导出的包放在这里了)
+            Application.OpenURL("file:///" + System.IO.Path.Combine(Application.dataPath, "../"));//打开一下Assets文件夹(导出的包放在这里了)
                                                                                         //生成上一级的目录要用这个api
         }
 

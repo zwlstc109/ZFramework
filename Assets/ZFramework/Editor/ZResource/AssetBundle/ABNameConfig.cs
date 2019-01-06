@@ -7,6 +7,7 @@ namespace Zframework.Editor
     {     
         //单个文件所在文件夹路径，会遍历这个文件夹下面所有Prefab,所有的Prefab的名字不能重复，必须保证名字的唯一性
         public List<string> AllPrefabAB = new List<string>();//一个prefab一个包 
+        public List<string> AllSceneAB = new List<string>();//一个Scene一个包 依赖项打另一个包 包名是SceneName_Depend
         public List<FolderABName> AllFolderAB = new List<FolderABName>();//单个文件夹里的所有资源打一个包
 
         [System.Serializable]

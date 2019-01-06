@@ -11,7 +11,7 @@ namespace Zframework
         private Stack<int> mIdleFsmLst = new Stack<int>();//存放闲置的fsm 考虑fsm回收再利用
         internal override void Init()
         {
-            Z.Debug.Log("FSMManager init");
+            //Z.Debug.Log("FSMManager init");
             Z.Fsm = this;
         }
         /// <summary>

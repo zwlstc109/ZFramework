@@ -6,11 +6,17 @@ using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Xml.Serialization;
+using System.Text;
 
 namespace Zframework.Editor
 {   
     public static class BuildAB
     {
+        enum SingleAssetType
+        {
+            Prefab,
+            Scene
+        }
         //AB包打完后 所在的路径
         private static string mABBuildTargetPath = Application.streamingAssetsPath;
         //AB包 包名标记 配置文件 所在路径
@@ -23,21 +29,24 @@ namespace Zframework.Editor
         //所有以单个文件夹打包的AB     key 包名, value 全路径
         private static Dictionary<string, string> mAllFolderABDic = new Dictionary<string, string>();
         //所有以单个prefab打包的AB    key 包名，value 依赖全路径
-        private static Dictionary<string, List<string>> mAllPrefabABDic = new Dictionary<string, List<string>>();
+        private static Dictionary<string, List<string>> mAllSingleAssetABDic = new Dictionary<string, List<string>>();
         //路径过滤
-        private static List<string> mABPathFilter = new List<string>();     
+        private static List<string> mABPathFilters = new List<string>();     
         //储存所有有效资源路径 （储存的是那些会在运行时主动加载的资源 声音图片预制体之类，即二进制配置表中需要记录的信息）
-        private static List<string> mAssetLst = new List<string>();
-
+        private static List<string> mAssetFilters = new List<string>();
+        //所有所有的资源对应的AB包名
+        private static Dictionary<string, string> mAllFileABNameDic = new Dictionary<string, string>();
+        private static ABNameConfig abNameConfig;
         [MenuItem("ZFramework/AssetBundle/打包 (需配置)")]
         public static void Build()
         {
           
-            mAssetLst.Clear();
-            mABPathFilter.Clear();
+            mAssetFilters.Clear();
+            mABPathFilters.Clear();
             mAllFolderABDic.Clear();
-            mAllPrefabABDic.Clear();
-            ABNameConfig abNameConfig = AssetDatabase.LoadAssetAtPath<ABNameConfig>(mABNameConfigPath);
+            mAllSingleAssetABDic.Clear();
+            mAllFileABNameDic.Clear();
+            abNameConfig = AssetDatabase.LoadAssetAtPath<ABNameConfig>(mABNameConfigPath);
             //------文件夹ab字典添加
             foreach (var folderAB in abNameConfig.AllFolderAB)
             {
@@ -48,52 +57,24 @@ namespace Zframework.Editor
                 else
                 {
                     mAllFolderABDic.Add(folderAB.ABName, folderAB.Path);
-                    mABPathFilter.Add(folderAB.Path);
-                    mAssetLst.Add(folderAB.Path);
+                    mABPathFilters.Add(folderAB.Path);
+                    mAssetFilters.Add(folderAB.Path);
                 }
             }
             //------单prefab ab字典添加
-
             //在配置文件夹下搜索所有prefab
-            string[] prfGuids = AssetDatabase.FindAssets("t:Prefab", abNameConfig.AllPrefabAB.ToArray());
-            for (int i = 0; i < prfGuids.Length; i++)
-            {   
-                string prfPath = AssetDatabase.GUIDToAssetPath(prfGuids[i]);
-                EditorUtility.DisplayProgressBar("查找Prefab", "Prefab:" + prfPath, i * 1.0f / prfGuids.Length);
-                mAssetLst.Add(prfPath);
-                if (!containPathFilter(prfPath))
-                {
-                    string prfName = prfPath.Remove(0, prfPath.LastIndexOf("/") + 1);
-                    GameObject obj = AssetDatabase.LoadAssetAtPath<GameObject>(prfPath);
-                    string[] allDependences = AssetDatabase.GetDependencies(prfPath);
-                    List<string> allDependPath = new List<string>();
-                    for (int j = 0; j < allDependences.Length; j++)
-                    {
-                        if (!containPathFilter(allDependences[j]) && !allDependences[j].EndsWith(".cs"))
-                        {
-                            mABPathFilter.Add(allDependences[j]);
-                            allDependPath.Add(allDependences[j]);
-                        }
-                    }
-                    if (mAllPrefabABDic.ContainsKey(obj.name))
-                    {
-                        Debug.LogError("存在相同名字的Prefab！名字：" + obj.name);
-                    }
-                    else
-                    {
-                        mAllPrefabABDic.Add(obj.name, allDependPath);
-                    }
-                }
-            }
-
+            _FindSingleAsset(SingleAssetType.Prefab);
+            //------scene ab字典添加
+            //在配置文件夹下搜索所有场景
+            _FindSingleAsset(SingleAssetType.Scene);
             foreach (string name in mAllFolderABDic.Keys)
             {
                 setABName(name, mAllFolderABDic[name]);
             }
 
-            foreach (string name in mAllPrefabABDic.Keys)
+            foreach (string name in mAllSingleAssetABDic.Keys)
             {
-                setABName(name, mAllPrefabABDic[name]);
+                setABName(name, mAllSingleAssetABDic[name]);
             }
 
             BunildAssetBundle();
@@ -108,6 +89,68 @@ namespace Zframework.Editor
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             EditorUtility.ClearProgressBar();
+        }
+        private static void _FindSingleAsset(SingleAssetType assetType)
+        {
+            string assetTypeStr = assetType == SingleAssetType.Prefab ? "Prefab" : "Scene";
+            var assetLst = assetType == SingleAssetType.Prefab ? abNameConfig.AllPrefabAB : abNameConfig.AllSceneAB;
+
+            string[] assetGuids = AssetDatabase.FindAssets("t:"+ assetTypeStr, assetLst.ToArray());
+
+            for (int i = 0; i < assetGuids.Length; i++)
+            {
+                string assetPath = AssetDatabase.GUIDToAssetPath(assetGuids[i]);
+               
+                mAssetFilters.Add(assetPath);
+                if (!containPathFilter(assetPath))
+                {
+                    string assetName = Util.Path.SingleAsset2ABName(assetPath);
+                    //if (assetName=="TestScene1_unity")
+                    //{
+                    //    int m = 0;
+                    //}
+                    //GameObject obj = AssetDatabase.LoadAssetAtPath<GameObject>(prfPath);
+                    string[] allDependences = AssetDatabase.GetDependencies(assetPath);
+                    List<string> allDependPath = new List<string>();
+                    for (int j = 0; j < allDependences.Length; j++)
+                    {
+                        EditorUtility.DisplayProgressBar("查找" + assetTypeStr, assetTypeStr + ":" + assetPath, j * 1.0f / allDependences.Length);
+                        if (containPathFilter(allDependences[j]) || allDependences[j].EndsWith(".cs")|| allDependences[j].EndsWith("LightingData.asset")
+                            || allDependences[j].Contains("Lightmap")|| allDependences[j].Contains("ReflectionProbe")||
+                            (assetType == SingleAssetType.Scene&& allDependences[j].EndsWith(".mat")))
+
+                            continue;
+                        mABPathFilters.Add(allDependences[j]);
+                        if (allDependences[j].Equals(assetPath) && assetType == SingleAssetType.Scene)//Scene过滤时 依赖项剔除自己
+                            continue;
+                        allDependPath.Add(allDependences[j]);
+                    }
+
+
+
+                    if (mAllSingleAssetABDic.ContainsKey(assetName))
+                    {
+                        Debug.LogErrorFormat("存在相同名字的{0}！名字：{1}" , assetTypeStr, assetName);
+                    }
+                    else
+                    {
+                        if (assetType == SingleAssetType.Scene)
+                        {
+                            List<string> temp = null;
+                            temp = new List<string>(); temp.Add(assetPath);
+                            if (allDependPath.Count>0)
+                            {                               
+                                Debug.LogWarningFormat("场景 {0} 不应该依赖于额外的资源", assetPath);
+                            }
+                          
+                            mAllSingleAssetABDic.Add(assetName, temp);
+                            mAllSingleAssetABDic.Add(Z.Str.Fmt("{0}_{1}", assetName, "Depend"), allDependPath);
+                        }
+                        else
+                            mAllSingleAssetABDic.Add(assetName, allDependPath);
+                    }
+                }
+            }
         }
         //标记包名
         static void setABName(string name, string path)
@@ -141,10 +184,9 @@ namespace Zframework.Editor
             {   //在此包名下所有的资源 的路径
                 string[] assetPath = AssetDatabase.GetAssetPathsFromAssetBundle(abNames[i]);
                 for (int j = 0; j < assetPath.Length; j++)
-                {   
-                    //if (assetPath[j].EndsWith(".cs"))//没看懂为什么要过滤这个
-                    //    continue;
-
+                {
+                   
+                    mAllFileABNameDic.Add(assetPath[j], abNames[i]);
                     //Debug.Log("此AB包：" + allBundles[i] + "下面包含的资源文件路径：" + allBundlePath[j]);
                     if (isAssetPath(assetPath[j]))
                     {
@@ -222,13 +264,11 @@ namespace Zframework.Editor
                 for (int i = 0; i < resDependce.Length; i++)
                 {
                     string tempPath = resDependce[i];
-                    if (tempPath == path || path.EndsWith(".cs"))
-                        continue;
-
+                                        
                     string abName = "";
-                    if (resPathDic.TryGetValue(tempPath, out abName))
+                    if (mAllFileABNameDic.TryGetValue(tempPath, out abName))
                     {
-                        if (abName == resPathDic[path])
+                        if (abName == resPathDic[path])//依赖资源就在本包内 忽略   （其实就包含了过滤自己）
                             continue;
 
                         if (!element.DependAB.Contains(abName))
@@ -289,9 +329,9 @@ namespace Zframework.Editor
         /// <returns></returns>
         static bool containPathFilter(string path)
         {
-            for (int i = 0; i < mABPathFilter.Count; i++)
+            for (int i = 0; i < mABPathFilters.Count; i++)
             {   //单prefab包包含过                              //包含在文件夹下                     //确保剔除包含路径后以/开头 以保证是真的包含在文件夹下
-                if (path.Equals(mABPathFilter[i]) || (path.Contains(mABPathFilter[i]) && (path.Replace(mABPathFilter[i], "")[0] == '/')))
+                if (path.Equals(mABPathFilters[i]) || (path.Contains(mABPathFilters[i]) && (path.Replace(mABPathFilters[i], "")[0] == '/')))
                     return true;
             }
 
@@ -305,9 +345,9 @@ namespace Zframework.Editor
         /// <returns></returns>
         static bool isAssetPath(string path)
         {
-            for (int i = 0; i < mAssetLst.Count; i++)
+            for (int i = 0; i < mAssetFilters.Count; i++)
             {
-                if (path.Contains(mAssetLst[i]))
+                if (path.Contains(mAssetFilters[i]))
                 {
                     return true;
                 }

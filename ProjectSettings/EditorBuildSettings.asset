@@ -8,13 +8,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Demo/Scenes/0.unity
     guid: 321a0b9813694054c91f2ad4befc8989
-  - enabled: 1
+  - enabled: 0
     path: Assets/Demo/Scenes/Empty.unity
     guid: 7b9f2dfcbce990b4ea71deaabfa53617
-  - enabled: 1
+  - enabled: 0
     path: Assets/Demo/Scenes/Start.unity
     guid: 271d13c572424d4448ed2b5d955b9274
-  - enabled: 1
+  - enabled: 0
     path: Assets/Demo/Scenes/TestScene1.unity
     guid: 9f2da015c4acc3a46a62d1e85b6b8888
   - enabled: 0

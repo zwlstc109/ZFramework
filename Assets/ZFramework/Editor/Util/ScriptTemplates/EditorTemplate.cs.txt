@@ -6,10 +6,10 @@ using System.IO;
 using UniRx;
 #if UNITY_EDITOR
 using UnityEditor;
-namespace Zframework
+namespace Zframework.Editor
 {
  
-    public class #NAME#
+    public static class #NAME#
     {                                                
       
 

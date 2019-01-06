@@ -20,7 +20,7 @@ namespace Zframework
         
         internal override void Init()
         {
-            Z.Debug.Log("ResourceManager init");
+            //Z.Debug.Log("ResourceManager init");
             Z.Resource = this;
             Z.Pool.RegisterClassCustomPool(() => new ResourceItem(), ResourceItem.Clean, 500);
             ResourceGroupManager.Init();
@@ -30,9 +30,9 @@ namespace Zframework
             }          
         }
         /// <summary>
-        /// 解析处理AB包清单信息
+        /// 解析处理AB包清单信息 
         /// </summary>
-        public void AnalyzeAssetBundleData() { AssetBundleManager.LoadABManifest(); }
+        public void AnalyzeAssetBundleData() { AssetBundleManager.LoadABManifest(); }//FOR TEST
         /// <summary>
         /// 同步加载资源
         /// </summary>
@@ -137,21 +137,21 @@ namespace Zframework
         /// <param name="path"></param>
         /// <param name="refCountAdd"></param>
         /// <returns></returns>
-        private ResourceItem _GetCachedResItem(string path,int groupIndex ,int refCountAdd=1)
+        private ResourceItem _GetCachedResItem(string path,int groupIndex )
         {
             var resItem = ResourceItemDic.GetValue(path);
             if (resItem!=null&& resItem.Asset != null)
             {
-                IncreaseRefCount(resItem,groupIndex,refCountAdd);
+                IncreaseRefCount(resItem,groupIndex);
                 return resItem;
             }
             return null;
         }
-        internal void IncreaseRefCount(ResourceItem resItem,int groupIndex ,int refCountAdd=1)
+        internal void IncreaseRefCount(ResourceItem resItem,int groupIndex )
         {
-            resItem.RefCount += refCountAdd;
+            resItem.RefCount ++;
             resItem.LastUseTime= Time.realtimeSinceStartup;//先存着再说
-            Z.Obs.ForLoop(refCountAdd, _ => resItem.AddTo(groupIndex));//考虑到释放资源组时的操作即减少引用计数，则哪里增加的就在哪里加入组中，这样可保证加了多少，等减掉的时候就能不多不少得减掉 应该没错..
+            resItem.AddTo(groupIndex);//考虑到释放资源组时的操作即减少引用计数，则哪里增加的就在哪里加入组中，这样可保证加了多少，等减掉的时候就能不多不少得减掉 应该没错..
         }
         //internal override void MgrUpdate()
         //{

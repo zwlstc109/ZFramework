@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using System;
+using System.Threading.Tasks;
+
 namespace Zframework
 {
     
@@ -17,27 +19,29 @@ namespace Zframework
             //...
             //...
             
-            Z.Scene.LoadScene("Start", FadeMode.None,()=> Z.UI.Open("Assets/GameData/Prefabs/UGUI/Panel/pnlStartMenu.prefab"));
+            Z.Scene.LoadScene("Assets/Demo/Scenes/Start.unity", FadeMode.None,()=> Z.UI.Open("Assets/GameData/Prefabs/UGUI/Panel/pnlStartMenu.prefab"));
 
-           
+            //int[] numbers = new int[10000] ;
+            //System.Random rd = new System.Random();
+            //Parallel.For(0,numbers.Length, i=>{
+            //    int factor = Z.Rd.SysHitPercent(50) ? -1 : 1;
+            //    numbers[i] = 100 + factor *Z.Rd.SysNumber(50, 99);
+            //});
+            //FunnySort sort = new FunnySort(numbers);
+            //sort.Sort();
 
-            //Action<int> a = _ => { _++; };
-            //Z.Pool.RegisterClassPool<TreeNode<Test>>(100);
+#if UNITY_EDITOR
+            //string[] prfGuids =UnityEditor. AssetDatabase.FindAssets("t:Scene",new string[] { "Assets/Demo/Scenes" });
+            ////string prfPath =(prfGuids[i]);
+            //Z.Obs.ForLoop(prfGuids.Length, i => Z.Debug.Log(UnityEditor.AssetDatabase.GUIDToAssetPath(prfGuids[i])));
+#endif
 
-            //Tree<Test> tree = new Tree<Test>();
-            //TreeNode<Test> A = new TreeNode<Test>("A"); TreeNode<Test> B = new TreeNode<Test>("B");
-            //tree.Root.AddChild(A); tree.Root.AddChild(B);
-            //TreeNode<Test> AA1 = new TreeNode<Test>("AA1"); TreeNode<Test> AA2 = new TreeNode<Test>("AA2"); TreeNode<Test> AA3 = new TreeNode<Test>("AA3");
-            //A.AddChild(AA1); A.AddChild(AA2); A.AddChild(AA3);
-            //A.RemoveChild(B);
-            //Debug.Log(".........................................");
-            //tree.Root.ActionRecursive(n => Debug.Log(n.Name)/*{ }*/);
-            
 
-            TestClass c = new TestClass();
-            var temp = c;
-            c.Destroy();
-            Debug.Log(temp == null);
+
+            //TestClass c = new TestClass();
+            //var temp = c;
+            //c.Destroy();
+            //Debug.Log(temp == null);
         }
 
     }

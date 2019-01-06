@@ -1,0 +1,28 @@
+ManifestFileVersion: 0
+CRC: 3712389830
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 08a65b47decc16b3f44ed1696cbc52d7
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 387ab1b367dd3c2a8b60be2d9a7323db
+HashAppended: 0
+ClassTypes:
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 89
+  Script: {instanceID: 0}
+- Class: 104
+  Script: {instanceID: 0}
+- Class: 157
+  Script: {instanceID: 0}
+- Class: 258
+  Script: {instanceID: 0}
+Assets:
+- Assets/Demo/Scenes/Empty.unity
+Dependencies: []

@@ -45,7 +45,7 @@ namespace Zframework
         private IDisposable mFadeDispose;
         internal override void Init()
         {
-            Z.Debug.Log("SceneManager init");
+            //Z.Debug.Log("SceneManager init");
             Z.Scene = this;
             Z.Pool.RegisterClassCustomPool(() => new FadeData(), FadeData.Clean, 2);
         }
@@ -85,9 +85,13 @@ namespace Zframework
         /// <summary>
         /// 同步加载一个场景 
         /// </summary>
-        /// <param name="sceneName"></param>
-        public void LoadScene(string sceneName,FadeMode mode,Action loadedCallBack=null)
-        {           
+        /// <param name="scenePath"></param>
+        public void LoadScene(string scenePath,FadeMode mode,Action loadedCallBack=null)
+        {
+            //先加载场景AB包
+            _LoadSceneAB(scenePath);
+            string sceneName = Z.Str.GetAssetNoExtensionName(scenePath);
+
             Fade(mode, () =>
             {
                 UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
@@ -96,10 +100,13 @@ namespace Zframework
                     Z.Subject.Fire("Z_FadeOutAction", null);
             });          
         }
+       
 
-        public void LoadSceneAsync(string sceneName,Action<object> doneCallback=null,bool fadeIn=true,bool fadeOut=true, object userData=null)
+        public void LoadSceneAsync(string scenePath,Action<object> doneCallback=null,bool fadeIn=true,bool fadeOut=true, object userData=null)
         {
-
+            //先加载场景AB包
+            _LoadSceneAB(scenePath);
+            string sceneName = Z.Str.GetAssetNoExtensionName(scenePath);
             AsyncOperation asyncScene = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
             asyncScene.allowSceneActivation = false;
             if (fadeIn)
@@ -144,8 +151,8 @@ namespace Zframework
                     }
 
                 }
-
-                ClearCache();
+                //TODO将来如果在读条中加载资源 要在这个清理缓存前处理 这样可保证引用计数先加再减  (场景的ResItem直接添加进0组 会在下一句话时清理)
+                ClearCache();//TODO 暂时将场景ResItem放到预加载组
                 asyncScene.allowSceneActivation = true;
 
                 //自行加载剩余的10%
@@ -164,6 +171,24 @@ namespace Zframework
 
             }
           
+        }
+        /// <summary>
+        /// 通过Z.Resource找到ResItem 并调用AssetBundleManager的加载AB包方法
+        /// </summary>
+        /// <param name="scenePath"></param>
+        public void _LoadSceneAB(string scenePath)
+        {
+            if (Z.Resource.LoadFromAssetBundle)
+            {
+                ResourceItem resItem = Z.Resource.ResourceItemDic[scenePath];
+                if (resItem.AssetBundle == null)
+                {
+                    if (AssetBundleManager.LoadResourceAB(resItem))
+                    {
+                        Z.Resource.IncreaseRefCount(resItem, 1);//TODO 暂时将场景ResItem放到预加载组
+                    }
+                }
+            }
         }
         //转场清理默认资源组
         private void ClearCache()

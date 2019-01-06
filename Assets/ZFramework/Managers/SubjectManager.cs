@@ -17,7 +17,7 @@ namespace Zframework
 
         internal override void Init()
         {
-            Z.Debug.Log("SubjectManager init");
+            //Z.Debug.Log("SubjectManager init");
             Z.Subject = this;
         }
         //用于轻量级无装箱版的字典的字典， 通过类型 找到对应的字典

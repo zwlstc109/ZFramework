@@ -16,7 +16,7 @@ namespace Zframework
         internal override void Init()
         {
            
-            Z.Debug.Log("CoreManager init"/* + Time.frameCount.ToString()*/);
+            //Z.Debug.Log("CoreManager init"/* + Time.frameCount.ToString()*/);
             if (!mInitial)
             {
                 DontDestroyOnLoad(gameObject);

@@ -9,9 +9,9 @@ using System.Text.RegularExpressions;
 public class CreateScriptWithTemplate
 {
 	//脚本模板所在目录
-	private const string ZFRAMEWORK_SCRIPT_DEFAULT = "Assets/ZFramework/Editor/ScriptTemplates/LibaryTemplate.cs.txt";
-    private const string ZFRAMEWORK_MBSCRIPT_DEFAULT = "Assets/ZFramework/Editor/ScriptTemplates/MonoBehaviorTemplate.cs.txt";
-    private const string ZFRAMEWORK_EDITORSCRIPT_DEFAULT = "Assets/ZFramework/Editor/ScriptTemplates/EditorTemplate.cs.txt";
+	private const string ZFRAMEWORK_SCRIPT_DEFAULT = "Assets/ZFramework/Editor/Util/ScriptTemplates/LibaryTemplate.cs.txt";
+    private const string ZFRAMEWORK_MBSCRIPT_DEFAULT = "Assets/ZFramework/Editor/Util/ScriptTemplates/MonoBehaviorTemplate.cs.txt";
+    private const string ZFRAMEWORK_EDITORSCRIPT_DEFAULT = "Assets/ZFramework/Editor/Util/ScriptTemplates/EditorTemplate.cs.txt";
 
     [MenuItem("Assets/Create/ZFrameworkLibaryScript", false, 80)]
 	public static void CreatMyScript()//创建ZFramework库脚本

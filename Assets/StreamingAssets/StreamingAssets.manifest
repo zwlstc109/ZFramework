@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 1150776948
+CRC: 338466394
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -12,43 +12,57 @@ AssetBundleManifest:
       Name: sprites
       Dependencies: {}
     Info_3:
-      Name: attack
+      Name: attack_prefab
       Dependencies:
         Dependency_0: shader
     Info_4:
-      Name: ptctest1
+      Name: ptctest1_prefab
       Dependencies: {}
     Info_5:
-      Name: cube
+      Name: cube_prefab
       Dependencies: {}
     Info_6:
-      Name: cube variant
+      Name: cube variant_prefab
       Dependencies:
-        Dependency_0: cube
+        Dependency_0: cube_prefab
     Info_7:
-      Name: pnlempty
+      Name: pnlempty_prefab
       Dependencies: {}
     Info_8:
-      Name: pnlloading
+      Name: pnlloading_prefab
       Dependencies: {}
     Info_9:
-      Name: pnlmainmenu
+      Name: pnlmainmenu_prefab
       Dependencies: {}
     Info_10:
-      Name: pnlstartmenu
+      Name: pnlstartmenu_prefab
       Dependencies: {}
     Info_11:
-      Name: pnltest1
+      Name: pnltest1_prefab
       Dependencies: {}
     Info_12:
-      Name: pnltest1sub
+      Name: pnltest1sub_prefab
       Dependencies: {}
     Info_13:
-      Name: pnltest2
+      Name: pnltest2_prefab
       Dependencies: {}
     Info_14:
-      Name: pnltest3
+      Name: pnltest3_prefab
       Dependencies: {}
     Info_15:
+      Name: 0_unity
+      Dependencies: {}
+    Info_16:
+      Name: empty_unity
+      Dependencies: {}
+    Info_17:
+      Name: start_unity
+      Dependencies:
+        Dependency_0: cube_prefab
+        Dependency_1: cube variant_prefab
+    Info_18:
+      Name: testscene1_unity
+      Dependencies: {}
+    Info_19:
       Name: assetmanifest
       Dependencies: {}

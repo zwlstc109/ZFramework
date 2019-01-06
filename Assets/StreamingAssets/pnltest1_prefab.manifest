@@ -1,0 +1,40 @@
+ManifestFileVersion: 0
+CRC: 3452772069
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: a51919b0abcce48c6ee48ae0ab5e17fa
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 315d8d02d957c4c230f0bd2ed535de4b
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+- Class: 114
+  Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+- Class: 114
+  Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 36c19f358211a69479da5652d019f07f, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 128
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+- Class: 222
+  Script: {instanceID: 0}
+- Class: 224
+  Script: {instanceID: 0}
+Assets:
+- Assets/GameData/Prefabs/UGUI/Panel/PnlTest1.prefab
+Dependencies: []
