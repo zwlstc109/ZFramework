@@ -1,0 +1,32 @@
+ManifestFileVersion: 0
+CRC: 3767238682
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 0aeccd59c739b4181cb34d11fd58c2f0
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 97efc28defd7deb4f313a7dd038cb5af
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+- Class: 114
+  Script: {fileID: -113659843, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 60e28b49297bd1f4c85920e661ec6290, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+- Class: 222
+  Script: {instanceID: 0}
+- Class: 224
+  Script: {instanceID: 0}
+Assets:
+- Assets/GameData/Prefabs/UGUI/Panel/PnlLoading.prefab
+Dependencies: []

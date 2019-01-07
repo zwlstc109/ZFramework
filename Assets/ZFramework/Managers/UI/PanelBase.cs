@@ -14,6 +14,7 @@ namespace Zframework
         internal int mId = -1;
         public int Id { get { return mId; } }
 
+        private bool InPool = false;
 
         [HideInInspector] public CanvasGroup CanvasGroup;
         //internal string Path;
@@ -56,7 +57,8 @@ namespace Zframework
         /// <param name="userData"></param>
         public virtual void OnLoad(object userData = null)
         {
-           
+            //Available = true;
+            //Visible = true;
         }
         public virtual void OnOpen(object userData=null)
         {
@@ -98,7 +100,7 @@ namespace Zframework
         /// <param name="userData"></param>
         public virtual void OnSwitch(object userData = null)
         {
-            Visible = false;
+            //Visible = false;  
         }
         public virtual void OnUnLoad(object userData = null)
         {
@@ -165,13 +167,13 @@ namespace Zframework
         /// <summary>
         /// 释放面板控制权 TODO
         /// </summary>
-        protected void ReleaseSelf(bool destroy=false)
+        protected void ReleaseSelf(bool destroy=false,object userData=null)
         {
             if (!Available)
             {
                 return;
             }
-            UIGroup.Release(NodeInGroup,destroy);
+            UIGroup.Release(NodeInGroup,destroy,userData);
         }
         /// <summary>
         /// 在UIGroup中锁定自己 使得UIGroup不接受任何打开请求
@@ -183,6 +185,40 @@ namespace Zframework
                 return;
             }
             UIGroup.Lock = value;
+        }
+
+
+        public static bool operator !=(PanelBase lhs, PanelBase rhs)
+        {
+            if (System.Object.Equals(rhs, null))
+            {
+                if (System.Object.Equals(lhs, null))
+                {
+                    return false;
+                }
+
+                if (lhs.InPool ||!lhs.gameObject)
+                {
+                    return false;
+                }
+            }
+            return !ReferenceEquals(lhs, rhs);
+        }
+        
+        public static bool operator ==(PanelBase lhs, PanelBase rhs)
+        {
+            if (System.Object.Equals(rhs, null))
+            {
+                if (System.Object.Equals(lhs, null))
+                {
+                    return true;
+                }
+                if (lhs.InPool || !lhs.gameObject)
+                {
+                    return true;
+                }
+            }
+            return ReferenceEquals(lhs, rhs);
         }
     }
 }

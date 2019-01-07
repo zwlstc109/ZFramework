@@ -42,11 +42,11 @@ namespace Zframework
         /// <param name="groupIndex"></param>
         internal static void AddTo(this ResourceItem resItem, int groupIndex)
         {
-            if (resItem.Asset==null)
-            {
-                Z.Debug.Warning("空壳无法加入资源组 "+resItem.AssetName+" "+resItem.Path);
-                return;
-            }
+            //if (resItem.Asset==null) //在其他调用这个方法的地方 都已经判空过 所以这边不要了
+            //{
+            //    Z.Debug.Warning("空壳无法加入资源组 "+resItem.AssetName+" "+resItem.Path);
+            //    return;
+            //}
 
             if (groupIndex>mGroupLst.Count-1)
             {

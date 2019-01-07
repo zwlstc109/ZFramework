@@ -9,7 +9,7 @@ namespace Zframework
     /// 树节点
     /// </summary>
     /// <typeparam name="T"></typeparam>  
-    public class TreeNode<T> where T:class
+    public class TreeNode<T>:ZObject where T:class
     {
        
         public TreeNode<T> Parent=null;

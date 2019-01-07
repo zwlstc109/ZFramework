@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 3904912289
+CRC: 2406064274
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -12,46 +12,65 @@ AssetBundleManifest:
       Name: sprites
       Dependencies: {}
     Info_3:
-      Name: attack
+      Name: attack_prefab
       Dependencies:
         Dependency_0: shader
     Info_4:
-      Name: ptctest1
+      Name: ptctest1_prefab
       Dependencies: {}
     Info_5:
-      Name: cube
+      Name: cube_prefab
       Dependencies: {}
     Info_6:
-      Name: cube variant
-      Dependencies:
-        Dependency_0: cube
+      Name: cube (1)_prefab
+      Dependencies: {}
     Info_7:
-      Name: itmtest1
+      Name: cube (2)_prefab
       Dependencies: {}
     Info_8:
-      Name: itmtest2
-      Dependencies: {}
+      Name: cube variant_prefab
+      Dependencies:
+        Dependency_0: cube_prefab
     Info_9:
-      Name: pnlempty
+      Name: pnlempty_prefab
       Dependencies: {}
     Info_10:
-      Name: pnlloading
+      Name: pnlloading_prefab
       Dependencies: {}
     Info_11:
-      Name: pnlmainmenu
+      Name: pnlmainmenu_prefab
       Dependencies: {}
     Info_12:
-      Name: pnlstartmenu
+      Name: pnlstartmenu_prefab
       Dependencies: {}
     Info_13:
-      Name: pnltest1
+      Name: pnltest1_prefab
       Dependencies: {}
     Info_14:
-      Name: pnltest2
+      Name: pnltest1sub_prefab
       Dependencies: {}
     Info_15:
-      Name: pnltest3
+      Name: pnltest2_prefab
       Dependencies: {}
     Info_16:
+      Name: pnltest3_prefab
+      Dependencies: {}
+    Info_17:
+      Name: 0_unity
+      Dependencies: {}
+    Info_18:
+      Name: empty_unity
+      Dependencies: {}
+    Info_19:
+      Name: start_unity
+      Dependencies:
+        Dependency_0: cube_prefab
+        Dependency_1: cube variant_prefab
+    Info_20:
+      Name: testscene1_unity
+      Dependencies:
+        Dependency_0: cube (1)_prefab
+        Dependency_1: cube (2)_prefab
+    Info_21:
       Name: assetmanifest
       Dependencies: {}

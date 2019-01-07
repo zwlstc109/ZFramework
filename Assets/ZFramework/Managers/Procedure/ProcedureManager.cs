@@ -19,7 +19,7 @@ namespace Zframework
         public ProcedureBase CurrentProcedure { get { return Z.Fsm.GetFsmCurrentState(mProcedureFsmId) as ProcedureBase; } }
         internal override void Init()
         {
-            Z.Debug.Log("ProcedureManager init");
+            //Z.Debug.Log("ProcedureManager init");
             Z.Procedure = this;
 
             ProcedureBase[] procedures = new ProcedureBase[m_AvailableProcedureTypeNames.Length];

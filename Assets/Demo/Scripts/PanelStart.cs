@@ -15,7 +15,7 @@ public class PanelStart : PanelBase
         base.OnLoad(userData);
         mbtnStart.onClick.AddListener(() =>
         {
-            Z.Scene.LoadSceneAsync("TestScene1", _ =>
+            Z.Scene.LoadSceneAsync("Assets/Demo/Scenes/TestScene1.unity", _ =>
             {
                 CloseSelf();
                 Z.Procedure.ChangeProcedure<ProcedurePlay>();              

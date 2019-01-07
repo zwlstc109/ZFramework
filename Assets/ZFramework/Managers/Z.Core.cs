@@ -79,7 +79,10 @@ namespace Zframework
         #region 框架组件
         /// <summary> AssetBundleManager</summary>
         //internal static AssetBundleManager AssetBundle { get; set; }
-        /// <summary> ResrouceManager</summary>
+
+        /// <summary> CoreManager</summary>
+        internal static CoreManager core { get; set; }
+        /// <summary> ResourceManager</summary>
         public static ResourceManager Resource { get; internal set; }
         /// <summary>AudioManager</summary>
         public static AudioManager Audio { get; internal set; }

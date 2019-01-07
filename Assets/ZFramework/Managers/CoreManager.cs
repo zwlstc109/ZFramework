@@ -15,8 +15,8 @@ namespace Zframework
         bool mInitial = false;
         internal override void Init()
         {
-           
-            Z.Debug.Log("CoreManager init"/* + Time.frameCount.ToString()*/);
+            Z.core = this;
+            //Z.Debug.Log("CoreManager init"/* + Time.frameCount.ToString()*/);
             if (!mInitial)
             {
                 DontDestroyOnLoad(gameObject);
@@ -40,6 +40,7 @@ namespace Zframework
             });
            
         }
+        
         private void OnApplicationQuit()
         {
 #if UNITY_EDITOR          

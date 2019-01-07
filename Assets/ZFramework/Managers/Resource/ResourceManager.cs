@@ -20,7 +20,7 @@ namespace Zframework
         
         internal override void Init()
         {
-            Z.Debug.Log("ResourceManager init");
+            //Z.Debug.Log("ResourceManager init");
             Z.Resource = this;
             Z.Pool.RegisterClassCustomPool(() => new ResourceItem(), ResourceItem.Clean, 500);
             ResourceGroupManager.Init();
@@ -30,9 +30,9 @@ namespace Zframework
             }          
         }
         /// <summary>
-        /// 解析处理AB包清单信息
+        /// 解析处理AB包清单信息 
         /// </summary>
-        public void AnalyzeAssetBundleData() { AssetBundleManager.LoadABManifest(); }
+        public void AnalyzeAssetBundleData() { AssetBundleManager.LoadABManifest(); }//FOR TEST
         /// <summary>
         /// 同步加载资源
         /// </summary>
@@ -79,7 +79,7 @@ namespace Zframework
                     Z.Debug.Error("请求加载的资源不在清单内 "+path);
                     return null;
                 }
-                if (AssetBundleManager.LoadResourceAB(resItem))
+                if (AssetBundleManager.LoadAssetBundle(resItem))
                 {
                     resItem.Asset = resItem.AssetBundle.LoadAsset<T>(resItem.AssetName);
                 }
@@ -137,21 +137,21 @@ namespace Zframework
         /// <param name="path"></param>
         /// <param name="refCountAdd"></param>
         /// <returns></returns>
-        private ResourceItem _GetCachedResItem(string path,int groupIndex ,int refCountAdd=1)
+        private ResourceItem _GetCachedResItem(string path,int groupIndex )
         {
             var resItem = ResourceItemDic.GetValue(path);
             if (resItem!=null&& resItem.Asset != null)
             {
-                IncreaseRefCount(resItem,groupIndex,refCountAdd);
+                IncreaseRefCount(resItem,groupIndex);
                 return resItem;
             }
             return null;
         }
-        internal void IncreaseRefCount(ResourceItem resItem,int groupIndex ,int refCountAdd=1)
+        internal void IncreaseRefCount(ResourceItem resItem,int groupIndex )
         {
-            resItem.RefCount += refCountAdd;
+            resItem.RefCount ++;
             resItem.LastUseTime= Time.realtimeSinceStartup;//先存着再说
-            Z.Obs.ForLoop(refCountAdd, _ => resItem.AddTo(groupIndex));//考虑到释放资源组时的操作即减少引用计数，则哪里增加的就在哪里加入组中，这样可保证加了多少，等减掉的时候就能不多不少得减掉 应该没错..
+            resItem.AddTo(groupIndex);//考虑到释放资源组时的操作即减少引用计数，则哪里增加的就在哪里加入组中，这样可保证加了多少，等减掉的时候就能不多不少得减掉 应该没错..
         }
         //internal override void MgrUpdate()
         //{
@@ -166,7 +166,7 @@ namespace Zframework
     /// <summary>
     /// 资源壳 记录了资源所在AB包、包依赖、引用计数等信息
     /// </summary>
-    public class ResourceItem
+    public class ResourceItem:ZObject
     {
         ////资源路径的CRC  本来想用crc做key 
         //public uint Crc = 0;
@@ -177,6 +177,28 @@ namespace Zframework
         public string ABName = string.Empty;
         //依赖的AB
         public List<string> DependAB = null;
+        //异步加载包依赖时 用来标记每个依赖包否加载完成
+        internal List<bool> DependLoadedFlag = null;
+        //用来标记包否已经可用 (本包、依赖包 加载完成)
+        internal bool AnsycLoaded = false;
+        //清除依赖包加载完成信息 将会在该资源每次异步加载前调用 加载过程中会重新判断一次所有包的加载到位  读取清单 初始化时也会执行一次
+        internal void ClearDependFlag()
+        {
+            AnsycLoaded = false;
+            if (DependLoadedFlag == null)
+            {
+                if (DependAB != null)
+                {
+                    DependLoadedFlag = new List<bool>();
+                    for (int i = 0; i < DependAB.Count; i++)
+                        DependLoadedFlag.Add(false);
+                }
+                return;
+            }
+            else
+                for (int i = 0; i < DependLoadedFlag.Count; i++)
+                    DependLoadedFlag[i] = false;
+        }
         //加载完的AB
         public AssetBundle AssetBundle = null;
         //-----------------------------------------------------

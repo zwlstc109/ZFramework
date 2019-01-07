@@ -1,0 +1,35 @@
+ManifestFileVersion: 0
+CRC: 4048085659
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 02d7627a86c20b14b2468eb9bc2bf15a
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 19d6577312f3ac7ad1cdc4f25bb69b0c
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 65
+  Script: {instanceID: 0}
+- Class: 135
+  Script: {instanceID: 0}
+- Class: 136
+  Script: {instanceID: 0}
+Assets:
+- Assets/GameData/Prefabs/Temp/Cube Variant.prefab
+Dependencies:
+- D:/study/MyFramework/Assets/StreamingAssets/cube_prefab

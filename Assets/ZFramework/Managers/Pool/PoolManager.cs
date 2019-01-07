@@ -14,7 +14,11 @@ namespace Zframework
         internal override void Init()
         {
             Z.Pool = this;
+            //通用池
+            RegisterClassPool<List<bool>>(5);
+            RegisterClassPool<List<int>>(5);
         }
+        
 
         /// <summary>
         /// 注册一个普通类池
@@ -42,8 +46,11 @@ namespace Zframework
         /// <param name="cleanMethod"> 清洗方法</param>
         /// <param name="initialAmount">初始数量</param>
         /// <param name="holdAmount">保有数量</param>
-        public void RegisterClassCustomPool<T>(Func<T> factoryMethod, Action<T> cleanMethod = null, int initialAmount = 0, int holdAmount = -1) where T : class, new()
+        public void RegisterClassCustomPool<T>(Func<T> factoryMethod=null, Action<T> cleanMethod = null, int initialAmount = 0, int holdAmount = -1) where T : class, new()
         {
+            if (factoryMethod==null)
+                factoryMethod = () => new T();
+
             string poolName = typeof(T).FullName;
             var pool = mObjectPoolDic.GetValue(poolName);
             if (pool != null)

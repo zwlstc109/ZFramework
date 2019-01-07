@@ -15,7 +15,7 @@ namespace Zframework
 
         internal override void Init()
         {
-            Z.Debug.Log("AudioManager init");
+            //Z.Debug.Log("AudioManager init");
             Z.Audio = this;
             mBackGroundSource.loop = true;
             mSoundSource.loop = false;

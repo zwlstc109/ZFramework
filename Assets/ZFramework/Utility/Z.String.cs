@@ -74,7 +74,16 @@ namespace Zframework
                 Builder.Length = 0;
                 return str;
             }
-
+            /// <summary>
+            /// 获取资源没有扩展名的名字
+            /// </summary>
+            /// <param name="path"></param>
+            /// <returns></returns>
+            public static string GetAssetNoExtensionName(string path)
+            {
+                string temp = path.Remove(0, path.LastIndexOf('/') + 1);
+                return temp.Remove(temp.LastIndexOf('.'));
+            }
         }
 
         //public class StringBuilder 

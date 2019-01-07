@@ -21,8 +21,8 @@ namespace Zframework
            logSubject.Where(e => ReferenceEquals(e.LoggerName, "DefaultLogger")).Subscribe(new UnityDebugSink());//有个不好的地方 用默认日志输出器就不能双击console来到debug.log的地方了
             //默认日志输出器                                                     //但可以使用Debug.log 不强制使用Z.log   Z.log用来以后可以把输出整理到一个UI上 持久化到文件上 甚至上传到服务器之类的需求
             mDefaultLogger = new Logger("DefaultLogger");
-         
-            Z.Debug.Log("LogManager init");
+
+            //Z.Debug.Log("LogManager init");
         }
 
         public Action<LogEntry> RegisterLogger(Logger logger)
