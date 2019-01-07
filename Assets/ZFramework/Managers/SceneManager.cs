@@ -91,20 +91,18 @@ namespace Zframework
         /// </summary>
         /// <param name="scenePath"></param>
         public void LoadScene(string scenePath,FadeMode mode,Action loadedCallBack=null)
-        {     
-            _LoadSceneABAnsyc(scenePath,loadedCallBack);//异步是为了在先调这个函数的情况下 不阻碍幕布的开启
-            Fade(mode, () =>
-            {           
-                if (mode == FadeMode.FadeInOut)
+        {
+            Already = false;
+            _LoadSceneBundleAnsyc(scenePath,loadedCallBack,mode);//异步是为了在先调这个函数的情况下 不阻碍幕布的开启
+            Fade(mode,()=> {
+                if (mode == FadeMode.FadeInOut&&Z.Scene.Already)
                     Z.Subject.Fire("Z_FadeOutAction", null);
-            }
-            );
-
+            });
         }
        
         public void LoadSceneAsync(string scenePath,Action<object> doneCallback=null,bool fadeIn=true,bool fadeOut=true, object userData=null)
         {
-             
+            Already = false;
             if (fadeIn)
             {
                 Fade(FadeMode.FadeIn,() => _LoadSceneAsync(scenePath, doneCallback, fadeOut, userData));   
@@ -114,6 +112,7 @@ namespace Zframework
         }
         private void _LoadSceneAsync(string scenePath, Action<object> doneCallback ,bool fade ,object userData = null)
         {
+           
             mDoneCallback = doneCallback;
             StartCoroutine(LoadAsync(scenePath, userData,fade));
             Z.UI.Open(LoadingUIPath, Z.UI.Top);
@@ -126,7 +125,7 @@ namespace Zframework
         {
             LoadingProgress = 0;
             int targetProgress = 0;
-            Already = false;
+          
             //现在clearCache在下面这个方法内调用      //   TODO 可能这前面还要加上加载其他资源的代码 先加再减避免重复加载 等于是要再前面封装一个 一股脑加载资源的进度输出
             _LoadSceneAB(scenePath);
             string sceneName = Z.Str.GetAssetNoExtensionName(scenePath);
@@ -201,7 +200,7 @@ namespace Zframework
         /// </summary>
         /// <param name="scenePath"></param>
         ///
-        private void _LoadSceneABAnsyc(string scenePath,Action loadedCallback)
+        private void _LoadSceneBundleAnsyc(string scenePath,Action loadedCallback,FadeMode mode)
         {
             string sceneName = Z.Str.GetAssetNoExtensionName(scenePath);
             if (Z.Resource.LoadFromAssetBundle)
@@ -215,7 +214,10 @@ namespace Zframework
                         ClearCache();//场景包加载完毕 在正式同步加载界面前清理缓存
                         Z.Resource.IncreaseRefCount(resItem, 0);
                         UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
-                        loadedCallback?.Invoke();                      
+                        Already = true;
+                        loadedCallback?.Invoke();
+                        if (mode == FadeMode.FadeInOut)
+                            Z.Subject.Fire("Z_FadeOutAction", null);
                     });
                 }
             }

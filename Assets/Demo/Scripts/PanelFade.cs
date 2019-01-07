@@ -31,9 +31,9 @@ public class PanelFade : PanelBase
             case FadeMode.FadeInOut:
                 CanvasGroup.alpha = 0;
                 CanvasGroup.DOFade(1, 0.5f).onComplete += () =>
-                {
-                    tempData.FadeInDoneCallback?.Invoke();
+                {                  
                     mFadeInActionDisposer = Z.Subject.GetSubject("Z_FadeOutAction").Subscribe(_FadeOut);
+                    tempData.FadeInDoneCallback?.Invoke();
                 };
                 break;
             default:
@@ -47,6 +47,7 @@ public class PanelFade : PanelBase
         Z.Pool.Return(ref temp);
 
     }
+    
     private void _FadeOut(object n)
     {
         mFadeInActionDisposer?.Dispose();

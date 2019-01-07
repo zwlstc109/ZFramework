@@ -57,7 +57,8 @@ namespace Zframework
         /// <param name="userData"></param>
         public virtual void OnLoad(object userData = null)
         {
-           
+            //Available = true;
+            //Visible = true;
         }
         public virtual void OnOpen(object userData=null)
         {
@@ -99,7 +100,7 @@ namespace Zframework
         /// <param name="userData"></param>
         public virtual void OnSwitch(object userData = null)
         {
-            Visible = false;
+            //Visible = false;  
         }
         public virtual void OnUnLoad(object userData = null)
         {
