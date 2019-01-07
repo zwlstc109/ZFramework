@@ -31,11 +31,10 @@ namespace Zframework
             //sort.Sort();
 
 #if UNITY_EDITOR
-            //string[] prfGuids =UnityEditor. AssetDatabase.FindAssets("t:Scene",new string[] { "Assets/Demo/Scenes" });
-            ////string prfPath =(prfGuids[i]);
-            //Z.Obs.ForLoop(prfGuids.Length, i => Z.Debug.Log(UnityEditor.AssetDatabase.GUIDToAssetPath(prfGuids[i])));
+            //UnityEditor.EditorUtility.
 #endif
-
+            
+            
 
 
             //TestClass c = new TestClass();

@@ -217,22 +217,19 @@ namespace Zframework
             if (childNode != null)
             {
                 childNode.Value.OnOpen(userData);
+                _CoverParent(parentNode, childNode, userData);//调整coverParent到这里执行 
                 if (await)
                 {
                     Lock= true;
                     childNode.Value.SetAvailable(false);
-                    mUiComplete =Z.Subject.GetSubject("Z_UIComplete").Subscribe(_ =>
+                    Z.Subject.GetSubject("Z_UIComplete").First().Subscribe(_ =>
                     {
-                        _CoverParent(parentNode, childNode, userData);
+                       
                         childNode.Value.SetAvailable(true);                       
-                        mUiComplete.Dispose();
                         Lock = false;
                     });
                 }
-                else
-                    _CoverParent(parentNode, childNode, userData);
-
-            }
+           }
         }
         private void _CoverParent(TreeNode<PanelBase> parentNode, TreeNode<PanelBase> childNode,object userData)
         {

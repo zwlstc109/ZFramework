@@ -141,13 +141,13 @@ namespace Zframework
                     yield return StartCoroutine(_WaitProgress(targetProgress));
                 }
                 asyncScene.allowSceneActivation = true;
-                Z.Debug.Log(asyncScene.progress);
+                //Z.Debug.Log(asyncScene.progress);
                 //自行加载剩余的10%
                 targetProgress = 100;
                 while (LoadingProgress < targetProgress - 2)
                 {
                     ++LoadingProgress;
-                    Z.Debug.Log(asyncScene.progress);
+                    //Z.Debug.Log(asyncScene.progress);
                     yield return null;
                 }
                 LoadingProgress = 100;

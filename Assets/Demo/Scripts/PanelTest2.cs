@@ -12,32 +12,29 @@ public class PanelTest2 : PanelBase
     public override void OnLoad(object userData = null)
     {
         base.OnLoad(userData);
-
+        transform.localScale = Vector3.zero;
         mBtnClose.onClick.AddListener(() => CloseSelf());
     }
 
     public override void OnOpen(object userData = null)
     {
         base.OnOpen(userData);
-       
-        Z.Debug.Log("Test2 OnOpen");
-        CanvasGroup.alpha = 0;
-        CanvasGroup.DOFade(1, 2).onComplete += () =>
-        {
-            Z.Subject.Fire("Z_UIComplete", null);
-        };
+        transform.SetAsLastSibling();
+        Z.Debug.Log("Test2 OnOpen");      
+        transform.DOScale(Vector3.one, 0.5f).onComplete += () => Z.Subject.Fire("Z_UIComplete", null);       
     }
 
     public override void OnClose(object userData = null)
-    {
-        base.OnClose(userData);
+    {      
         Z.Debug.Log("Test2 OnClose");
+        transform.SetAsFirstSibling();
+        transform.DOScale(Vector3.zero, 0.5f).onComplete += () =>base.OnClose(userData);
     }
     public override void OnSwitch(object userData = null)
     {
         base.OnSwitch(userData);
         Z.Debug.Log("Test2 OnSwicth");
-      
+        CloseSelf();
     }
     public override void OnUnLoad(object userData = null)
     {
