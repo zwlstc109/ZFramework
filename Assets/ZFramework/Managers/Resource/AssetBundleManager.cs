@@ -126,11 +126,11 @@ namespace Zframework
                 for (int i = 0; i < resItem.DependAB.Count; i++)
                 {
                     string tempDependName = resItem.DependAB[i];
-                    Z.core.StartCoroutine(_LoadAssetBundleAsync(resItem, tempDependName));
+                    Z.core.StartCoroutine(_LoadAssetBundleAsync(tempDependName,resItem));
                     Z.Subject.GetSubject<ABLoadedSArgs>().Where(args=>ReferenceEquals(args.LoadedName,tempDependName)).First().Subscribe(_ABLoadedCallBack);
                 }
             }
-            Z.core.StartCoroutine(_LoadAssetBundleAsync(resItem,resItem.ABName));
+            Z.core.StartCoroutine(_LoadAssetBundleAsync(resItem.ABName,resItem));
             Z.Subject.GetSubject<ABLoadedSArgs>().Where(args => ReferenceEquals(args.LoadedName, resItem.ABName)).First().Subscribe(_ABLoadedCallBack);
         }
         private static void _ABLoadedCallBack(ABLoadedSArgs args)
@@ -154,7 +154,7 @@ namespace Zframework
             return Z.Subject.GetSubject<ABLoadedSArgs>().Where(args=>resItem==args.ResItem&&args.ResItem.AnsycLoaded).First();
         }
        
-        private static IEnumerator _LoadAssetBundleAsync(ResourceItem resItem,string abName)
+        private static IEnumerator _LoadAssetBundleAsync(string abName,ResourceItem resItem)
         {
             AssetBundleItem abItem = mAssetBundleItemDic.GetValue(abName);
             if (abItem == null)
@@ -173,7 +173,9 @@ namespace Zframework
                 }
                 else
                 {
-                    resItem.AssetBundle = abRequest.assetBundle;
+                    if (ReferenceEquals(abName,resItem.ABName))
+                        resItem.AssetBundle = abRequest.assetBundle;
+
                     abItem = Z.Pool.Take<AssetBundleItem>();
                     abItem.AssetBundle = abRequest.assetBundle;
                     mAssetBundleItemDic.Add(abName, abItem); //协程是在主线程等待 因此这个操作并不需要加锁 ...又一次体现了协程的优越性

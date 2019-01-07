@@ -19,7 +19,7 @@ namespace Zframework
             //...
             //...
             
-            Z.Scene.LoadScene("Assets/Demo/Scenes/Start.unity", FadeMode.FadeOut,()=> Z.UI.Open("Assets/GameData/Prefabs/UGUI/Panel/pnlStartMenu.prefab"));
+            Z.Scene.LoadScene("Assets/Demo/Scenes/Start.unity", FadeMode.WaitingThenFadeOut,()=> Z.UI.Open("Assets/GameData/Prefabs/UGUI/Panel/pnlStartMenu.prefab"));
 
             //int[] numbers = new int[10000] ;
             //System.Random rd = new System.Random();

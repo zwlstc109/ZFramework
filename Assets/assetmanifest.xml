@@ -37,5 +37,6 @@
   <AssetLst Path="Assets/Demo/Scenes/TestScene1.unity" ABName="testscene1_unity" AssetName="TestScene1.unity">
     <DependAB>cube (1)_prefab</DependAB>
     <DependAB>cube (2)_prefab</DependAB>
+    <DependAB>attack_prefab</DependAB>
   </AssetLst>
 </AssetManifest>
