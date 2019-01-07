@@ -10,10 +10,11 @@ namespace Zframework
 {
     internal static class AssetBundleManager 
     {
+        
         private static string mManifestName = "assetmanifest";
         private static string mABLoadPath = Application.streamingAssetsPath + "/";
         private static Dictionary<string, AssetBundleItem> mAssetBundleItemDic = new Dictionary<string, AssetBundleItem>();
-
+        //private static SimpleSpinLock mSpinLock = new SimpleSpinLock();//考虑到
         internal static void LoadABManifest()
         {
             //if (!Z.Resource.LoadFromAssetBundle)
@@ -40,19 +41,14 @@ namespace Zframework
                 resItem.AssetName = element.AssetName;
                 resItem.ABName = element.ABName;
                 resItem.DependAB = element.DependAB;
+                resItem.ClearDependFlag();
+
                 Z.Resource.ResourceItemDic.Add(resItem.Path, resItem);
-                //if (Z.Resource.ResourceItemDic.ContainsKey(resItem.Path))
-                //{   //路径生成了一样的crc 可能性较小 但不保证不发生
-                //    Z.Log.ErrorFormat("相同的Crc!! 资源名:{0}ab包名:{1}    资源名:{2}ab包名:{3}" ,resItem.AssetName,resItem.ABName, Z.Resource.ResourceItemDic[resItem.Crc].AssetName, Z.Resource.ResourceItemDic[resItem.Crc].ABName);
-                //    return;
-                //}
-                //else
-                //{
-                   
-                //}
+               
             }
             //预留200个AB包壳
-            Z.Pool.RegisterClassCustomPool(() => new AssetBundleItem(), AssetBundleItem.Clean, 200);
+            Z.Pool.RegisterClassCustomPool(()=>new AssetBundleItem(), AssetBundleItem.Clean, 200);
+            Z.Pool.RegisterClassPool<ABLoadedSArgs>(60);//一次加载请求可能同时需要加载多个包 这时候每个包都要发一次事件 所以给多点 但上小于上面的数字
             return ;
         }
 
@@ -61,15 +57,15 @@ namespace Zframework
         /// </summary>
         /// <param name="crc"></param>
         /// <returns></returns>
-        internal static bool LoadResourceAB(ResourceItem resItem)
+        internal static bool LoadAssetBundle(ResourceItem resItem)
         {           
             //如果资源壳里的包是加载过的
-            if (resItem.AssetBundle != null)
+            if (resItem.AssetBundle != null)//TODO 寻找需要这个判断的代码 明明可以那边自己判断
             {
                 return true;
             }
             //加载依赖
-            if (resItem.DependAB != null)
+            if (resItem.DependAB != null)//不用递归 已经在打包时就找出了所有依赖   依赖只是资源和包的关系 包和包之间没有依赖关系
             {
                 for (int i = 0; i < resItem.DependAB.Count; i++)
                 {
@@ -97,7 +93,7 @@ namespace Zframework
                 {
                     assetBundle = AssetBundle.LoadFromFile(fullPath);// ---正式的加载
                 }
-
+                
                 if (assetBundle == null)
                 {
                     Debug.LogError("加载AB包失败:" + fullPath);
@@ -110,6 +106,82 @@ namespace Zframework
             }
             abItem.RefCount++;
             return abItem.AssetBundle;
+        }
+        //public static void LoadAssetBundleAsync(string name)
+        //{
+        //    Z.core.StartCoroutine(_LoadAssetBundleAsync(name));
+        //}
+        /// <summary>
+        /// 异步加载AB包
+        /// </summary>
+        /// <param name="resItem"></param>
+        /// <returns></returns>
+        internal static void LoadAssetBundleAsync(ResourceItem resItem)//异步加载资源时 如果包很大 那加载包也应该异步 比如场景包 
+        {
+            resItem.ClearDependFlag();
+            //加载依赖
+            if (resItem.DependAB != null)
+            {
+               
+                for (int i = 0; i < resItem.DependAB.Count; i++)
+                {
+                    string tempDependName = resItem.DependAB[i];
+                    Z.core.StartCoroutine(_LoadAssetBundleAsync(resItem, tempDependName));
+                    Z.Subject.GetSubject<ABLoadedSArgs>().Where(args=>ReferenceEquals(args.LoadedName,tempDependName)).First().Subscribe(_ABLoadedCallBack);
+                }
+            }
+            Z.core.StartCoroutine(_LoadAssetBundleAsync(resItem,resItem.ABName));
+            Z.Subject.GetSubject<ABLoadedSArgs>().Where(args => ReferenceEquals(args.LoadedName, resItem.ABName)).First().Subscribe(_ABLoadedCallBack);
+        }
+        private static void _ABLoadedCallBack(ABLoadedSArgs args)
+        {
+            var resItem = args.ResItem;
+            for (int i = 0; i < resItem.DependAB.Count; i++)
+            {
+                //当前循环到的依赖项名字 匹配了传来的 已完成加载的依赖包名字
+                if (ReferenceEquals(resItem.DependAB[i], args.LoadedName))
+                    resItem.DependLoadedFlag[i] = true;
+                //有一个flag为false 就退出
+                if (!resItem.DependLoadedFlag[i])
+                    return;
+            }           
+            //最后当resItem自己的包加载好时 赋值AsyncLoaded   
+            if(resItem.AssetBundle!=null)//如果没有这个判断的话 当最后一个依赖项加载完但本包还没加载好 就会错误的赋值true
+                resItem.AnsycLoaded = true;
+        }
+        internal static IObservable<ABLoadedSArgs> GetAssetBundleLoadedSubject(ResourceItem resItem)
+        {
+            return Z.Subject.GetSubject<ABLoadedSArgs>().Where(args=>resItem==args.ResItem&&args.ResItem.AnsycLoaded).First();
+        }
+       
+        private static IEnumerator _LoadAssetBundleAsync(ResourceItem resItem,string abName)
+        {
+            AssetBundleItem abItem = mAssetBundleItemDic.GetValue(abName);
+            if (abItem == null)
+            {
+                AssetBundleCreateRequest abRequest = null;
+                string fullPath = mABLoadPath + abName;
+                if (File.Exists(fullPath))
+                {
+                    abRequest = AssetBundle.LoadFromFileAsync(fullPath);// ---正式的加载
+                }
+                while (!abRequest.isDone)//等待加载完成
+                    yield return null;
+                if (abRequest.assetBundle == null)
+                {
+                    Debug.LogError("加载AB包失败:" + fullPath);
+                }
+                else
+                {
+                    resItem.AssetBundle = abRequest.assetBundle;
+                    abItem = Z.Pool.Take<AssetBundleItem>();
+                    abItem.AssetBundle = abRequest.assetBundle;
+                    mAssetBundleItemDic.Add(abName, abItem); //协程是在主线程等待 因此这个操作并不需要加锁 ...又一次体现了协程的优越性
+                }              
+            }            
+            abItem.RefCount++;
+            //发送加载完成事件 接收方过滤name即可
+            Z.Subject.Fire(Z.Pool.Take<ABLoadedSArgs>().Fill(resItem,abName));
         }
         /// <summary>
         /// 释放资源
@@ -154,7 +226,21 @@ namespace Zframework
                 }
             }
         }
+        
+        //private static void _AddToABDic(string name,AssetBundleItem abItem)
+        //{
+        //    mSpinLock.Enter();
+        //    mAssetBundleItemDic.Add(name, abItem);
+        //    mSpinLock.Leave();
+        //}
+        //private static void _RemoveFromABDic(string name)
+        //{
+        //    mSpinLock.Enter();
+        //    mAssetBundleItemDic.Remove(name);
+        //    mSpinLock.Leave();
+        //}
     }
+    
     /// <summary>
     /// AB包壳
     /// </summary>
@@ -170,6 +256,23 @@ namespace Zframework
         {
             item.AssetBundle = null;
             item.RefCount = 0;
+        }
+    }
+    /// <summary>
+    /// AB包加载完成事件参数 
+    /// </summary>
+    internal class ABLoadedSArgs : SubjectArgs
+    {
+        public static int Id = typeof(ABLoadedSArgs).GetHashCode();
+        public override int SubjectId { get { return Id; } }
+        public ResourceItem ResItem;
+        public string LoadedName;
+      
+        public ABLoadedSArgs Fill(ResourceItem resItem,string loadedName) 
+        {
+            ResItem = resItem;
+            LoadedName = loadedName;
+            return this;
         }
     }
 }

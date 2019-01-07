@@ -14,13 +14,14 @@ public class PanelFade : PanelBase
     {
         base.OnLoad(userData);
         tempData = (FadeData)userData;
+        tempData.FadeEnterCallback?.Invoke();
         switch (tempData.Mode)
         {
             case FadeMode.FadeIn:
                 CanvasGroup.alpha = 0;
                 CanvasGroup.DOFade(1, 0.5f).onComplete += () =>
                 {
-                    tempData.FadeInCallback?.Invoke();                   
+                    tempData.FadeInDoneCallback?.Invoke();                   
                     ReleaseSelf(false,tempData);
                 };
                 break;
@@ -31,7 +32,7 @@ public class PanelFade : PanelBase
                 CanvasGroup.alpha = 0;
                 CanvasGroup.DOFade(1, 0.5f).onComplete += () =>
                 {
-                    tempData.FadeInCallback?.Invoke();
+                    tempData.FadeInDoneCallback?.Invoke();
                     mFadeInActionDisposer = Z.Subject.GetSubject("Z_FadeOutAction").Subscribe(_FadeOut);
                 };
                 break;

@@ -15,7 +15,7 @@ namespace Zframework
         bool mInitial = false;
         internal override void Init()
         {
-           
+            Z.core = this;
             //Z.Debug.Log("CoreManager init"/* + Time.frameCount.ToString()*/);
             if (!mInitial)
             {
@@ -40,6 +40,7 @@ namespace Zframework
             });
            
         }
+        
         private void OnApplicationQuit()
         {
 #if UNITY_EDITOR          

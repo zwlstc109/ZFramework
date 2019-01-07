@@ -16,17 +16,20 @@ namespace Zframework
     public class FadeData:ZObject
     {
         public FadeMode Mode;
-        public Action FadeInCallback;
-        public FadeData Fill(FadeMode mode, Action fadeInAction)
+        public Action FadeInDoneCallback;
+        public Action FadeEnterCallback;
+        public FadeData Fill(FadeMode mode, Action fadeInDoneAction,Action fadeEnterCallback=null)
         {
             Mode = mode;
-            FadeInCallback = fadeInAction;
+            FadeInDoneCallback = fadeInDoneAction;
+            FadeEnterCallback = fadeEnterCallback;
             return this;
         }
         public static void Clean(FadeData data)
         {
             data.Mode = default;
-            data.FadeInCallback = null;
+            data.FadeInDoneCallback = null;
+            data.FadeEnterCallback = null;
         }
     }
     /// <summary>
@@ -53,8 +56,8 @@ namespace Zframework
         /// 开启一个黑幕渐变 (期间锁定所有UI响应)
         /// </summary>
         /// <param name="mode">渐变模式</param>
-        /// <param name="fadeInCallback">淡入完成后执行</param>
-        public void Fade(FadeMode mode,Action fadeInCallback=null)
+        /// <param name="fadeInDoneCallback">淡入完成后执行</param>
+        public void Fade(FadeMode mode,Action fadeInDoneCallback=null,Action fadeEnterCallback=null)
         {
             if (string.IsNullOrEmpty(FadeUIPath))
             {
@@ -64,10 +67,11 @@ namespace Zframework
             switch (mode)
             {
                 case FadeMode.None:
-                    fadeInCallback?.Invoke();
+                    fadeEnterCallback?.Invoke();
+                    fadeInDoneCallback?.Invoke();
                     break;
                 case FadeMode.FadeIn://淡入后 执行fadeInDone 随后释放幕布
-                    Z.UI.Open(FadeUIPath, Z.UI.Top, userData:Z.Pool.Take<FadeData>().Fill(mode,fadeInCallback));
+                    Z.UI.Open(FadeUIPath, Z.UI.Top, userData:Z.Pool.Take<FadeData>().Fill(mode,fadeInDoneCallback, fadeEnterCallback));
                   
                     break;
                 case FadeMode.FadeOut://淡出后 释放幕布
@@ -75,7 +79,7 @@ namespace Zframework
                   
                     break;
                 case FadeMode.FadeInOut://淡入后 执行fadeInDone 随后等待事件"Z_FadeOutAction"触发后淡出 最后释放幕布
-                    Z.UI.Open(FadeUIPath, Z.UI.Top, userData: Z.Pool.Take<FadeData>().Fill(mode, fadeInCallback));                  
+                    Z.UI.Open(FadeUIPath, Z.UI.Top, userData: Z.Pool.Take<FadeData>().Fill(mode, fadeInDoneCallback, fadeEnterCallback));                  
                     break;
                 default:
                     Z.Debug.Warning("不存在的FadeMode");
@@ -83,30 +87,24 @@ namespace Zframework
             }
         }
         /// <summary>
-        /// 同步加载一个场景 
+        /// 轻量级同步加载场景（没有进度条 但是可以用幕布遮盖）
         /// </summary>
         /// <param name="scenePath"></param>
         public void LoadScene(string scenePath,FadeMode mode,Action loadedCallBack=null)
-        {
-            string sceneName = Z.Str.GetAssetNoExtensionName(scenePath);
+        {     
+            _LoadSceneABAnsyc(scenePath,loadedCallBack);//异步是为了在先调这个函数的情况下 不阻碍幕布的开启
             Fade(mode, () =>
-            {
-                //先加载场景AB包
-                ClearCache();
-                _LoadSceneAB(scenePath);
-                UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
-                loadedCallBack?.Invoke();
+            {           
                 if (mode == FadeMode.FadeInOut)
                     Z.Subject.Fire("Z_FadeOutAction", null);
-            });
-                  
+            }
+            );
+
         }
        
-
         public void LoadSceneAsync(string scenePath,Action<object> doneCallback=null,bool fadeIn=true,bool fadeOut=true, object userData=null)
         {
-            //先加载场景AB包
-          
+             
             if (fadeIn)
             {
                 Fade(FadeMode.FadeIn,() => _LoadSceneAsync(scenePath, doneCallback, fadeOut, userData));   
@@ -129,8 +127,7 @@ namespace Zframework
             LoadingProgress = 0;
             int targetProgress = 0;
             Already = false;
-            //加载场景包前先清0组缓存
-            ClearCache();//TODO 可能这前面还要加上加载其他资源的代码 先加再减避免重复加载 等于是要再前面封装一个 一股脑加载资源的进度输出
+            //现在clearCache在下面这个方法内调用      //   TODO 可能这前面还要加上加载其他资源的代码 先加再减避免重复加载 等于是要再前面封装一个 一股脑加载资源的进度输出
             _LoadSceneAB(scenePath);
             string sceneName = Z.Str.GetAssetNoExtensionName(scenePath);
             AsyncOperation asyncScene = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
@@ -138,26 +135,20 @@ namespace Zframework
                 
             if (asyncScene != null && !asyncScene.isDone)
             {
-
                 while (asyncScene.progress < 0.9f)
                 {
-                    targetProgress = (int)asyncScene.progress * 100;//TODO 
+                    targetProgress = (int)asyncScene.progress * 100;//没毛病 如果想用time.deltaTime还不是得乘法 这种反而算是技巧
                     yield return null;
-                    //平滑过渡
-                    while (LoadingProgress < targetProgress)
-                    {
-                        ++LoadingProgress;
-                        yield return null;
-                    }
-
+                    yield return StartCoroutine(_WaitProgress(targetProgress));
                 }
                 asyncScene.allowSceneActivation = true;
-
+                Z.Debug.Log(asyncScene.progress);
                 //自行加载剩余的10%
                 targetProgress = 100;
                 while (LoadingProgress < targetProgress - 2)
                 {
                     ++LoadingProgress;
+                    Z.Debug.Log(asyncScene.progress);
                     yield return null;
                 }
                 LoadingProgress = 100;
@@ -171,22 +162,65 @@ namespace Zframework
           
         }
         /// <summary>
+        /// 平滑追踪读条值
+        /// </summary>
+        /// <param name="progress">目标值</param>
+        /// <returns></returns>
+        IEnumerator _WaitProgress(int progress)
+        {
+            while (LoadingProgress<progress)
+            {
+                ++LoadingProgress;
+                yield return null;
+            }
+        } 
+        /// <summary>
         /// 通过Z.Resource找到ResItem 并调用AssetBundleManager的加载AB包方法
         /// </summary>
         /// <param name="scenePath"></param>
-        public void _LoadSceneAB(string scenePath)
+       
+        private void _LoadSceneAB(string scenePath)
         {
             if (Z.Resource.LoadFromAssetBundle)
             {
                 ResourceItem resItem = Z.Resource.ResourceItemDic[scenePath];
                 if (resItem.AssetBundle == null)
                 {
-                    if (AssetBundleManager.LoadResourceAB(resItem))
+                    if (AssetBundleManager.LoadAssetBundle(resItem))
                     {
-                        Z.Resource.IncreaseRefCount(resItem, 1);//TODO 暂时将场景ResItem放到预加载组
+                        ClearCache();
+                        Z.Resource.IncreaseRefCount(resItem, 0);
                     }
                 }
             }
+            else
+                ClearCache();
+        }
+        /// <summary>
+        /// 异步加载场景包
+        /// </summary>
+        /// <param name="scenePath"></param>
+        ///
+        private void _LoadSceneABAnsyc(string scenePath,Action loadedCallback)
+        {
+            string sceneName = Z.Str.GetAssetNoExtensionName(scenePath);
+            if (Z.Resource.LoadFromAssetBundle)
+            {
+                ResourceItem resItem = Z.Resource.ResourceItemDic[scenePath];
+                if (!resItem.AnsycLoaded)
+                {
+                    AssetBundleManager.LoadAssetBundleAsync(resItem);
+                    AssetBundleManager.GetAssetBundleLoadedSubject(resItem).Subscribe(_ =>
+                    {
+                        ClearCache();//场景包加载完毕 在正式同步加载界面前清理缓存
+                        Z.Resource.IncreaseRefCount(resItem, 0);
+                        UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
+                        loadedCallback?.Invoke();                      
+                    });
+                }
+            }
+            else
+                ClearCache();
         }
         //转场清理默认资源组
         private void ClearCache()

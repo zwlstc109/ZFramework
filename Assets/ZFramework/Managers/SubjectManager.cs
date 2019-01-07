@@ -67,7 +67,7 @@ namespace Zframework
         {
            
             mSubjectDic.GetValue(e.SubjectId)?.OnNext(e);
-            Z.Pool.Return(ref e);
+            Z.Pool.Return(ref e);//回旋镖 了解一下
         }
         #endregion
         #region 轻量级

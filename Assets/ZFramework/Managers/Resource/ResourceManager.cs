@@ -79,7 +79,7 @@ namespace Zframework
                     Z.Debug.Error("请求加载的资源不在清单内 "+path);
                     return null;
                 }
-                if (AssetBundleManager.LoadResourceAB(resItem))
+                if (AssetBundleManager.LoadAssetBundle(resItem))
                 {
                     resItem.Asset = resItem.AssetBundle.LoadAsset<T>(resItem.AssetName);
                 }
@@ -177,6 +177,28 @@ namespace Zframework
         public string ABName = string.Empty;
         //依赖的AB
         public List<string> DependAB = null;
+        //异步加载包依赖时 用来标记每个依赖包否加载完成
+        internal List<bool> DependLoadedFlag = null;
+        //用来标记包否已经可用 (本包、依赖包 加载完成)
+        internal bool AnsycLoaded = false;
+        //清除依赖包加载完成信息 将会在该资源每次异步加载前调用 加载过程中会重新判断一次所有包的加载到位  读取清单 初始化时也会执行一次
+        internal void ClearDependFlag()
+        {
+            AnsycLoaded = false;
+            if (DependLoadedFlag == null)
+            {
+                if (DependAB != null)
+                {
+                    DependLoadedFlag = new List<bool>();
+                    for (int i = 0; i < DependAB.Count; i++)
+                        DependLoadedFlag.Add(false);
+                }
+                return;
+            }
+            else
+                for (int i = 0; i < DependLoadedFlag.Count; i++)
+                    DependLoadedFlag[i] = false;
+        }
         //加载完的AB
         public AssetBundle AssetBundle = null;
         //-----------------------------------------------------
