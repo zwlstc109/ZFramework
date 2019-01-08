@@ -8,7 +8,7 @@ using DG.Tweening;
 using System;
 public class PanelFade : PanelBase
 {
-    private IDisposable mFadeInActionDisposer = null;
+   
     private FadeData tempData = null;
     public override void OnLoad(object userData = null)
     {
@@ -32,9 +32,14 @@ public class PanelFade : PanelBase
                 CanvasGroup.alpha = 0;
                 CanvasGroup.DOFade(1, 0.5f).onComplete += () =>
                 {                  
-                    mFadeInActionDisposer = Z.Subject.GetSubject("Z_FadeOutAction").Subscribe(_FadeOut);
+                    Z.Subject.GetSubject("Z_FadeOutAction").First().Subscribe(_FadeOut);
                     tempData.FadeInDoneCallback?.Invoke();
                 };
+                break;
+            case FadeMode.WaitingThenFadeOut:
+                CanvasGroup.alpha = 1;
+                Z.Subject.GetSubject("Z_FadeOutAction").First().Subscribe(_FadeOut);
+                tempData.FadeInDoneCallback?.Invoke();
                 break;
             default:
                 break;
@@ -50,7 +55,7 @@ public class PanelFade : PanelBase
     
     private void _FadeOut(object n)
     {
-        mFadeInActionDisposer?.Dispose();
+       
         CanvasGroup.alpha = 1;
         CanvasGroup.DOFade(0, 1f).onComplete += () =>
         {         

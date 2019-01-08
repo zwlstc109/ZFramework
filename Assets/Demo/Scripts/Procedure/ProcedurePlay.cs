@@ -17,7 +17,7 @@ namespace Zframework
             Z.Audio.PlayBackGroundMusic("Assets/GameData/Sounds/menusound.mp3");
 
             Z.UI.Open("Assets/GameData/Prefabs/UGUI/Panel/PnlMainMenu.prefab");
-
+            Z.UI.Open("Assets/GameData/Prefabs/UGUI/Panel/PnlMainMenu2.prefab");
 
 
               

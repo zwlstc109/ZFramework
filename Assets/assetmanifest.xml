@@ -14,12 +14,14 @@
   <AssetLst Path="Assets/Demo/Scenes/Empty.unity" ABName="empty_unity" AssetName="Empty.unity" />
   <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/PnlEmpty.prefab" ABName="pnlempty_prefab" AssetName="PnlEmpty.prefab" />
   <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/PnlLoading.prefab" ABName="pnlloading_prefab" AssetName="PnlLoading.prefab" />
+  <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/PnlMainMenu2.prefab" ABName="pnlmainmenu2_prefab" AssetName="PnlMainMenu2.prefab" />
   <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/PnlMainMenu.prefab" ABName="pnlmainmenu_prefab" AssetName="PnlMainMenu.prefab" />
   <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/pnlStartMenu.prefab" ABName="pnlstartmenu_prefab" AssetName="pnlStartMenu.prefab" />
   <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/PnlTest1.prefab" ABName="pnltest1_prefab" AssetName="PnlTest1.prefab" />
   <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/PnlTest1Sub.prefab" ABName="pnltest1sub_prefab" AssetName="PnlTest1Sub.prefab" />
   <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/PnlTest2.prefab" ABName="pnltest2_prefab" AssetName="PnlTest2.prefab" />
   <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/PnlTest3.prefab" ABName="pnltest3_prefab" AssetName="PnlTest3.prefab" />
+  <AssetLst Path="Assets/GameData/Prefabs/UGUI/Panel/PnlTest4.prefab" ABName="pnltest4_prefab" AssetName="PnlTest4.prefab" />
   <AssetLst Path="Assets/GameData/Prefabs/Effect/ptcTest1.prefab" ABName="ptctest1_prefab" AssetName="ptcTest1.prefab" />
   <AssetLst Path="Assets/GameData/Shaders/benghuai.shader" ABName="shader" AssetName="benghuai.shader" />
   <AssetLst Path="Assets/GameData/Shaders/Skybox.shader" ABName="shader" AssetName="Skybox.shader" />
@@ -37,5 +39,6 @@
   <AssetLst Path="Assets/Demo/Scenes/TestScene1.unity" ABName="testscene1_unity" AssetName="TestScene1.unity">
     <DependAB>cube (1)_prefab</DependAB>
     <DependAB>cube (2)_prefab</DependAB>
+    <DependAB>attack_prefab</DependAB>
   </AssetLst>
 </AssetManifest>

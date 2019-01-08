@@ -37,7 +37,14 @@ namespace Zframework.Editor
         //所有所有的资源对应的AB包名
         private static Dictionary<string, string> mAllFileABNameDic = new Dictionary<string, string>();
         private static ABNameConfig abNameConfig;
-        [MenuItem("ZFramework/AssetBundle/打包 (需配置)")]
+
+        [MenuItem("ZFramework/AssetBundle/前往配置",priority =1)]
+        public static void FocusOnABNameConfigAsset()
+        {
+            Selection.activeObject = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(mABNameConfigPath);
+        }
+
+        [MenuItem("ZFramework/AssetBundle/打包 (需配置)", priority = 0)]
         public static void Build()
         {
           

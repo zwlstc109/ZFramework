@@ -19,7 +19,7 @@ namespace Zframework
             //...
             //...
             
-            Z.Scene.LoadScene("Assets/Demo/Scenes/Start.unity", FadeMode.FadeOut,()=> Z.UI.Open("Assets/GameData/Prefabs/UGUI/Panel/pnlStartMenu.prefab"));
+            Z.Scene.LoadScene("Assets/Demo/Scenes/Start.unity", FadeMode.WaitingThenFadeOut,()=> Z.UI.Open("Assets/GameData/Prefabs/UGUI/Panel/pnlStartMenu.prefab"));
 
             //int[] numbers = new int[10000] ;
             //System.Random rd = new System.Random();
@@ -31,11 +31,10 @@ namespace Zframework
             //sort.Sort();
 
 #if UNITY_EDITOR
-            //string[] prfGuids =UnityEditor. AssetDatabase.FindAssets("t:Scene",new string[] { "Assets/Demo/Scenes" });
-            ////string prfPath =(prfGuids[i]);
-            //Z.Obs.ForLoop(prfGuids.Length, i => Z.Debug.Log(UnityEditor.AssetDatabase.GUIDToAssetPath(prfGuids[i])));
+            //UnityEditor.EditorUtility.
 #endif
-
+            
+            
 
 
             //TestClass c = new TestClass();

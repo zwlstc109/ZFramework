@@ -7,7 +7,7 @@ namespace Zframework
 {/// <summary>
 /// Debug管理
 /// </summary>  
-    public class DebugManager : BaseManager
+    public sealed class DebugManager : BaseManager
     {   
         protected override int MgrIndex { get { return (int)ManagerIndex.Log; } }
         //日志subject
@@ -41,37 +41,37 @@ namespace Zframework
             mDefaultLogger.DebugFormat(format, args);
         }
 
-        public virtual void Log(object message, UnityEngine.Object context = null)
+        public  void Log(object message, UnityEngine.Object context = null)
         {
             mDefaultLogger.Log(message);
         }
 
-        public virtual void LogFormat(string format, params object[] args)
+        public  void LogFormat(string format, params object[] args)
         {
             mDefaultLogger.LogFormat(format,args);
         }
 
-        public virtual void Warning(object message, UnityEngine.Object context = null)
+        public  void Warning(object message, UnityEngine.Object context = null)
         {
             mDefaultLogger.Warning(message);
         }
 
-        public virtual void WarningFormat(string format, params object[] args)
+        public  void WarningFormat(string format, params object[] args)
         {
             mDefaultLogger.WarningFormat(format,args);
         }
 
-        public virtual void Error(object message, UnityEngine.Object context = null)
+        public  void Error(object message, UnityEngine.Object context = null)
         {
             mDefaultLogger.Error(message);
         }
 
-        public virtual void ErrorFormat(string format, params object[] args)
+        public  void ErrorFormat(string format, params object[] args)
         {
             mDefaultLogger.ErrorFormat(format, args);
         }
 
-        public virtual void Exception(Exception exception, UnityEngine.Object context = null)
+        public  void Exception(Exception exception, UnityEngine.Object context = null)
         {
             mDefaultLogger.Exception(exception);
         }
