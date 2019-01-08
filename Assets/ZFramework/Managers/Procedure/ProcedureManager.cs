@@ -8,7 +8,7 @@ using System.Reflection;
 namespace Zframework
 {
 
-    public class ProcedureManager : BaseManager
+    public sealed class ProcedureManager : BaseManager
     {
         [SerializeField]
         private string[] m_AvailableProcedureTypeNames = null;

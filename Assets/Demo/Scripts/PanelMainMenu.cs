@@ -10,9 +10,7 @@ public class PanelMainMenu : PanelBase
     [SerializeField] private Button mBtnTest1 = null;
     [SerializeField] private Button mBtnTest2 = null;
     [SerializeField] private Button mBtnTest3 = null;
-    //PanelBase pnlTest1 = null;
-    //PanelBase pnlTest2 = null;
-    //PanelBase pnlTest3 = null;
+
 
     public override void OnLoad(object userData = null)
     {
@@ -23,7 +21,7 @@ public class PanelMainMenu : PanelBase
         });
         mBtnTest2.onClick.AddListener(() =>
         {
-            Open("Assets/GameData/Prefabs/UGUI/Panel/PnlTest2.prefab", await: true);
+            Switch("Assets/GameData/Prefabs/UGUI/Panel/PnlTest2.prefab", await: true);
         });
         mBtnTest3.onClick.AddListener(() =>
         {

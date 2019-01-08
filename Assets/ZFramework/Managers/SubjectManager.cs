@@ -11,7 +11,7 @@ namespace Zframework
         public abstract int SubjectId { get; }
     }
 
-    public class SubjectManager : BaseManager
+    public sealed class SubjectManager : BaseManager
     {
         protected override int MgrIndex { get { return (int)ManagerIndex.Subject; } }
 

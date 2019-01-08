@@ -15,12 +15,13 @@ public class PanelStart : PanelBase
         base.OnLoad(userData);
         mbtnStart.onClick.AddListener(() =>
         {
+            //读条切场景
             //Z.Scene.LoadSceneAsync("Assets/Demo/Scenes/TestScene1.unity", _ =>
             // {
             //     CloseSelf();
             //     Z.Procedure.ChangeProcedure<ProcedurePlay>();
             // });
-           
+            //幕布切场景
             Z.Scene.LoadScene("Assets/Demo/Scenes/TestScene1.unity", FadeMode.FadeInOut, () =>
             {
                 CloseSelf();

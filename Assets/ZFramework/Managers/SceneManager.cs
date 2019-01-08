@@ -5,7 +5,8 @@ using UniRx;
 using System;
 using UnityEngine.SceneManagement;
 namespace Zframework
-{  
+{
+    #region additional
     public enum FadeMode
     {
         None,
@@ -33,10 +34,11 @@ namespace Zframework
             data.FadeEnterCallback = null;
         }
     }
+    #endregion
     /// <summary>
     /// 场景管理 包括淡入淡出等幕布类功能
     /// </summary>
-    public class SceneManager : BaseManager //TODO 现在场景没有结合AB包
+    public sealed class SceneManager : BaseManager //TODO 现在场景没有结合AB包
     {
         protected override int MgrIndex { get { return (int)ManagerIndex.Scene; } }
         public AsyncOperation Async { get; private set; }
@@ -109,7 +111,14 @@ namespace Zframework
                 }          
             });
         }
-       
+       /// <summary>
+       /// 读条式加载场景 适用于额外附带大量动态加载资源的重型场景切换
+       /// </summary>
+       /// <param name="scenePath"></param>
+       /// <param name="doneCallback"></param>
+       /// <param name="fadeIn"></param>
+       /// <param name="fadeOut"></param>
+       /// <param name="userData"></param>
         public void LoadSceneAsync(string scenePath,Action<object> doneCallback=null,bool fadeIn=true,bool fadeOut=true, object userData=null)
         {
             Already = false;

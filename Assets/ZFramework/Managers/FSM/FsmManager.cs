@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Zframework
 {
 
-    public class FsmManager : BaseManager
+    public sealed class FsmManager : BaseManager
     {
         protected override int MgrIndex { get { return (int)ManagerIndex.Fsm; } }
         private List<Fsm> mFsmLst = new List<Fsm>();

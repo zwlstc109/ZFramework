@@ -11,7 +11,7 @@ namespace Zframework
         Custom,
         Count
     }
-    public class UIManager : BaseManager
+    public sealed class UIManager : BaseManager
     {
         protected override int MgrIndex { get { return (int)ManagerIndex.UI; } }
         //用来迅速判断面板是否加载过 的字典
@@ -41,9 +41,9 @@ namespace Zframework
         /// <param name="userData"></param>
         /// <param name="uiGroupIndex">指定在哪个uiGroup</param>
         /// <param name="unitGroupIndex"></param>
-        public PanelBase Open(string path,Transform parent=null,bool await=false, object userData = null, int uiGroupIndex = 0, int unitGroupIndex = (int)BuiltinGroup.UI, bool open = true)
+        public PanelBase Open(string path,Transform parent=null,bool await=false, object userData = null, int uiGroupIndex = 0, int unitGroupIndex = (int)BuiltinGroup.UI, bool open = true,bool allowMultiInstance=false)
         {
-            var panel = mGroupLst[uiGroupIndex].Open(path, parent,await, userData, unitGroupIndex, true);
+            var panel = mGroupLst[uiGroupIndex].Open(path, parent,await, userData, unitGroupIndex, open,allowMultiInstance);
             if (uiGroupIndex==0)
             {
                 Top.SetAsLastSibling();
@@ -62,7 +62,7 @@ namespace Zframework
         {
             Z.Obs.ForLoop(mGroupLst.Count, i => mGroupLst[i].Lock = false);
         }
-        internal PanelBase Load(string path,Transform parent,object userData,UIGroup uiGroup, int unitGroupIndex)
+        internal PanelBase Load(string path,Transform parent,object userData,UIGroup uiGroup, int unitGroupIndex,bool allowMultiInstance)
         {
             var pnl = PathPnlDic.GetValue(path);
             if (pnl != null && !pnl.AllowMultInstance)
@@ -77,6 +77,7 @@ namespace Zframework
             panel._UnitGroupIndex = unitGroupIndex;
             panel.CanvasGroup = panel.GetOrAddComponent<CanvasGroup>();
             panel.CanvasGroup.ignoreParentGroups = true;
+            panel.AllowMultInstance = allowMultiInstance;
             panel.UIGroup=uiGroup;
             panel.transform.SetParent(parent==null?CanvasRoot:parent,false);
             panel.OnLoad(userData);
@@ -131,9 +132,9 @@ namespace Zframework
         /// <param name="path"></param>
         /// <param name="userData"></param>
         /// <param name="open">是否自动打开</param>
-        internal PanelBase Open(string path,Transform parent,bool await, object userData,int unitGroupIndex=-1,bool open=true)
+        internal PanelBase Open(string path,Transform parent,bool await, object userData,int unitGroupIndex,bool open,bool allowMultiInstance)//TODO 将参数分装成类 避免多次复制 要注意默认参数的处理
         {
-            return Open(mPanelTree.Root,path,parent,await, userData,(int)BuiltinGroup.UI, open);
+            return Open(mPanelTree.Root,path,parent,await, userData,(int)BuiltinGroup.UI, open,allowMultiInstance);
         }
         /// <summary>
         /// 在某节点上打开 (单实例的ui传path可以重复打开 多实例的不行)
@@ -144,7 +145,7 @@ namespace Zframework
         /// <param name="unitGroupIndex"></param>
         /// <param name="open">是否自动打开</param>
         /// <returns></returns>
-        internal PanelBase Open(TreeNode<PanelBase> parentNode, string path,Transform parent ,bool await, object userData,  int unitGroupIndex = -1, bool open = true)
+        internal PanelBase Open(TreeNode<PanelBase> parentNode, string path,Transform parent ,bool await, object userData,  int unitGroupIndex , bool open ,bool allowMultiInstance)
         {
             if (Lock )
             {
@@ -152,13 +153,13 @@ namespace Zframework
                 return null;
             }
             var panel = Z.UI.PathPnlDic.GetValue(path);
-            if (panel!=null&&!panel.AllowMultInstance)
+            if (panel!=null&&!allowMultiInstance)
             {
                 Open(parentNode, panel, await, userData);
                 return panel;
             }
                                                   //-1则用父节点的Unit组Id 否则用参数指定的Id
-            PanelBase newPanel = Z.UI.Load(path,parent, userData, this, unitGroupIndex == -1 ? parentNode.Value._UnitGroupIndex : unitGroupIndex);
+            PanelBase newPanel = Z.UI.Load(path,parent, userData, this, unitGroupIndex == -1 ? parentNode.Value._UnitGroupIndex : unitGroupIndex,allowMultiInstance);
 
             if (newPanel == null)
             {
@@ -262,7 +263,7 @@ namespace Zframework
         //    Open(parentNode, child, userData);
         //}
         /// <summary>
-        /// 关闭某个面板自己
+        /// 关闭某个面板
         /// </summary>
         /// <param name="node"></param>
         /// <param name="userData"></param>
@@ -274,6 +275,23 @@ namespace Zframework
             });
             _RevealParent(node.Parent, node);
         }
+        //internal void Close(string path)//给传path 的Swicth做的接口
+        //{
+        //    //var panel = Z.UI.PathPnlDic.GetValue(path);
+        //    //if (panel != null && !panel.AllowMultInstance)
+        //    //{
+        //    //    var childNode=FindChild()
+        //    //}
+        //}
+        //internal TreeNode<PanelBase> FindChildNode(TreeNode<PanelBase> parent, PanelBase child)//可以写成find linq
+        //{
+        //    for (int i = 0; i < parent.Children.Count; i++)
+        //    {
+        //        if (parent.Children[i].Value == child)
+        //            return parent.Children[i];
+        //    }
+        //    return null;
+        //}
         /// <summary>
         /// 关闭所有子节点
         /// </summary>
@@ -288,6 +306,16 @@ namespace Zframework
                 });
             }
             parent.Value?.OnReveal();
+        }
+        internal void CloseChild(TreeNode<PanelBase> parent,PanelBase child)
+        {
+            var childNode = parent.Children.Find(n => n.Value == child);
+            if (childNode == null)
+            {
+                Z.Debug.Warning("子节点中找不到此面板");
+                return;
+            }
+            Close(childNode);
         }
         internal void Release(TreeNode<PanelBase> node,bool destroy,object userData)
         {

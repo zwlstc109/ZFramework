@@ -6,7 +6,7 @@ using System;
 namespace Zframework
 {
 
-    public class UnitManager : BaseManager //TODO 异步加载
+    public sealed class UnitManager : BaseManager //TODO 异步加载
     {
         protected override int MgrIndex { get { return (int)ManagerIndex.Unit; } }
         //为了快速获取池中的unit,必须要一个字典

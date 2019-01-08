@@ -6,7 +6,7 @@ using System;
 namespace Zframework
 {
 
-    public class PoolManager : BaseManager
+    public sealed class PoolManager : BaseManager
     {
         protected override int MgrIndex { get { return (int)ManagerIndex.Pool; } }
         internal Dictionary<string, IPool> mObjectPoolDic = new Dictionary<string, IPool>();

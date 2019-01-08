@@ -5,7 +5,7 @@ using UniRx;
 using System;
 namespace Zframework
 {
-    public class CoreManager : BaseManager
+    public sealed class CoreManager : BaseManager
     {
         private Action mCoreUpdate;
         private Action mCoreInit;

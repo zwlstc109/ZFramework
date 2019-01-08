@@ -8,7 +8,7 @@ namespace Zframework
     /// <summary>
     /// 资源管理 提供编辑模式读包模式无差别加载 (加载代码和资源文件存放均无差别 AB包打包需要先配置包名)
     /// </summary>
-    public class ResourceManager : BaseManager //TODO 异步加载
+    public sealed class ResourceManager : BaseManager //TODO 异步加载
     {
         protected override int MgrIndex { get { return (int)ManagerIndex.Resource; } }
         //是否从AB加载

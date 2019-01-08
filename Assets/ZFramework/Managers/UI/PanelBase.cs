@@ -19,7 +19,7 @@ namespace Zframework
         [HideInInspector] public CanvasGroup CanvasGroup;
         //internal string Path;
         //是否允许多个实例 TODO
-        public bool AllowMultInstance = false;
+        [HideInInspector]public bool AllowMultInstance = false;
         //所在的UI组（树）
         internal UIGroup UIGroup;//面板的所有回调都是基于其所在的UI组进行触发
         //所在的节点
@@ -114,13 +114,13 @@ namespace Zframework
         /// <param name="path"></param>
         /// <param name="userData"></param>
         /// <param name="open">是否直接打开</param>
-        protected PanelBase Open(string path,Transform parent=null,bool await=false, object userData=null,int unitGroupIndex=-1, bool open = true)
+        protected PanelBase Open(string path,Transform parent=null,bool await=false, object userData=null,int unitGroupIndex=-1, bool open = true,bool allowMultiInstance=false)
         {
             if (!Available)
             {
                 return null;
             }
-           return UIGroup.Open(NodeInGroup, path, parent==null?transform:parent,await, userData,unitGroupIndex, open);
+           return UIGroup.Open(NodeInGroup, path, parent==null?transform:parent,await, userData,unitGroupIndex, open,allowMultiInstance);
         }
         /// <summary>
         /// 在本面板下打开旧有面板
@@ -137,9 +137,63 @@ namespace Zframework
             UIGroup.Open(NodeInGroup, child,await, userData);
         }
         /// <summary>
+        /// 打开/关闭一个子面板
+        /// </summary>
+        /// <param name="child"></param>
+        /// <param name="await"></param>
+        /// <param name="userData"></param>
+        protected void Switch(string path, Transform parent = null, bool await = false, object userData = null, int unitGroupIndex = -1, bool open = true,bool allowMultiInstance=false)
+        {
+            if (!Available)
+            {
+                return;
+            }
+            if (allowMultiInstance)
+            {
+                Z.Debug.Warning("多实例的面板不支持按照路径进行Switch操作");
+                return;
+            }
+            var child = Z.UI.PathPnlDic.GetValue(path);
+            if (child == null || !child.Visible && !child.Available)
+            {
+                UIGroup.Open(NodeInGroup,path, parent == null ? transform : parent, await, userData, unitGroupIndex, open, allowMultiInstance);
+            }
+            else if (child.Available && child.Visible)
+            {
+               
+                UIGroup.CloseChild(NodeInGroup,child);
+            }
+            else
+                Z.Debug.Warning("Switch操作可能存在问题");
+        }
+        /// <summary>
+        /// 打开/关闭一个子面板
+        /// </summary>
+        /// <param name="child"></param>
+        /// <param name="await"></param>
+        /// <param name="userData"></param>
+        protected void Switch(PanelBase child,bool await=false,object userData = null)
+        {
+            if (!Available)
+            {
+                return;
+            }
+        
+            if (child.Available && child.Visible)
+            {
+                UIGroup.CloseChild(NodeInGroup,child);
+            }
+            else if (!child.Available && !child.Visible)
+            {
+                UIGroup.Open(NodeInGroup,child, await, userData);
+            }
+            else
+                Z.Debug.Warning("Switch操作可能存在问题");
+        }
+        /// <summary>
         /// 在UIGroup中关闭自己
         /// </summary>
-        protected void CloseSelf()
+        protected void CloseSelf()//
         {
             if (!Available)
             {

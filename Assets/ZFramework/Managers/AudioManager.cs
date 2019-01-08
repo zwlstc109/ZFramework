@@ -6,7 +6,7 @@ using System;
 namespace Zframework
 {
 
-    public class AudioManager : BaseManager//TODO ...侧烂污赶时间
+    public sealed class AudioManager : BaseManager//TODO ...侧烂污赶时间
     {
         protected override int MgrIndex { get { return (int)ManagerIndex.Audio; } }
 
