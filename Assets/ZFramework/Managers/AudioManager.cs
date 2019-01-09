@@ -12,7 +12,15 @@ namespace Zframework
 
         [SerializeField] AudioSource mBackGroundSource = null;
         [SerializeField] AudioSource mSoundSource = null;
-
+       
+        public float BackGroundVolume
+        {
+            get { return mBackGroundSource.volume; }
+            set
+            {
+                mBackGroundSource.volume = value;
+            }
+        }
         internal override void Init()
         {
             //Z.Debug.Log("AudioManager init");

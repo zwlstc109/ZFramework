@@ -84,6 +84,8 @@ namespace Zframework
                 string temp = path.Remove(0, path.LastIndexOf('/') + 1);
                 return temp.Remove(temp.LastIndexOf('.'));
             }
+
+          
         }
 
         //public class StringBuilder 

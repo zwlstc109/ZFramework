@@ -69,6 +69,21 @@ namespace Zframework
             mSubjectDic.GetValue(e.SubjectId)?.OnNext(e);
             Z.Pool.Return(ref e);//回旋镖 了解一下
         }
+        public void Fire<T>(T e,float delay) where T : SubjectArgs
+        {
+            Z.Obs.Timer(delay).Subscribe(_ =>
+            {
+                mSubjectDic.GetValue(e.SubjectId)?.OnNext(e);
+                Z.Pool.Return(ref e);//回旋镖 了解一下
+            });
+          
+        }
+        public void Fire<T>(T e, int delayFrame) where T : SubjectArgs
+        {
+
+            mSubjectDic.GetValue(e.SubjectId)?.OnNext(e);
+            Z.Pool.Return(ref e);//回旋镖 了解一下
+        }
         #endregion
         #region 轻量级
 

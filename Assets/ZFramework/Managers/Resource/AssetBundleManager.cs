@@ -14,6 +14,7 @@ namespace Zframework
         private static string mManifestName = "assetmanifest";
         private static string mABLoadPath = Application.streamingAssetsPath + "/";
         private static Dictionary<string, AssetBundleItem> mAssetBundleItemDic = new Dictionary<string, AssetBundleItem>();
+        internal static readonly string TextureKeySuffix = "_Texture";
         //private static SimpleSpinLock mSpinLock = new SimpleSpinLock();//考虑到
         internal static void LoadABManifest()
         {
@@ -36,22 +37,26 @@ namespace Zframework
             for (int i = 0; i < manifest.AssetLst.Count; i++)
             {   
                 AssetElement element = manifest.AssetLst[i];
-                ResourceItem resItem = Z.Pool.Take<ResourceItem>();
-                resItem.Path = element.Path;
-                resItem.AssetName = element.AssetName;
-                resItem.ABName = element.ABName;
-                resItem.DependAB = element.DependAB;
-                resItem.ClearDependFlag();
-
-                Z.Resource.ResourceItemDic.Add(resItem.Path, resItem);
+                _ResourceItemDicAdd(element.Path, element);
+                if (element.AssetName.EndsWith(".png"))//还能增加多种扩展名识别 到时候再加
+                    _ResourceItemDicAdd(element.Path + TextureKeySuffix, element);//为了让同一个路径可以分别作为sprite和texture的key值 所以在字典中会存在两个pair 当请求的资源类型是Texture2d，会自动添加后缀来匹配另一个pair
                
             }
             //预留200个AB包壳
             Z.Pool.RegisterClassCustomPool(()=>new AssetBundleItem(), AssetBundleItem.Clean, 200);
-            Z.Pool.RegisterClassPool<ABLoadedSArgs>(60);//一次加载请求可能同时需要加载多个包 这时候每个包都要发一次事件 所以给多点 但上小于上面的数字
+            Z.Pool.RegisterClassPool<ABLoadedArgs>(60);//一次加载请求可能同时需要加载多个包 这时候每个包都要发一次事件 所以给多点 但上小于上面的数字
             return ;
         }
-
+        private static void _ResourceItemDicAdd(string key, AssetElement element)
+        {
+            ResourceItem resItem = Z.Pool.Take<ResourceItem>();
+            resItem.Path = element.Path;
+            resItem.AssetName = element.AssetName;
+            resItem.ABName = element.ABName;
+            resItem.DependAB = element.DependAB;
+            resItem.ClearDependFlag();
+            Z.Resource.ResourceItemDic.Add(key, resItem);
+        }
         /// <summary>
         /// 加载资源所在AB包和依赖包
         /// </summary>
@@ -127,13 +132,13 @@ namespace Zframework
                 {
                     string tempDependName = resItem.DependAB[i];
                     Z.core.StartCoroutine(_LoadAssetBundleAsync(tempDependName,resItem));
-                    Z.Subject.GetSubject<ABLoadedSArgs>().Where(args=>ReferenceEquals(args.LoadedName,tempDependName)).First().Subscribe(_ABLoadedCallBack);
+                    Z.Subject.GetSubject<ABLoadedArgs>().Where(args=>ReferenceEquals(args.LoadedName,tempDependName)).First().Subscribe(_ABLoadedCallBack);
                 }
             }
             Z.core.StartCoroutine(_LoadAssetBundleAsync(resItem.ABName,resItem));
-            Z.Subject.GetSubject<ABLoadedSArgs>().Where(args => ReferenceEquals(args.LoadedName, resItem.ABName)).First().Subscribe(_ABLoadedCallBack);
+            Z.Subject.GetSubject<ABLoadedArgs>().Where(args => ReferenceEquals(args.LoadedName, resItem.ABName)).First().Subscribe(_ABLoadedCallBack);
         }
-        private static void _ABLoadedCallBack(ABLoadedSArgs args)
+        private static void _ABLoadedCallBack(ABLoadedArgs args)
         {
             var resItem = args.ResItem;
             for (int i = 0; i < resItem.DependAB.Count; i++)
@@ -149,9 +154,9 @@ namespace Zframework
             if(resItem.AssetBundle!=null)//如果没有这个判断的话 当最后一个依赖项加载完但本包还没加载好 就会错误的赋值true
                 resItem.AnsycLoaded = true;
         }
-        internal static IObservable<ABLoadedSArgs> GetAssetBundleLoadedSubject(ResourceItem resItem)
+        internal static IObservable<ABLoadedArgs> GetAssetBundleLoadedSubject(ResourceItem resItem)
         {
-            return Z.Subject.GetSubject<ABLoadedSArgs>().Where(args=>resItem==args.ResItem&&args.ResItem.AnsycLoaded).First();
+            return Z.Subject.GetSubject<ABLoadedArgs>().Where(args=>resItem==args.ResItem&&args.ResItem.AnsycLoaded).First();
         }
        
         private static IEnumerator _LoadAssetBundleAsync(string abName,ResourceItem resItem)
@@ -183,7 +188,7 @@ namespace Zframework
             }            
             abItem.RefCount++;
             //发送加载完成事件 接收方过滤name即可
-            Z.Subject.Fire(Z.Pool.Take<ABLoadedSArgs>().Fill(resItem,abName));
+            Z.Subject.Fire(Z.Pool.Take<ABLoadedArgs>().Fill(resItem,abName));
         }
         /// <summary>
         /// 释放资源
@@ -263,14 +268,14 @@ namespace Zframework
     /// <summary>
     /// AB包加载完成事件参数 
     /// </summary>
-    internal class ABLoadedSArgs : SubjectArgs
+    internal class ABLoadedArgs : SubjectArgs
     {
-        public static int Id = typeof(ABLoadedSArgs).GetHashCode();
+        public static int Id = typeof(ABLoadedArgs).GetHashCode();
         public override int SubjectId { get { return Id; } }
         public ResourceItem ResItem;
         public string LoadedName;
       
-        public ABLoadedSArgs Fill(ResourceItem resItem,string loadedName) 
+        public ABLoadedArgs Fill(ResourceItem resItem,string loadedName) 
         {
             ResItem = resItem;
             LoadedName = loadedName;

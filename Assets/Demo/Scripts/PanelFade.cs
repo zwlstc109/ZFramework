@@ -52,7 +52,11 @@ public class PanelFade : PanelBase
         Z.Pool.Return(ref temp);
 
     }
-    
+    public override void OnUpdate(object userData = null)
+    {
+        base.OnUpdate(userData);
+        Z.Audio.BackGroundVolume = 1 - CanvasGroup.alpha;
+    }
     private void _FadeOut(object n)
     {
        

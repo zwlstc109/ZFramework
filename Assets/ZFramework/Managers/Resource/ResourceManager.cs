@@ -57,8 +57,13 @@ namespace Zframework
                 Z.Debug.Error("请求的资源地址为空");
                 return null;
             }
+            string keyForDic=path;
+            if (typeof(T)==typeof(Texture2D))//如果请求的是texture 需要在路径后加上后缀 匹配另一个pair
+            {
+                keyForDic = path+ AssetBundleManager.TextureKeySuffix;
+            }
             //获得内含资源的资源壳
-            ResourceItem resItem = _GetCachedResItem(path,groupIndex);
+            ResourceItem resItem = _GetCachedResItem(keyForDic, groupIndex);
             if (resItem != null)
             {
                 return resItem;
@@ -73,7 +78,7 @@ namespace Zframework
 #endif
             if (LoadFromAssetBundle)
             {
-                resItem = ResourceItemDic.GetValue(path);//只要加载过清单 肯定会得到对应的壳
+                resItem = ResourceItemDic.GetValue(keyForDic);//只要加载过清单 肯定会得到对应的壳
                 if (resItem == null)
                 {
                     Z.Debug.Error("请求加载的资源不在清单内 "+path);
@@ -86,9 +91,9 @@ namespace Zframework
             }
             if (resItem.Asset != null)
             {             
-                if (!LoadFromAssetBundle&&!ResourceItemDic.ContainsKey(path))//只有编辑器下加载资源需要添加这个pair
+                if (!LoadFromAssetBundle&&!ResourceItemDic.ContainsKey(keyForDic))//只有编辑器下加载资源需要添加这个pair
                 {
-                    ResourceItemDic.Add(path, resItem);
+                    ResourceItemDic.Add(keyForDic, resItem);
                 }
                 IncreaseRefCount(resItem,groupIndex);
                 return resItem;

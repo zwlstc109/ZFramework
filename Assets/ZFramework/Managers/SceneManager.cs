@@ -48,6 +48,7 @@ namespace Zframework
         private Action<object> mDoneCallback = null;
         public string LoadingUIPath = null;
         public string FadeUIPath = null;
+        [HideInInspector] public float FadeAlpha;//当前渐变时的alpha值 给AudioManager用来调整声音大小
         private IDisposable mFadeDispose;
         private bool FadeInDone = false;//当前淡入是否结束
         internal override void Init()
@@ -229,7 +230,7 @@ namespace Zframework
                 {
                     AssetBundleManager.LoadAssetBundleAsync(resItem);
                     AssetBundleManager.GetAssetBundleLoadedSubject(resItem).Subscribe(_ =>
-                    {
+                    {   
                         if (FadeInDone)//如果渐变已经完成 
                             _DoLoadScene(scenePath, loadedCallback);
                        
@@ -237,8 +238,8 @@ namespace Zframework
                     });
                 }
             }
-            //else
-            //    ClearCache();
+            else
+                Already = true;
         }
         private void _DoLoadScene(string scenePath,Action loadedCallback)
         {

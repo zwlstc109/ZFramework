@@ -172,7 +172,7 @@ namespace Zframework
         /// <param name="child"></param>
         /// <param name="await"></param>
         /// <param name="userData"></param>
-        protected void Switch(PanelBase child,bool await=false,object userData = null)
+        protected void ToggleChild(PanelBase child,bool await=false,object userData = null)
         {
             if (!Available)
             {

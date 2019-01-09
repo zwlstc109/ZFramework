@@ -2804,6 +2804,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LoadingUIPath: Assets/GameData/Prefabs/UGUI/Panel/PnlLoading.prefab
   FadeUIPath: Assets/GameData/Prefabs/UGUI/Panel/PnlEmpty.prefab
+  FadeAlpha: 0
 --- !u!222 &6600559108902831003
 CanvasRenderer:
   m_ObjectHideFlags: 0

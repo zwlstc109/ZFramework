@@ -61,6 +61,7 @@ namespace Zframework
             {
                 return Observable.Timer(TimeSpan.FromSeconds(dueTime), TimeSpan.FromSeconds(period));
             }
+          
             #endregion
             #region for循环
             public static void ForLoop(int loopTime,Action<int> action)
