@@ -4,87 +4,149 @@ using UnityEngine;
 using UniRx;
 using System;
 namespace Zframework
-{/// <summary>
-/// Debug管理
-/// </summary>  
+{ 
+    /// <summary>
+    /// Debug管理
+    /// </summary> 
     public sealed class DebugManager : BaseManager
     {   
+        
         protected override int MgrIndex { get { return (int)ManagerIndex.Log; } }
+        private bool mIsDebugBuild;
         //日志subject
-        private readonly Subject<LogEntry> logSubject = new Subject<LogEntry>();
-        private Logger mDefaultLogger;
-        [HideInInspector] public DebugHub Hub; 
+        private readonly Subject<LogEntry> logSubject = new Subject<LogEntry>();//用法: 为需要接收日志消息的地方实现Iobserver<logEntry> 然后订阅这个subject  然后Z.debug.xxx 就相当于发送日志消息
+        //默认日志
+        private const string mDefaultLoggerName = "DefaultLogger";
+        private DebugHub mHub;
+       
+        
         internal override void Init()
         {
             Z.Debug = this;
-            //默认关联UnityDebug
-           logSubject.Where(e => ReferenceEquals(e.LoggerName, "DefaultLogger")).Subscribe(new UnityDebugSink());//有个不好的地方 用默认日志输出器就不能双击console来到debug.log的地方了
-            //默认日志输出器                                                     //但可以使用Debug.log 不强制使用Z.log   Z.log用来以后可以把输出整理到一个UI上 持久化到文件上 甚至上传到服务器之类的需求
-            mDefaultLogger = new Logger("DefaultLogger");
-
+            mIsDebugBuild = UnityEngine.Debug.isDebugBuild;
+            //默认关联UnityDebug where中可以自定义自己的过滤方式
+            logSubject.Where(e => ReferenceEquals(e.LoggerName, mDefaultLoggerName)).Subscribe(new UnityDebugSink());//有个不好的地方 用默认日志输出器就不能双击console来到debug.log的地方了
+                                                                                                                
+            mHub = GameObject.Find("DebugHub").GetComponent<DebugHub>();
+            Z.Debug.Log(mHub.GetInstanceID());
             //Z.Debug.Log("LogManager init");
         }
 
-        public Action<LogEntry> RegisterLogger(Logger logger)
-        {           
-            return logSubject.OnNext;
-        }
-        /// <summary>Output LogType.Log but only enables isDebugBuild</summary>
-        public void Debug(object message, UnityEngine.Object context = null)
+       
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="context"></param>
+        /// <param name="name">loggerName</param>
+        public void Debug(object message, UnityEngine.Object context = null,string loggerName=mDefaultLoggerName)
         {
-            mDefaultLogger.Debug(message);
+            if (mIsDebugBuild)
+            {
+                logSubject.OnNext(new LogEntry(
+                    message: (message != null) ? message.ToString() : "",
+                    logType: LogType.Log,
+                    timestamp: DateTime.Now,
+                    loggerName: loggerName,
+                    context: context));
+            }
         }
 
         /// <summary>Output LogType.Log but only enables isDebugBuild</summary>
-        public void DebugFormat(string format, params object[] args)
+        public void DebugFormat(string format, string loggerName = mDefaultLoggerName, params object[] args)
         {
-            mDefaultLogger.DebugFormat(format, args);
+            if (mIsDebugBuild)
+            {
+                logSubject.OnNext(new LogEntry(
+                    message: (format != null) ? string.Format(format, args) : "",
+                    logType: LogType.Log,
+                    timestamp: DateTime.Now,
+                    loggerName: loggerName,
+                    context: null));
+            }
         }
 
-        public  void Log(object message, UnityEngine.Object context = null)
+        public  void Log(object message, UnityEngine.Object context = null, string loggerName = mDefaultLoggerName)
         {
-            mDefaultLogger.Log(message);
+            logSubject.OnNext(new LogEntry(
+               message: (message != null) ? message.ToString() : "",
+               logType: LogType.Log,
+               timestamp: DateTime.Now,
+               loggerName: loggerName,
+               context: context));
         }
 
-        public  void LogFormat(string format, params object[] args)
+        public  void LogFormat(string format, string loggerName = mDefaultLoggerName, params object[] args)
         {
-            mDefaultLogger.LogFormat(format,args);
+            logSubject.OnNext(new LogEntry(
+               message: (format != null) ? string.Format(format, args) : "",
+               logType: LogType.Log,
+               timestamp: DateTime.Now,
+               loggerName: loggerName,
+               context: null));
         }
 
-        public  void Warning(object message, UnityEngine.Object context = null)
+        public  void Warning(object message, UnityEngine.Object context = null, string loggerName = mDefaultLoggerName)
         {
-            mDefaultLogger.Warning(message);
+            logSubject.OnNext(new LogEntry(
+                message: (message != null) ? message.ToString() : "",
+                logType: LogType.Warning,
+                timestamp: DateTime.Now,
+                loggerName: loggerName,
+                context: context));
         }
 
-        public  void WarningFormat(string format, params object[] args)
+        public  void WarningFormat(string format, string loggerName = mDefaultLoggerName, params object[] args)
         {
-            mDefaultLogger.WarningFormat(format,args);
+            logSubject.OnNext(new LogEntry(
+                 message: (format != null) ? string.Format(format, args) : "",
+                 logType: LogType.Warning,
+                 timestamp: DateTime.Now,
+                 loggerName: loggerName,
+                 context: null));
         }
 
-        public  void Error(object message, UnityEngine.Object context = null)
+        public  void Error(object message, UnityEngine.Object context = null, string loggerName = mDefaultLoggerName)
         {
-            mDefaultLogger.Error(message);
+            logSubject.OnNext(new LogEntry(
+                message: (message != null) ? message.ToString() : "",
+                logType: LogType.Error,
+                timestamp: DateTime.Now,
+                loggerName: loggerName,
+                context: context));
         }
 
-        public  void ErrorFormat(string format, params object[] args)
+        public  void ErrorFormat(string format, string loggerName = mDefaultLoggerName, params object[] args)
         {
-            mDefaultLogger.ErrorFormat(format, args);
+            logSubject.OnNext(new LogEntry(
+                message: (format != null) ? string.Format(format, args) : "",
+                logType: LogType.Error,
+                timestamp: DateTime.Now,
+                loggerName: loggerName,
+                context: null));
         }
 
-        public  void Exception(Exception exception, UnityEngine.Object context = null)
+        public  void Exception(Exception exception, UnityEngine.Object context = null, string loggerName = mDefaultLoggerName)
         {
-            mDefaultLogger.Exception(exception);
+            logSubject.OnNext(new LogEntry(
+                message: (exception != null) ? exception.ToString() : "",
+                exception: exception,
+                logType: LogType.Exception,
+                timestamp: DateTime.Now,
+                loggerName: loggerName,
+                context: context));
         }
         internal override void MgrUpdate()
         {
-            if (Input.GetKeyDown(KeyCode.K))
-            {
-                Hub.Show();
-            }
-            if (Input.GetKeyDown(KeyCode.L))
-            {
-                Hub.Hide();
-            }
+            //if (Input.GetKeyDown(KeyCode.K))
+            //{
+            //    Hub.Show();
+            //}
+            //if (Input.GetKeyDown(KeyCode.L))
+            //{
+            //    Hub.Hide();
+            //}
         }
 
         internal override void ShutDown()

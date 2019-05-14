@@ -20,19 +20,33 @@ namespace Zframework
         private List<UIGroup> mGroupLst = new List<UIGroup>();
         [SerializeField] internal Transform CanvasRoot=null;
         [SerializeField] internal Transform Top = null;
-        IReadOnlyReactiveProperty<int> mTreeNodePoolCount;//TEST
+        //IReadOnlyReactiveProperty<int> mTreeNodePoolCount;//TEST
         //private Dictionary<string, List<PanelBase>> mPanelDic = new Dictionary<string, List<PanelBase>>();
         internal override void Init()
         {
             Z.UI = this;
             Z.Pool.RegisterClassCustomPool(() => new TreeNode<PanelBase>(), UIGroup.Clean, 150);
 
-            mTreeNodePoolCount =Z.Pool.mObjectPoolDic[typeof(TreeNode<PanelBase>).FullName].ObserveEveryValueChanged(p=>p.Count).ToReactiveProperty<int>();
+            //mTreeNodePoolCount =Z.Pool.mObjectPoolDic[typeof(TreeNode<PanelBase>).FullName].ObserveEveryValueChanged(p=>p.Count).ToReactiveProperty<int>();
             //DebugHub.Instance.RegistText(mTreeNodePoolCount);
-
+            
             Z.Obs.ForLoop((int)BuiltinUIGroup.Count, i=> mGroupLst.Add(new UIGroup(i)));
         }
-
+        /// <summary>
+        /// 获取一个面板
+        /// </summary>
+        /// <param name="path">面板预制体所在的路径</param>
+        /// <returns></returns>
+        public PanelBase GetPanel(string path)
+        {
+            var panel = PathPnlDic.GetValue(path);
+            if (panel!=null&&panel.AllowMultInstance)
+            {
+                Z.Debug.Warning("无法获取一个允许多实例的面板");
+                return null;
+            }
+            return panel;
+        }
 
         /// <summary>
         /// 在root下打开一个新的面板
@@ -222,11 +236,11 @@ namespace Zframework
                 if (await)
                 {
                     Lock= true;
-                    childNode.Value.SetAvailable(false);
-                    Z.Subject.GetSubject("Z_UIComplete").First().Subscribe(_ =>
+                    childNode.Value.Available=false;
+                    Z.Subject.Get("Z_UIComplete").First().Subscribe(_ =>
                     {
                        
-                        childNode.Value.SetAvailable(true);                       
+                        childNode.Value.Available=true;                       
                         Lock = false;
                     });
                 }

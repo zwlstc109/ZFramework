@@ -23,7 +23,8 @@ namespace Zframework
         Scene,
         Unit,
         UI,
-        Procedure,
+        Input,
+        Procedure,       
         Count
     }
 
@@ -39,6 +40,8 @@ namespace Zframework
             {
                 //根据枚举长度初始化一样数量的
                 mMgrLst = new List<BaseManager>(new BaseManager[(int)ManagerIndex.Count]);
+                UnityEngine.Debug.Log("<size=14><b><color=#00FFFF>Z</color><color=#00F8FF>F</color><color=#00F3FF>R</color><color=#00ECFF>A</color><color=#00E0FF>M</color><color=#00D8FF>E</color><color=#00D1FF>W</color><color=#00C5FF>O</color><color=#00BCFF>R</color><color=#00B2FF>K</color></b></size>");
+
             }
             // 注册Manager 由所有BaseManager Awake时自动调用, BaseManager用MB的方式，是为了今后要做Inspector扩展
             internal static void RegisterManager(BaseManager mgr, int index)
@@ -102,6 +105,8 @@ namespace Zframework
         public static UnitManager Unit { get; internal set; }
         /// <summary>UIManager</summary>
         public static UIManager UI { get; internal set; }
+        /// <summary>InputManager</summary>
+        public static InputManager Input { get; internal set; }
         #endregion
 
 

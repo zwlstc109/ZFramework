@@ -99,7 +99,7 @@ namespace Zframework
                 return resItem;
             }
 #if UNITY_EDITOR
-            Z.Pool.Return(ref resItem);
+            Z.Pool.Return(resItem);
 #endif
             Z.Debug.Error("加载资源失败");
             return null;

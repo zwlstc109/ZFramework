@@ -42,7 +42,7 @@ namespace Zframework
         {
             if (fsmId>=mFsmLst.Count)
             {
-                Debug.Log("状态机Id越界");
+               Z.Debug.Warning("状态机Id越界");
                 return null;
             }
             return mFsmLst[fsmId];

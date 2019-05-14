@@ -35,7 +35,7 @@ namespace Zframework
         protected IFactory<T> mFactory;
         public int Count { get { return mStack.Count; }}
         protected int mHoldAmount;//保有数量
-        protected SimpleSpinLock mSpinLock = new SimpleSpinLock();
+        protected int mSpinLockRoot=0;
         /// <summary>
         /// 
         /// </summary>
@@ -50,31 +50,42 @@ namespace Zframework
 
         public void ClearAll()
         {
-            mSpinLock.Enter();
+            Z.Lock.LOCK(ref mSpinLockRoot);
             mStack.Clear();
-            mSpinLock.Leave();
+            Z.Lock.UNLOCK(ref mSpinLockRoot);
         }
                              
         public object Spawn()//由于Pool没有公共构造函数，所以只能调PoolManager的接口进行使用，返回对象的转型交给PoolManager
         {
             T t;
-            mSpinLock.Enter();
+            Z.Lock.LOCK(ref mSpinLockRoot);
             t = Count > 0 ? mStack.Pop() : mFactory.Create();
-            mSpinLock.Leave();
+            var z = t as ZObject;
+            if (z != null)
+            {
+                z.destroy = false;
+            }
+            Z.Lock.UNLOCK(ref mSpinLockRoot);
             //Z.Log.Log(CurCount);
             return t;
         }
 
         public virtual void Despawn(object t)
         {
-           
-            mSpinLock.Enter();
+
+            Z.Lock.LOCK(ref mSpinLockRoot);
             if (Count < mHoldAmount)
             {
+                var z = t as ZObject;
+                if (z!=null)
+                {
+                    z.destroy = true;
+                }
+
                 mStack.Push(t as T);
             }
-            mSpinLock.Leave();
-           
+            Z.Lock.UNLOCK(ref mSpinLockRoot);
+
             //Z.Log.Log(CurCount);
         }
     }
@@ -89,14 +100,19 @@ namespace Zframework
         }
         public override void Despawn(object t)
         {
-            mSpinLock.Enter();
+            Z.Lock.LOCK(ref mSpinLockRoot);
             if (Count < mHoldAmount)
             {
                 mCleanMethod?.Invoke(t as T);
+                var z = t as ZObject;
+                if (z != null)
+                {
+                    z.destroy = false;
+                }
                 mStack.Push(t as T);
             }
-            
-            mSpinLock.Leave();
+
+            Z.Lock.UNLOCK(ref mSpinLockRoot);
         }
     }
    

@@ -124,7 +124,7 @@ namespace Zframework
 #if UNITY_EDITOR  //TODO 两个一样的宏 很尴尬 
                         if (!Z.Resource.LoadFromAssetBundle/*&&Z.Resource.ResourceItemDic.ContainsKey(resItem.Path)*/)
                         {
-                            Z.Pool.Return(ref resItem);
+                            Z.Pool.Return(resItem);
 
                         }                      
 #endif

@@ -46,7 +46,7 @@ namespace Zframework
             child.ActionRecursive(n=>
             {
                 Parent.Children.Remove(n);
-                Z.Pool.Return(ref n);
+                Z.Pool.Return(n);
             } );         
         }
         public void RemoveSelf()
@@ -59,7 +59,7 @@ namespace Zframework
             ActionRecursive(n =>
             {
                 Parent.Children.Remove(n);
-                Z.Pool.Return(ref n);
+                Z.Pool.Return(n);
             });
         }
         private  TreeNode<T> _GetOneEmptyChild()

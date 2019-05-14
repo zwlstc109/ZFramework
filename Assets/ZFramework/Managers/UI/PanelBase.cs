@@ -36,13 +36,13 @@ namespace Zframework
         protected bool mAvailable = true;
         public virtual bool Available {
             get { return mAvailable; }
-            protected set  //很尴尬的访问修饰符 protected是为了让程序集外的子类访问 但是我需要在程序集里也能访问 只能再加一个internal方法
+            internal protected set  //原来访问修饰符可以叠加
             {
                 mAvailable = value;
                 CanvasGroup.interactable = value;
             }
-        }    
-        internal void SetAvailable(bool value) { Available = value; }
+        }
+         int num;
         protected bool mVisible = true;
         public bool Visible {
             get { return mVisible; }

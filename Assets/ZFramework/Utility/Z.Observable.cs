@@ -17,45 +17,33 @@ namespace Zframework
         public static class Obs
         {
             #region 常用Observable
-            private static IObservable<long> mEveryUpdate = UniRx.Observable.EveryUpdate();
-            private static IObservable<long> mEveryFixedUpdate = UniRx.Observable.EveryFixedUpdate();
+            public readonly static IObservable<long> EveryUpdate = UniRx.Observable.EveryUpdate();
+            public readonly static IObservable<long> EveryFixedUpdate = UniRx.Observable.EveryFixedUpdate();
             /// <summary>鼠标左键的observable</summary>
             public static IObservable<long> LeftClick()
             {
-                return mEveryUpdate.Where(_ => Input.GetMouseButtonDown(0));
+                return EveryUpdate.Where(_ => UnityEngine.Input.GetMouseButtonDown(0));
             }
             /// <summary>鼠标右键的observable</summary>
             public static IObservable<long> RightClick()
             {
-                return mEveryUpdate.Where(_ => Input.GetMouseButtonDown(1));
+                return EveryUpdate.Where(_ =>UnityEngine. Input.GetMouseButtonDown(1));
             }
             public static IObservable<long> KeyDown(KeyCode key)
             {
-                return mEveryUpdate.Where(_ => Input.GetKeyDown(key));
+                return EveryUpdate.Where(_ => UnityEngine.Input.GetKeyDown(key));
             }
-            /// <summary>Update的observable</summary>
-            public static IObservable<long> Update()
-            {
-                return mEveryUpdate;
-            }
-            /// <summary>FixedUpdate的observable</summary>
-            public static  IObservable<long> FixedUpdate()
-            {
-                return mEveryFixedUpdate;
-            }
+          
             #endregion
             #region 计时器
-            /// <summary>
-            /// 在主线程立即运行工作项，可以用来在其他线程时给主线程传递要做的事情
-            /// </summary>
-            /// <param name="action"></param>
-            public static void Timer(Action action)
-            {
-               Observable.Timer(TimeSpan.FromSeconds(0)).Subscribe(_=>action());
-            }
+           
             public static IObservable<long> Timer(float delay)
             {
                 return Observable.Timer(TimeSpan.FromSeconds(delay));
+            }
+            public static IObservable<UniRx.Unit> DelayFrame(int frame)
+            {
+                return Observable.ReturnUnit().DelayFrame(frame);
             }
             public static IObservable<long> Timer(float dueTime, float period)
             {
@@ -69,6 +57,8 @@ namespace Zframework
                 Observable.Range(0, loopTime).Subscribe(_ => action(_));
             }
             #endregion
+
+            
         }
 
     }

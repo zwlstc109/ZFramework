@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 2382726294
+CRC: 82068033
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 44bc6755373b02997a232c8661b957cf
+    Hash: acd7bae237a9a25ab8916aa89ea17604
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 380d0a21209045e93c9118cf694c9b4b
+    Hash: 476d44114dc06c004739984702733ea8
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -43,6 +43,8 @@ ClassTypes:
   Script: {fileID: 11500000, guid: b885bef30bc1bf14f8bd42e16b5a4b92, type: 3}
 - Class: 115
   Script: {instanceID: 0}
+- Class: 135
+  Script: {instanceID: 0}
 - Class: 157
   Script: {instanceID: 0}
 - Class: 258
@@ -50,6 +52,7 @@ ClassTypes:
 Assets:
 - Assets/Demo/Scenes/TestScene1.unity
 Dependencies:
-- D:/study/MyFramework/Assets/StreamingAssets/attack_prefab
-- D:/study/MyFramework/Assets/StreamingAssets/cube (1)_prefab
-- D:/study/MyFramework/Assets/StreamingAssets/cube (2)_prefab
+- D:/Backup2019_2_26/study/MyFramework/Assets/StreamingAssets/attack_prefab
+- D:/Backup2019_2_26/study/MyFramework/Assets/StreamingAssets/cube (1)_prefab
+- D:/Backup2019_2_26/study/MyFramework/Assets/StreamingAssets/cube (2)_prefab
+- D:/Backup2019_2_26/study/MyFramework/Assets/StreamingAssets/testscene1_unity_depend

@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 namespace Zframework
 {
+  
     
     public class DebugHub:MonoBehaviour
     {

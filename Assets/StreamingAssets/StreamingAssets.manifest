@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 815937775
+CRC: 2673913816
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -78,6 +78,10 @@ AssetBundleManifest:
         Dependency_0: attack_prefab
         Dependency_1: cube (1)_prefab
         Dependency_2: cube (2)_prefab
+        Dependency_3: testscene1_unity_depend
     Info_23:
+      Name: testscene1_unity_depend
+      Dependencies: {}
+    Info_24:
       Name: assetmanifest
       Dependencies: {}

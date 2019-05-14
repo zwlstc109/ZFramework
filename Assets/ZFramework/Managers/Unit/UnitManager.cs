@@ -120,7 +120,7 @@ namespace Zframework
         /// <param name="another"></param>
         internal void Move(Unit another)
         {
-            another.ResItem = ResItem;//这个赋值似乎没有必要，不管unit有什么变故，resItem已经在GO加载时就被添加进资源组了
+            another.ResItem = ResItem;
             another.GO = GO;
             another.Group = Group;
 
@@ -186,7 +186,7 @@ namespace Zframework
                     if (unit.GO!=null)//判空是需要的 因为有的unit会提前调用releaseSelf
                         UnityEngine.Object.Destroy(unit.GO);
                     mUnitsOutPool.RemoveAt(i);
-                    Z.Pool.Return(ref unit);//类池归还
+                    Z.Pool.Return(unit);//类池归还
                 }
                 //
                 for (int i = mUnitsInPool.Count - 1; i >= 0; i--)
@@ -201,7 +201,7 @@ namespace Zframework
                         UnityEngine.Object.Destroy(unit.GO);
                     }                  
                     mUnitsInPool.RemoveAt(i);
-                    Z.Pool.Return(ref unit);
+                    Z.Pool.Return(unit);
                 }
                 Z.Resource.Release(prefabGroupIndex, true);
             }
@@ -213,7 +213,7 @@ namespace Zframework
             if (unit.GO==null)
             {
                 Z.Debug.Warning("提前调用过Destory?");//也可能提前调用过releaseSelf
-                Z.Pool.Return(ref unit);
+                Z.Pool.Return(unit);
                 return;
             }
             var stack = Z.Unit.mUnitPool.GetValue(unit.ResItem.Path);

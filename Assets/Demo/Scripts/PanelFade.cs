@@ -32,13 +32,13 @@ public class PanelFade : PanelBase
                 CanvasGroup.alpha = 0;
                 CanvasGroup.DOFade(1, 0.5f).onComplete += () =>
                 {                  
-                    Z.Subject.GetSubject("Z_FadeOutAction").First().Subscribe(_FadeOut);
+                    Z.Subject.Get("Z_FadeOutAction").First().Subscribe(_FadeOut);
                     tempData.FadeInDoneCallback?.Invoke();
                 };
                 break;
             case FadeMode.WaitingThenFadeOut:
                 CanvasGroup.alpha = 1;
-                Z.Subject.GetSubject("Z_FadeOutAction").First().Subscribe(_FadeOut);
+                Z.Subject.Get("Z_FadeOutAction").First().Subscribe(_FadeOut);
                 tempData.FadeInDoneCallback?.Invoke();
                 break;
             default:
@@ -49,7 +49,7 @@ public class PanelFade : PanelBase
     {
         base.OnUnLoad(userData);
         var temp = (FadeData)userData;
-        Z.Pool.Return(ref temp);
+        Z.Pool.Return(temp);
 
     }
     public override void OnUpdate(object userData = null)

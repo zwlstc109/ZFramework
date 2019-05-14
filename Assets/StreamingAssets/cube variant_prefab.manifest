@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 4048085659
+CRC: 1646405973
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 02d7627a86c20b14b2468eb9bc2bf15a
+    Hash: 2a1d680dbae3d92d3b4e1b708c97f002
   TypeTreeHash:
     serializedVersion: 2
     Hash: 19d6577312f3ac7ad1cdc4f25bb69b0c
@@ -32,4 +32,4 @@ ClassTypes:
 Assets:
 - Assets/GameData/Prefabs/Temp/Cube Variant.prefab
 Dependencies:
-- D:/study/MyFramework/Assets/StreamingAssets/cube_prefab
+- D:/Backup2019_2_26/study/MyFramework/Assets/StreamingAssets/cube_prefab

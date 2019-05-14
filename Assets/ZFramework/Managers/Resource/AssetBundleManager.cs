@@ -31,7 +31,7 @@ namespace Zframework
             }
             MemoryStream stream = new MemoryStream(manifestBytes.bytes);
             BinaryFormatter bf = new BinaryFormatter();
-            AssetManifest manifest = (AssetManifest)bf.Deserialize(stream);
+            AssetManifest manifest = (AssetManifest)bf.Deserialize(stream);//获得自制的清单对象
             stream.Close();
 
             for (int i = 0; i < manifest.AssetLst.Count; i++)
@@ -227,8 +227,8 @@ namespace Zframework
                     {
                         Z.Debug.Warning("准备卸载AB包时，发现壳内的包引用为空");
                     }
-                    abItem.AssetBundle.Unload(true);//这个卸载Unity做的很智能 会把所有引用这个assetBundle的变量都置空，不知道怎么做的... 
-                    Z.Pool.Return(ref abItem);
+                    abItem.AssetBundle.Unload(true);
+                    Z.Pool.Return(abItem);
                     mAssetBundleItemDic.Remove(name);
                 }
             }

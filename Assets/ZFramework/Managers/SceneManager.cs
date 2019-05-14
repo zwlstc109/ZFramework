@@ -141,6 +141,7 @@ namespace Zframework
         {
             
         }
+        IProgress<float> mprogress = new Progress<float>(_=>Z.Debug.Log(_));
         IEnumerator LoadAsync(string scenePath, object userData,bool fade)
         {
             LoadingProgress = 0;
@@ -151,7 +152,7 @@ namespace Zframework
             string sceneName = Z.Str.GetAssetNoExtensionName(scenePath);
             AsyncOperation asyncScene = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
             asyncScene.allowSceneActivation = false;
-                
+            asyncScene.AsObservable(mprogress).Subscribe(_ => Z.Debug.Log("done"));//FOR Test
             if (asyncScene != null && !asyncScene.isDone)
             {
                 while (asyncScene.progress < 0.9f)
@@ -189,6 +190,7 @@ namespace Zframework
         {
             while (LoadingProgress<progress)
             {
+              
                 ++LoadingProgress;
                 yield return null;
             }
@@ -246,10 +248,11 @@ namespace Zframework
             string sceneName = Z.Str.GetAssetNoExtensionName(scenePath);
             ClearCache();//只要保证执行在 增加引用计数的函数前就行 因为是在这个函数里把场景加入了资源组0 
             UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
-            if (Z.Resource.LoadFromAssetBundle)
+            //if (Z.Resource.LoadFromAssetBundle) 
                 Z.Resource.IncreaseRefCount(Z.Resource.ResourceItemDic[scenePath], 0);
             loadedCallback?.Invoke();
-            Z.Subject.Fire("Z_FadeOutAction", null);
+            Z.Obs.DelayFrame(1).Subscribe(_ => Z.Subject.Fire("Z_FadeOutAction", null));//1帧后发送消息 (其实是2帧...)  这个延迟到时候再调整
+       
         }
         //转场清理默认资源组
         private void ClearCache()

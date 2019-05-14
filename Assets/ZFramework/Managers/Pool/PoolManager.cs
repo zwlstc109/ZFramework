@@ -81,7 +81,7 @@ namespace Zframework
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="t"></param>
-        public void Return<T>(ref T t) where T : class //这个ref 只能稍微缓解重复归还的问题 实际上类池的本质只是暂时托管实际的在堆中对象的残影 要确保没有重复引用同一个对象，只能用字典或者遍历，消耗很大，然而只要写代码时注意点就可避免重复归还
+        public void Return<T>(T t) where T : class //这个ref 只能稍微缓解重复归还的问题 实际上类池的本质只是暂时托管实际的在堆中对象的残影 要确保没有重复引用同一个对象，只能用字典或者遍历，消耗很大，然而只要写代码时注意点就可避免重复归还
         {
             if (t == null)
             {
@@ -96,7 +96,7 @@ namespace Zframework
                 return;
             }            
             pool.Despawn(t);
-            t = null;//清空引用
+           
         }
 
         internal override void MgrUpdate()

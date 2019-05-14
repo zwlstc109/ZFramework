@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 919446974
+CRC: 1863770603
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: b16f61a3facce2938e1cc708a01aaae9
+    Hash: 6b26a9c0f5d7b9257e207641bd2407e0
   TypeTreeHash:
     serializedVersion: 2
     Hash: 0936476af16b4fc7f0ba99e1d2dc9efe
@@ -48,5 +48,5 @@ ClassTypes:
 Assets:
 - Assets/Demo/Scenes/Start.unity
 Dependencies:
-- D:/study/MyFramework/Assets/StreamingAssets/cube_prefab
-- D:/study/MyFramework/Assets/StreamingAssets/cube variant_prefab
+- D:/Backup2019_2_26/study/MyFramework/Assets/StreamingAssets/cube_prefab
+- D:/Backup2019_2_26/study/MyFramework/Assets/StreamingAssets/cube variant_prefab

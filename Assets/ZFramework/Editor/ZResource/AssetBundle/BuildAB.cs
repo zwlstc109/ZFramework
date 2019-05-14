@@ -30,7 +30,7 @@ namespace Zframework.Editor
         private static Dictionary<string, string> mAllFolderABDic = new Dictionary<string, string>();
         //所有以单个prefab打包的AB    key 包名，value 依赖全路径
         private static Dictionary<string, List<string>> mAllSingleAssetABDic = new Dictionary<string, List<string>>();
-        //路径过滤
+        //路径过滤 这东西主要的作用是 保护已经被标记过包名的资源不被其他标记再次标记 例如文件夹包就有一个文件夹的路径 此路径会被添加到这个集合中 来避免文件夹内的资源被再次标记
         private static List<string> mABPathFilters = new List<string>();     
         //储存所有有效资源路径 （储存的是那些会在运行时主动加载的资源 声音图片预制体之类，即二进制配置表中需要记录的信息）
         private static List<string> mAssetFilters = new List<string>();
@@ -117,7 +117,8 @@ namespace Zframework.Editor
                     //    int m = 0;
                     //}
                     //GameObject obj = AssetDatabase.LoadAssetAtPath<GameObject>(prfPath);
-                    string[] allDependences = AssetDatabase.GetDependencies(assetPath);
+                    string[] allDependences = AssetDatabase.GetDependencies(assetPath);//所谓的依赖项，如果依赖项没有标记，则可能会被多次添加进多个包，而
+                    //如果依赖项有标记，则在打包时，unity会自动识别依赖关系，不会多次打包，并把依赖关系记录下来。而框架的打包系统不会读取unity的清单，而是自己建清单，自己读，只要在读那个包的前面，先把依赖的包加载完就行
                     List<string> allDependPath = new List<string>();
                     for (int j = 0; j < allDependences.Length; j++)
                     {
@@ -147,7 +148,7 @@ namespace Zframework.Editor
                             temp = new List<string>(); temp.Add(assetPath);
                             if (allDependPath.Count>0)
                             {                               
-                                Debug.LogWarningFormat("场景 {0} 不应该依赖于额外的资源", assetPath);
+                                Debug.LogWarningFormat("场景 {0} 不应该依赖于额外的资源", assetPath);//TODO 是否真的如此
                             }
                           
                             mAllSingleAssetABDic.Add(assetName, temp);
@@ -273,7 +274,7 @@ namespace Zframework.Editor
                     string tempPath = resDependce[i];
                                         
                     string abName = "";
-                    if (mAllFileABNameDic.TryGetValue(tempPath, out abName))
+                    if (mAllFileABNameDic.TryGetValue(tempPath, out abName))//用路径去找包名
                     {
                         if (abName == resPathDic[path])//依赖资源就在本包内 忽略   （其实就包含了过滤自己）
                             continue;
@@ -330,7 +331,7 @@ namespace Zframework.Editor
         }
 
         /// <summary>
-        /// 是否包含在已经有的AB包里
+        /// 是否包含在已经有的AB包过滤项里
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
@@ -354,7 +355,7 @@ namespace Zframework.Editor
         {
             for (int i = 0; i < mAssetFilters.Count; i++)
             {
-                if (path.Contains(mAssetFilters[i]))
+                if (path.Contains(mAssetFilters[i]))//会有文件夹路径 因此用contains
                 {
                     return true;
                 }
